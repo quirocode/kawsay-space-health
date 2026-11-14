@@ -17,6 +17,7 @@ Spaceflight damage is slow, silent and cumulative: bone loses 1–1.5% of its de
 | [`PROMPT_MAESTRO.md`](PROMPT_MAESTRO.md) | Prompts for Claude Code |
 | [`AGENTS.md`](AGENTS.md) | Rules for every AI assistant |
 | [`docs/04-recursos-nasa.md`](docs/04-recursos-nasa.md) | NASA/CSA resources and official figures |
+| [`docs/05-rediseno-urgencias.md`](docs/05-rediseno-urgencias.md) | Proposed redesign: emergencies first, watch data, screens for pen.dev, desktop stack |
 
 ## Develop
 ```bash
@@ -25,8 +26,15 @@ npm run dev      # http://localhost:5173
 npm run check    # types + tests + build (same as CI)
 ```
 
+## Desktop app (Windows, no network)
+```bash
+npm run desktop:build   # writes release/KAWSAY-win32-x64/KAWSAY.exe
+```
+Copy the whole `KAWSAY-win32-x64` folder, not just the exe. The build downloads the Electron runtime once; the app itself never opens a connection: it serves `dist/` from disk and cancels every other request (`desktop/main.cjs`).
+
 ## Layout
 ```
+desktop/      offline desktop shell (P1)
 src/domain/   science engine — pure TypeScript (P3) · types.ts is the contract (P1)
 src/data/     seeded mission data (P3)
 src/features/ screens (P1, P2)        src/components/ shared UI (P2)
