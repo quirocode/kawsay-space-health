@@ -123,7 +123,7 @@ function Shell() {
     <div className="flex h-full flex-col">
       {!immersive && <TopBar />}
       {!immersive && <Disclaimer />}
-      <main className="flex-1 overflow-auto">
+      <main className="relative min-h-0 flex-1 overflow-auto">
         <Switch>
           <Route path="/" component={FutureSelfScreen} />
           <Route path="/orbit" component={OrbitScreen} />
