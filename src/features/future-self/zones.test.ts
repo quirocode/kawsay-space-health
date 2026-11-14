@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { stubEngine as engine } from '../../app/engine/stubEngine';
-import { generateStubSol142 } from '../../app/engine/stubData';
+import { engine } from '../../app/engine';
+import { generateSol142 } from '../../data/sol142';
 import { arrivalZones, biggestDrops, exerciseGap, todayZones } from './zones';
 
-const demo = generateStubSol142();
+const demo = generateSol142();
 
 describe('Future Self zone mapping', () => {
   it('today: Sol 142 morning has no red zone and every measured zone is coloured', () => {

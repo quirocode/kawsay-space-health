@@ -208,3 +208,66 @@ export interface Engine {
     nowTs: number;
   }): FlightSurgeonBrief;
 }
+
+// ── Wrist watch (contract v2, added Sat 16:00 by P1) ─────────────────────────
+/** What the wearer is doing. Every watch rule says in which activity it applies. */
+export type ActivityState = 'sleep' | 'rest' | 'active' | 'exercise' | 'eva';
+
+/** One tick from the watch: all signals measured at the same instant. */
+export interface WatchSample {
+  ts: number;                       // epoch ms
+  activity: ActivityState;
+  /** 'off_wrist' samples carry no usable values: show as old data, never as OK. */
+  quality: 'good' | 'poor' | 'off_wrist';
+  heartRate: number;                // bpm
+  spo2: number;                     // %
+  respRate: number;                 // breaths per minute
+  skinTempDelta: number;            // °C vs personal baseline
+  hrv: number;                      // RMSSD, ms
+}
+
+/** emergency = alarm takes the window; warning = blocking sheet; caution = quiet banner. */
+export type AlertLevel = 'emergency' | 'warning' | 'caution';
+
+export interface ProtocolStep {
+  id: string;
+  kind: 'question' | 'measure' | 'timer' | 'action';
+  title: string;
+  detail: string;
+  /** question: choices; any chosen option with escalate=true sends the alert to the crew and Earth. */
+  options?: { id: string; label: string; escalate: boolean }[];
+  /** measure: indicators to record (ids from the indicator catalog). */
+  indicatorIds?: string[];
+  /** timer: seconds. */
+  durationSec?: number;
+  /** action: a reading to log when done, e.g. 250 ml of water. */
+  logs?: { indicatorId: string; add: number };
+}
+
+export interface WatchAlert {
+  ruleId: string;                   // 'resting_tachycardia', 'low_spo2', ...
+  level: AlertLevel;
+  title: string;
+  detectedTs: number;               // ts of the sample that completed the rule
+  activity: ActivityState;
+  /** Signal that fired and its value, for the before/after check. */
+  signal: 'heartRate' | 'spo2' | 'respRate' | 'quality';
+  value: number;
+  because: string[];
+  firstStep: string;                // imperative, one sentence
+  recheckInMin: number;
+  zones: BodyZone[];
+  risks: RiskId[];
+  hazards: HazardId[];
+  sources: Source[];
+}
+
+export interface WatchEngine {
+  /** Pure: a window of samples (oldest first) in, alerts out. Most severe first. */
+  detect(window: WatchSample[], ctx: MissionContext, nowTs: number): WatchAlert[];
+  protocol(alert: WatchAlert): ProtocolStep[];
+  /** Likely contributors, from the manual readings and the samples at detection time. */
+  likely(alert: WatchAlert, readings: Reading[], sample: WatchSample, ctx: MissionContext): { headline: string; reasons: { text: string; source: Source }[] };
+  /** So a watch alert travels in the flight surgeon brief like any other finding. */
+  toFinding(alert: WatchAlert): Finding;
+}
