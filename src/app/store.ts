@@ -88,7 +88,8 @@ export const useApp = create<AppState>()(
       resetDemo: () => set(initial()),
     }),
     {
-      name: 'kawsay:v1',
+      // Bump when the demo data or state shape changes, so returning devices reload the seeded mission.
+      name: 'kawsay:demo-2',
       storage: createJSONStorage(() => localStorage),
       // Infinity (conjunction) is not valid JSON: store it as -1 and restore.
       partialize: (s) => ({ ...s, context: { ...s.context, commDelayMin: Number.isFinite(s.context.commDelayMin) ? s.context.commDelayMin : -1 } }),
