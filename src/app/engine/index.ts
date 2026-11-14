@@ -1,16 +1,17 @@
 /**
- * The one place the UI gets its engine from. UI code imports `engine` from here and
- * talks to it only through the Engine interface (src/domain/types.ts).
- * P1 swaps stub pieces for P3's modules here as they land.
+ * The one place the UI gets its engine from. UI code imports from here and talks to the
+ * science engine only through the Engine and WatchEngine interfaces (src/domain/types.ts).
  */
-import type { Engine } from '../../domain/types';
-import { stubEngine } from './stubEngine';
-import { generateStubSol142, type DemoMission } from './stubData';
+import type { Engine, WatchEngine } from '../../domain/types';
+import { engine as domainEngine } from '../../domain/engine';
+import { watchEngine as domainWatchEngine } from '../../domain/watch';
+import { generateSol142, type DemoMission } from '../../data/sol142';
 
-export const engine: Engine = stubEngine;
+export const engine: Engine = domainEngine;
+export const watchEngine: WatchEngine = domainWatchEngine;
 
 export function loadDemoMission(): DemoMission {
-  return generateStubSol142();
+  return generateSol142();
 }
 
 export type { DemoMission };

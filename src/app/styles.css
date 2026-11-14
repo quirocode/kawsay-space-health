@@ -124,3 +124,23 @@ body {
   outline: 3px solid var(--brand);
   outline-offset: 2px;
 }
+
+/* The one alarm: a slow pulse on the border, once per second. Still under reduced motion. */
+@keyframes alarm-pulse {
+  0%, 100% { border-color: var(--status-act); }
+  50% { border-color: color-mix(in srgb, var(--status-act) 35%, var(--bg)); }
+}
+.alarm-frame {
+  border: 8px solid var(--status-act);
+  animation: alarm-pulse 1s ease-in-out infinite;
+}
+
+/* Breathing pacer: grows for 4 s, shrinks for 6 s. */
+@keyframes breathe {
+  0% { transform: scale(0.55); }
+  40% { transform: scale(1); }
+  100% { transform: scale(0.55); }
+}
+.breathe {
+  animation: breathe 10s ease-in-out infinite;
+}

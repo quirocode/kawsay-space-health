@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "main": "desktop/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "npm run typecheck && vite build",
@@ -10,7 +11,9 @@
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run typecheck && npm run test && vite build"
+    "check": "npm run typecheck && npm run test && vite build",
+    "desktop:dev": "npx --yes electron@45.3.2 .",
+    "desktop:build": "npm run build && node scripts/desktop-build.mjs"
   },
   "dependencies": {
     "@fontsource/atkinson-hyperlegible": "^5.3.0",
@@ -22,6 +25,7 @@
     "zustand": "^5.1.0"
   },
   "devDependencies": {
+    "@electron/packager": "^20.3.0",
     "@tailwindcss/vite": "^4.3.5",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",

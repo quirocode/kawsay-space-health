@@ -1,8 +1,8 @@
 /**
- * PROVISIONAL demo data for "Sol 142" (P1). Replaced by src/data/sol142.ts (P3-05) when it lands.
+ * Seeded demo mission "Sol 142" (P3-05).
  * Deterministic: no randomness, no clock. Same story as docs/tasks/P3-05-sol142.md.
  */
-import type { CountermeasurePlan, MissionContext, Reading } from '../../domain/types';
+import type { CountermeasurePlan, MissionContext, Reading } from '../domain/types';
 
 export const MISSION_START_TS = Date.UTC(2026, 5, 25, 12, 0, 0);
 export const DAY_MS = 86_400_000;
@@ -14,6 +14,13 @@ export const SOL142_CONTEXT: MissionContext = {
   arrivalDay: 180,
   commDelayMin: 14,
 };
+
+/** Ship time of a timestamp: mission day and seconds since that day began. */
+export function shipTime(ts: number): { day: number; secOfDay: number } {
+  const ms = ts - MISSION_START_TS;
+  const day = Math.floor(ms / DAY_MS);
+  return { day, secOfDay: Math.floor((ms - day * DAY_MS) / 1000) };
+}
 
 export function tsOf(day: number, hh: number, mm: number): number {
   return MISSION_START_TS + day * DAY_MS + (hh * 60 + mm) * 60_000;
@@ -30,11 +37,11 @@ export interface DemoMission {
   context: MissionContext;
   nowTs: number;
   history: Reading[];
-  beats: { headache: Reading[]; verification: Reading[] };
+  beats: { headache: Reading[]; verification: Reading[]; afternoon: Reading[] };
   defaultPlan: Required<CountermeasurePlan>;
 }
 
-export function generateStubSol142(): DemoMission {
+export function generateSol142(): DemoMission {
   const history: Reading[] = [];
   const push = (indicatorId: string, value: number, day: number, hh: number, mm: number, origin: Reading['origin'] = 'manual') =>
     history.push({ indicatorId, value, ts: tsOf(day, hh, mm), missionDay: day, phase: 'cruise', origin });
@@ -76,6 +83,8 @@ export function generateStubSol142(): DemoMission {
     beats: {
       headache: [beat('headache_score', 4, 13, 10), beat('cabin_co2', 4.1, 13, 10, 'sensor_sim')],
       verification: [beat('headache_score', 2, 13, 45), beat('cabin_co2', 2.6, 13, 45, 'sensor_sim')],
+      // What the crew member had logged by early afternoon: behind on water.
+      afternoon: [beat('water_ml', 1100, 14, 0)],
     },
     defaultPlan: { exerciseMinPerDay: 90, exerciseDaysPerWeek: 7, waterMlPerDay: 2500, sleepHours: 7 },
   };
