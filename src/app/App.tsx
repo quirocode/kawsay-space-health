@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, Route, Router, Switch, useLocation } from 'wouter';
 import { useHashLocation } from 'wouter/use-hash-location';
 import ui from '../../content/ui.json';
+import orbit from '../../content/orbit.json';
 import { PALETTES, useApp } from './store';
 import { missionLabel, delayLabel } from './format';
 import { FutureSelfScreen } from '../features/future-self/FutureSelfScreen';
@@ -9,8 +10,10 @@ import { CheckInScreen } from '../features/check-in';
 import { LoopScreen } from '../features/finding';
 import { BriefScreen } from '../features/brief';
 import { EnvironmentScreen } from '../features/environment';
+import { OrbitScreen } from './orbit/OrbitScreen';
 
 const NAV = [
+  { href: '/orbit', label: orbit.nav },
   { href: '/', label: ui.nav.home },
   { href: '/check', label: ui.nav.check },
   { href: '/loop', label: ui.nav.loop },
@@ -112,6 +115,32 @@ function Disclaimer() {
   );
 }
 
+/** The Services Orbit is a full-screen hub with its own header and footer (design S8 v2). */
+function Shell() {
+  const [loc] = useLocation();
+  const immersive = loc === '/orbit';
+  return (
+    <div className="flex h-full flex-col">
+      {!immersive && <TopBar />}
+      {!immersive && <Disclaimer />}
+      <main className="flex-1 overflow-auto">
+        <Switch>
+          <Route path="/" component={FutureSelfScreen} />
+          <Route path="/orbit" component={OrbitScreen} />
+          <Route path="/check" component={CheckInScreen} />
+          <Route path="/loop" component={LoopScreen} />
+          <Route path="/brief" component={BriefScreen} />
+          <Route path="/environment" component={EnvironmentScreen} />
+          <Route>
+            <p className="p-8">Not found.</p>
+          </Route>
+        </Switch>
+      </main>
+      {!immersive && <NavBar />}
+    </div>
+  );
+}
+
 export function App() {
   const theme = useApp((s) => s.theme);
   const palette = useApp((s) => s.palette);
@@ -122,23 +151,7 @@ export function App() {
 
   return (
     <Router hook={useHashLocation}>
-      <div className="flex h-full flex-col">
-        <TopBar />
-        <Disclaimer />
-        <main className="flex-1 overflow-auto">
-          <Switch>
-            <Route path="/" component={FutureSelfScreen} />
-            <Route path="/check" component={CheckInScreen} />
-            <Route path="/loop" component={LoopScreen} />
-            <Route path="/brief" component={BriefScreen} />
-            <Route path="/environment" component={EnvironmentScreen} />
-            <Route>
-              <p className="p-8">Not found.</p>
-            </Route>
-          </Switch>
-        </main>
-        <NavBar />
-      </div>
+      <Shell />
     </Router>
   );
 }

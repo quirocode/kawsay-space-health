@@ -1,0 +1,150 @@
+{
+  "nav": "Orbit",
+  "title": "Services orbit",
+  "wordmarkSub": "Sol {day} · {env}",
+  "loopLabel": "Mission loop · Sol {day}",
+  "band": {
+    "day": "Day {day} of {arrival}",
+    "remaining": "{n} days to landing",
+    "launch": "Launch",
+    "landing": "Landing · day {arrival}"
+  },
+  "status": {
+    "green": "Good",
+    "yellow": "Watch",
+    "red": "Act now",
+    "stale": "Stale"
+  },
+  "core": {
+    "overline": "Future Self · Landing readiness",
+    "of": "/100",
+    "open": "Open Future Self"
+  },
+  "stations": {
+    "measure": {
+      "stage": "Measure",
+      "name": "Daily check-in",
+      "streak": "{n}-day streak",
+      "notToday": "Not done today"
+    },
+    "understand": {
+      "stage": "Understand",
+      "name": "Body Map",
+      "trend": "{metric} −{rate} %/mo",
+      "steady": "All zones steady"
+    },
+    "act": {
+      "stage": "Act",
+      "name": "Finding & Action",
+      "one": "1 action today",
+      "many": "{n} actions today",
+      "none": "Nothing to do"
+    },
+    "verify": {
+      "stage": "Verify",
+      "name": "Verify",
+      "due": "Re-check at {time}",
+      "improved": "Last check improved",
+      "unchanged": "Last check unchanged",
+      "worse": "Last check worse",
+      "none": "No checks yet"
+    },
+    "escalate": {
+      "stage": "Escalate",
+      "name": "Surgeon Brief",
+      "today": "Sent today",
+      "one": "Sent 1 sol ago",
+      "many": "Sent {n} sols ago",
+      "none": "Not sent yet"
+    },
+    "environment": {
+      "stage": "Environment",
+      "name": "Earth link",
+      "co2": "CO₂ {value} mmHg",
+      "none": "No CO₂ reading"
+    }
+  },
+  "metric": {
+    "bone_density_pct": "Bones",
+    "leg_strength_pct": "Legs",
+    "orthostatic_tolerance_pct": "Standing",
+    "vision_pct": "Vision",
+    "alertness_pct": "Alertness"
+  },
+  "metricLong": {
+    "bone_density_pct": "Bone density",
+    "leg_strength_pct": "Leg strength",
+    "orthostatic_tolerance_pct": "Standing tolerance",
+    "vision_pct": "Vision",
+    "alertness_pct": "Alertness"
+  },
+  "rightNow": {
+    "kicker": "Right now",
+    "step": "Step {n} · {stage}",
+    "allDone": "Loop closed",
+    "why": "Why?",
+    "chipReadiness": "+{n} readiness",
+    "chipMinutes": "{n} min",
+    "chipRecheck": "Re-check in {n} min",
+    "chipDelay": "{n} min to Earth",
+    "chipPrototype": "Prototype value",
+    "chipOfficial": "NASA source",
+    "measure": {
+      "title": "Start today's check-in",
+      "why": "Two minutes of readings keep your body map and your landing projection current.",
+      "cta": "Start check-in"
+    },
+    "exercise": {
+      "title": "Load your bones: a {min}-min resistance session",
+      "why": "{metric} is trending −{rate} % per month. Following your plan lifts your landing readiness from {score} to {planScore}.",
+      "cta": "Start session"
+    },
+    "plan": {
+      "title": "Follow today's plan",
+      "why": "Following your plan lifts your landing readiness from {score} to {planScore}.",
+      "cta": "Open my plan"
+    },
+    "finding": {
+      "cta": "Start action"
+    },
+    "verify": {
+      "title": "Re-check: {indicator}",
+      "why": "You acted. Measure again at {time} to see whether it worked.",
+      "cta": "Re-check now"
+    },
+    "escalate": {
+      "title": "Send today's brief to your flight surgeon",
+      "why": "One screen with what changed, what you did and what you need from Earth.",
+      "whyNoLink": "No contact with Earth right now. The brief is queued and sent when the link returns.",
+      "cta": "Open brief"
+    },
+    "done": {
+      "title": "Today's loop is closed",
+      "why": "You measured, acted, verified and told Earth. See what it did to your landing day.",
+      "cta": "Open Future Self"
+    }
+  },
+  "stats": {
+    "streak": "day streak",
+    "delay": "Earth delay",
+    "delayValue": "{n} min",
+    "delaySeconds": "Seconds",
+    "delayNone": "No link",
+    "landing": "to landing",
+    "landingValue": "{n} sols"
+  },
+  "loop": {
+    "title": "Today’s loop",
+    "progress": "{done} of {total} done",
+    "done": "done",
+    "current": "current step",
+    "todo": "to do"
+  },
+  "bottom": {
+    "cta": "Daily check-in (2 min)",
+    "link": "Earth link: {n} min delay",
+    "linkSeconds": "Earth link: seconds of delay",
+    "linkNone": "Earth link: no contact (conjunction)",
+    "disclaimer": "Prototype — not a medical device."
+  }
+}

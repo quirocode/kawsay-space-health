@@ -74,6 +74,22 @@ body {
   );
 }
 
+/* Services Orbit: the current step breathes. */
+@keyframes orbit-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.45;
+  }
+}
+.orbit-pulse {
+  animation: orbit-pulse 2.4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

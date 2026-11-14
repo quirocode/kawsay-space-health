@@ -41,7 +41,8 @@ ${block('light')}
   color-scheme: light;
 }
 ${PALETTES.map((p) => `
-:root[data-theme='night'][data-palette='${p}'] {
+/* No :root: a subtree can opt into a night palette (the Services Orbit is always night). */
+[data-theme='night'][data-palette='${p}'] {
 ${block(p)}
   color-scheme: dark;
 }`).join('\n')}
