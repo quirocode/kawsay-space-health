@@ -61,7 +61,7 @@ Gestión: prevención y tratamiento mediante **ejercicio, dieta, medicación, en
 
 **D1. Se mantiene el concepto: copiloto autónomo con ciclo cerrado (Medir → Entender → Actuar → Verificar → Escalar).** Los recursos lo respaldan directamente: retraso de hasta 20 min, emergencias "con ayuda mínima de la Tierra", y Tempus Pro como precedente de integración de datos. Pitch: *"Tempus Pro integra datos para el médico en Tierra; nosotros los convertimos en decisiones para el astronauta cuando la Tierra está a 20 minutos."*
 
-**D2. Columna vertebral del modelo de datos = mapa oficial de NASA: Peligro → Riesgo → Indicador → Acción → Fuente.** Cada alerta muestra de qué peligro y riesgo HRP viene, con enlace a la página de NASA. Es la jugada de Validez y "Best Use of Science". Cubrimos 13 de los 17 riesgos. Quedan fuera: trabajo en equipo, operaciones de sistemas, cargas dinámicas y cáncer (este último solo como dosis acumulada).
+**D2. Columna vertebral del modelo de datos = mapa oficial de NASA: Peligro → Riesgo → Indicador → Acción → Fuente.** Cada alerta muestra de qué peligro y riesgo HRP viene, con enlace a la página de NASA. Es la jugada de Validez y "Best Use of Science". Cubrimos 14 de los 17 riesgos. Quedan fuera: trabajo en equipo, operaciones de sistemas, cargas dinámicas y cáncer (este último solo como dosis acumulada).
 
 **D3. Fases de misión, además del selector de entorno.** Los recursos insisten en las *transiciones*:
 - **Crucero en microgravedad:** rutina diaria.
@@ -118,7 +118,7 @@ Siguen vigentes los límites NASA-STD-3001 de la investigación previa: **CO2 �
 
 ---
 
-## 5. Contrato de datos (congelar a las 10:30)
+## 5. Contrato de datos (borrador; la versión vigente es `src/domain/types.ts`)
 ```ts
 type HazardId = 'radiation'|'isolation'|'distance'|'gravity'|'environment';
 type RiskId = 'immune'|'sensorimotor'|'cardio'|'dcs'|'microbes'|'hypoxia'|'nutrition'|'eva'
