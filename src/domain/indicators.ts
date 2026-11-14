@@ -5,7 +5,7 @@
  * thresholds aligned with docs/tasks/P3-01-indicators.md; P3's copy kept where it fit.
  * Official numbers used here: CO₂ 3 mmHg (SRC.co2) and exercise 90 min/day (SRC.fitness). Everything else is a prototype value.
  */
-import type { IndicatorDef, Source, Threshold } from './types';
+import { IndicatorDef, Source } from './types';
 
 const nasa = (label: string, url: string): Source => ({ label, url, official: true });
 
