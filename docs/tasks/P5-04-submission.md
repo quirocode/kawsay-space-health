@@ -21,10 +21,10 @@ Write it as a table: `time | what is on screen | subtitle (≤ 10 words)`. Requi
 | Time | Beat |
 |---|---|
 | 0–4 s | Hook: "In space, damage is silent. What body will you land with?" |
-| 4–10 s | Home: today vs arrival body; readiness 68; bones and muscles in Watch |
+| 4–10 s | Home: today vs arrival body; readiness 66; bones, heart and brain in Watch |
 | 10–16 s | Headache → finding "Headache + short sleep + high cabin CO₂" → one action |
 | 16–21 s | 30 min later: "Improved"; brief "Arrives on Earth in 14 min" |
-| 21–27 s | Drag the slider to arrival with the plan: readiness 68 → 84, tasks turn OK |
+| 21–27 s | Drag the slider to arrival with the plan: readiness 66 → 89, three of four landing tasks turn OK |
 | 27–30 s | "KAWSAY — life, in Quechua. Prototype, not a medical device." |
 
 No NASA logos or patches. Any AI-generated image or clip must carry a visible "AI-generated" watermark.

@@ -71,4 +71,4 @@ Tránsito a Marte, día 142 de 180. Retraso de comunicación: 14 minutos.
 2. El Yo Futuro está en amarillo: la proyección de piernas y hueso cayó por 6 días de ejercicio incompleto.
 3. El tripulante reporta dolor de cabeza. El motor lo cruza con mal sueño y CO2 alto y propone una acción, con nueva medición en 30 minutos.
 4. La medición confirma la mejora. Se genera el resumen para el médico de vuelo: "Llega en 14 min".
-5. Se mueve el control de tiempo al día 180: con el plan corregido, la Preparación para el aterrizaje sube de 68 a 84.
+5. Se mueve el control de tiempo al día 180 y se activa "Con mi plan": la Preparación para el aterrizaje sube de 66 a 89. Tres de las cuatro tareas del día de llegada pasan a OK; "Salir y caminar" sigue en Watch porque el hueso no se recupera en 38 días (mensaje honesto: empezar antes).

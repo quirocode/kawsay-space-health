@@ -115,12 +115,12 @@ const worst = (s: Status[]) => s.reduce((a, b) => (SEVERITY[b] > SEVERITY[a] ? b
 // ── Projection (simplified P3-04 model, same PARAMS) ──────────────────────────
 const PARAMS = {
   target: 90, missing: 0.5,
-  bone: { zero: 1.5, full: 1.0, green: 94, red: 91 },
+  bone: { zero: 1.5, full: 1.0, green: 95, red: 92 },
   muscle: { zero: 22, full: 10, green: 88, red: 82 },
   heart: { zero: 18, full: 8, bonus: 6, penalty: 4, good: 2500, low: 2000, green: 90, red: 82 },
   eyes: { per: 4, max: 12, green: 96, red: 90 },
   brain: { target: 7, per: 8, green: 92, red: 84 },
-  score: { atRed: 30, atGreen: 90 },
+  score: { atRed: 30, atGreen: 80 },
 };
 
 function project(history: Reading[], ctx: MissionContext, plan?: CountermeasurePlan): LandingReadiness {
@@ -204,11 +204,20 @@ function project(history: Reading[], ctx: MissionContext, plan?: CountermeasureP
     if (p.status === 'stale') return 50;
     const c = ZONE_CUT[p.zone as keyof typeof ZONE_CUT];
     const v = plan ? p.atArrivalIfPlanFollowed : p.atArrival;
-    return clamp(PARAMS.score.atRed + ((PARAMS.score.atGreen - PARAMS.score.atRed) * (v - c.red)) / (c.green - c.red), 0, 100);
+    return readinessPoints(v, c);
   };
   const score = (plan: boolean) => Math.round(taskDef.reduce((s, [, , zones]) => s + Math.min(...zones.map((z) => pScore(pBy.get(z)!, plan))), 0) / taskDef.length);
 
   return { score: score(false), scoreIfPlanFollowed: score(true), tasks, projections };
+}
+
+/** Piecewise: 0 at (red − span) → 30 at red → 80 at green → 100 at 100 % of pre-flight. */
+function readinessPoints(v: number, c: { green: number; red: number }): number {
+  const { atRed, atGreen } = PARAMS.score;
+  const span = c.green - c.red;
+  if (v < c.red) return clamp((atRed * (v - (c.red - span))) / span, 0, atRed);
+  if (v < c.green) return atRed + ((atGreen - atRed) * (v - c.red)) / span;
+  return clamp(atGreen + ((100 - atGreen) * (v - c.green)) / Math.max(1e-6, 100 - c.green), atGreen, 100);
 }
 
 const ZONE_CUT = { bones: PARAMS.bone, muscles: PARAMS.muscle, heart: PARAMS.heart, eyes: PARAMS.eyes, brain: PARAMS.brain };

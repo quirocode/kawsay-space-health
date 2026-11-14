@@ -15,3 +15,7 @@ One line per decision: date/time · decision · why.
 - Sat 11:30 · Provisional engine in `src/app/engine/stubEngine.ts` implements the full Engine with simplified logic · UI work starts before P3 delivers; P1 swaps pieces in `src/app/engine/index.ts`.
 - Sat 11:30 · "Watch" amber darkened to #9A6A00 in day mode · WCAG AA contrast for text on the light background.
 - Sat 11:50 · Vercel project `kawsay` (team quirocode) linked to GitHub; public production URL https://kawsay-ten.vercel.app; previews per PR stay behind Vercel login · judges need a public link; previews only for the team.
+- Sat 12:10 · Sol 142 calibrated to readiness 66 → 89 (was scripted as 68 → 84); "Climb out and walk" stays Watch with the plan · bone cannot recover in 38 days; forcing it to OK would contradict NASA's 1–1.5 %/month. The honest message ("start earlier") is stronger for Validity.
+- Sat 12:10 · Readiness points are piecewise (30 at the red line, 80 at the green line, 100 at pre-flight) · an "OK" task near the line should not score the same as a perfect one.
+- Sat 12:10 · Future Self opens on arrival day; the time slider previews "if you landed on Sol N" by calling `project()` with `arrivalDay = N` · no contract change needed.
+- Sat 12:10 · Woven timeline: one thread per day, height = exercise vs 90 min target; days under 75 % show in amber · the 6 short days are visible at a glance, which is the demo's first beat.

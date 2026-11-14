@@ -280,7 +280,7 @@ export function brief(input: {
 4. before `symptom_dizziness` 1, after 0 → `improved`.
 5. brief with ctx `commDelayMin: 14`, nowTs `T` → `arrivesAtTs = T + 840 000`.
 6. brief with `commDelayMin: Infinity` → `arrivesAtTs: null`.
-7. brief for the Sol 142 scene (one yellow `co2_headache` finding, one improved headache verification, readiness 68/84) → headline mentions "improved", `decisionRequested` = "No decision needed. For your awareness.", `readiness` = `{ score: 68, scoreIfPlanFollowed: 84 }`.
+7. brief for the Sol 142 scene (one yellow `co2_headache` finding, one improved headache verification, readiness 66/89) → headline mentions "improved", `decisionRequested` = "No decision needed. For your awareness.", `readiness` = `{ score: 66, scoreIfPlanFollowed: 89 }`.
 
 Build small inline fixtures for `Finding` and `LandingReadiness`.
 

@@ -46,7 +46,8 @@ export function generateStubSol142(): DemoMission {
     push('heart_rate', today ? 64 : Math.round(63 + 3 * wobble(d, 3)), d, 7, 40, 'sensor_sim');
     push('glucose', today ? 92 : Math.round(92 + 6 * wobble(d, 4)), d, 7, 40);
     push('body_temp', today ? 36.7 : r1(36.7 + 0.15 * wobble(d, 5)), d, 7, 40);
-    const sleep = d === 140 || d === 141 ? 4.6 : today ? 6.4 : r1(7.1 + 0.3 * wobble(d, 6));
+    // Busy week (days 136–141): exercise and sleep both slip; two very short nights.
+    const sleep = d === 140 || d === 141 ? 4.6 : today ? 6.4 : d >= 136 ? 5.6 : r1(7.1 + 0.3 * wobble(d, 6));
     push('sleep_hours', sleep, d, 7, 40);
     push('mood', today ? 4 : Math.max(3, Math.min(5, Math.round(4 + wobble(d, 7)))), d, 7, 40);
     push('spo2', today ? 97 : Math.round(97 + 0.7 * wobble(d, 8)), d, 7, 40, 'sensor_sim');

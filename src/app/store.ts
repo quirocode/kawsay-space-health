@@ -51,7 +51,7 @@ function initial() {
     readings: demo.history,
     plan: demo.defaultPlan as CountermeasurePlan, // recommended plan; "with plan" compares against it
     planAccepted: false,
-    viewDay: demo.context.missionDay,
+    viewDay: demo.context.arrivalDay, // Future Self opens on arrival day: the question is "what body will you land with?"
     pending: null,
     verifications: [] as VerificationResult[],
     briefQueuedTs: null,

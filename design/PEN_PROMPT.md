@@ -93,7 +93,7 @@ Two simple, gender-neutral, front-facing human figures side by side, the same si
 - The **10 zones** (each must be its own tappable shape/area, at least 56 pt): `eyes`, `brain`, `inner_ear`, `heart`, `lungs`, `bones` (spine + legs), `muscles` (thigh/arm), `kidneys`, `skin_immune` (skin outline / hand), `gut`.
 - Zone states to draw: OK, Watch, Act, Old data (hatched), Selected (thick `brand` outline), Pressed.
 
-Under the arrival figure: the **Landing Readiness** score (big number, e.g. **68**) with "→ 84 with your plan", and the **four landing-day tasks** as four cards:
+Under the arrival figure: the **Landing Readiness** score (big number, e.g. **66**) with "with your plan: 89", and the **four landing-day tasks** as four cards:
 1. **Stand up without fainting** (heart)
 2. **Read the displays** (eyes)
 3. **Climb out and walk** (bones, muscles, inner ear)
@@ -107,8 +107,8 @@ Mission: **Mars transit, Sol 142 of 180. One-way delay to Earth: 14 min.** Crew 
 ### 7.1 Home · Future Self (the hero screen)
 - Top bar: "Sol 142 · Mars transit · Earth delay 14 min" + environment chip + small "Demo" pill.
 - The double body (section 6). Today: all zones OK. Arrival: **bones** and **muscles** in **Watch** (amber).
-- Readiness: **68** "→ 84 if you follow the plan".
-- Tasks: Stand **Watch → OK**, Read displays **OK → OK**, Climb out and walk **Watch → OK**, Checklist **OK → OK**.
+- Readiness: **66** · "with your plan: 89". A two-option switch "Current habits / With my plan" flips the arrival figure and the tasks.
+- Tasks: Stand **Watch → OK**, Read displays **OK → OK**, Climb out and walk **Watch → Watch** (bone needs more than 38 days), Checklist **Watch → OK**.
 - One insight line: "6 days of incomplete exercise moved your arrival body. 38 more minutes a day brings it back."
 - Primary button: **"Start today's check (2 min)"**. Secondary: "Adjust my plan".
 - Small "Plan" panel (can be a sheet): exercise 52 → 90 min/day (NASA target: 1.5 h/day, `NASA` tag), water 1.6 → 2.5 L, sleep 6.1 → 7 h. Changing a value visibly moves the arrival figure and the score.
@@ -142,7 +142,7 @@ One screen, printable feel, readable by a doctor in 30 seconds.
 - Header: "Brief · Sol 142 · A. Quispe". Big line: **"Arrives on Earth in 14 min (14:02)"**, plus "Reply earliest: 14:16".
 - Headline: "Headache linked to high cabin CO₂ and short sleep; improved after action."
 - What changed · What the crew member did (with "Improved" outcome) · **Decision requested:** "Confirm scrubber check; any change to sleep schedule?"
-- Landing readiness 68 → 84 with plan.
+- Landing readiness 66 → 89 with plan.
 - Footer line: "Handled on board. A question to Earth would have taken 28 min just to get an answer."
 - Primary: "Queue for downlink". Show the **conjunction** state: "No contact with Earth until Sol 158 · Brief stored".
 

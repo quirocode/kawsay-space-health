@@ -244,12 +244,12 @@ export const PARAMS = {
   missingDayAdherence: 0.5,         // prototype: day with no exercise reading
   recentWindowDays: 7,              // "current habits" = average of the last 7 days
   partialGravityFactor: 0.5,        // prototype: moon / mars_surface lose half as fast
-  bone: { lossPerMonthAtFullAdherence: 1.0, lossPerMonthAtZeroAdherence: 1.5, green: 94, red: 91 },   // rates official, interpolation + cut-offs prototype
+  bone: { lossPerMonthAtFullAdherence: 1.0, lossPerMonthAtZeroAdherence: 1.5, green: 95, red: 92 },   // rates official, interpolation + cut-offs prototype
   muscle: { lossAt180dFullAdherence: 10, lossAt180dZeroAdherence: 22, green: 88, red: 82 },           // 10 % and >20 % anchored on SRC.fitness
   heart: { lossAt180dFullAdherence: 8, lossAt180dZeroAdherence: 18, fluidBonus: 6, dryPenalty: 4, fluidGoodMl: 2500, fluidLowMl: 2000, green: 90, red: 82 },
   eyes: { penaltyPerVisionDay: 4, maxPenalty: 12, lookbackDays: 14, green: 96, red: 90 },
   brain: { targetSleepH: 7, penaltyPerMissingHour: 8, green: 92, red: 84 },
-  score: { atRed: 30, atGreen: 90 },
+  score: { atRed: 30, atGreen: 80 },
 } as const;
 ```
 
@@ -295,7 +295,9 @@ Round all values to 1 decimal. `series` has one point per day (day 0 … arrival
 Task `status` = worst status of its zones' projections (order: stale > red > yellow > green — stale wins so old data never looks fine). `statusIfPlan` = same using the plan values.
 
 ### Landing Readiness score
-For each projection: `s = clamp(atRed + (atGreen − atRed) × (value − red) / (green − red), 0, 100)` with value = `atArrival` (or `atArrivalIfPlanFollowed`). Task score = min of its zones. `score` = round(mean of the 4 task scores). `scoreIfPlanFollowed` = same with plan values. A stale projection scores 50.
+For each projection, with `span = green − red` and value = `atArrival` (or `atArrivalIfPlanFollowed`), points are piecewise linear: **0** at `red − span` → **30** (`atRed`) at `red` → **80** (`atGreen`) at `green` → **100** at 100 % of pre-flight (clamped to 0–100). Task score = min of its zones. `score` = round(mean of the 4 task scores). `scoreIfPlanFollowed` = same with plan values. A stale projection scores 50.
+
+**Calibration target (P1 checked it with the provisional engine):** on the Sol 142 data with the default plan, `score ≈ 66` and `scoreIfPlanFollowed ≈ 89`; tasks stand Watch→OK, see OK→OK, move Watch→Watch, think Watch→OK.
 
 ## Example (must be a test, check properties, not exact numbers)
 ctx `{ environment: 'mars_transit', phase: 'cruise', missionDay: 142, arrivalDay: 180, commDelayMin: 14 }`.

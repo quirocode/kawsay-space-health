@@ -33,5 +33,34 @@
     "startCheck": "Start today's check (2 min)",
     "adjustPlan": "Adjust my plan"
   },
-  "placeholder": "This screen is being built."
+  "placeholder": "This screen is being built.",
+  "future": {
+    "today": "Today",
+    "arrival": "Arrival",
+    "dayLabel": "Sol {day}",
+    "ifLanding": "If you landed on Sol {day}",
+    "readiness": "Landing readiness",
+    "withPlan": "with your plan",
+    "currentHabits": "Current habits",
+    "followPlan": "With my plan",
+    "tasksTitle": "On landing day, can you…",
+    "insight": "{days} days of short exercise moved your arrival body. {min} more minutes a day brings most of it back.",
+    "insightOk": "Your habits are on track for landing day.",
+    "adjustPlan": "Adjust my plan",
+    "hidePlan": "Done",
+    "planExercise": "Exercise per day",
+    "planWater": "Water per day",
+    "planSleep": "Sleep per night",
+    "nasaTarget": "target 1.5 h/day",
+    "now": "Now",
+    "sliderHint": "Drag to see your body on any day until arrival",
+    "vsPreflight": "of pre-flight",
+    "noProjection": "Not projected — measured daily only",
+    "why": "Why?",
+    "model": "How we project it",
+    "source": "Source",
+    "nasa": "NASA",
+    "prototype": "Prototype",
+    "close": "Close"
+  }
 }
