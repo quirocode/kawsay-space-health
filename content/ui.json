@@ -1,0 +1,37 @@
+{
+  "app": {
+    "name": "KAWSAY",
+    "tagline": "What body will you land with?",
+    "disclaimer": "Prototype for a hackathon. Not a medical device.",
+    "disclaimerOk": "Got it",
+    "offline": "Offline · all data on this tablet",
+    "demo": "Demo"
+  },
+  "nav": {
+    "home": "Future Self",
+    "check": "Daily check",
+    "loop": "Findings",
+    "brief": "Brief",
+    "environment": "Environment"
+  },
+  "status": {
+    "green": "OK",
+    "yellow": "Watch",
+    "red": "Act",
+    "stale": "Old data"
+  },
+  "source": {
+    "official": "NASA",
+    "prototype": "Prototype",
+    "why": "Why?"
+  },
+  "home": {
+    "readiness": "Landing readiness",
+    "withPlan": "with your plan",
+    "today": "Today",
+    "arrival": "Arrival",
+    "startCheck": "Start today's check (2 min)",
+    "adjustPlan": "Adjust my plan"
+  },
+  "placeholder": "This screen is being built."
+}

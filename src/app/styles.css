@@ -1,0 +1,109 @@
+@import 'tailwindcss';
+@import '@fontsource/atkinson-hyperlegible/400.css';
+@import '@fontsource/atkinson-hyperlegible/700.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+
+/*
+ * Design tokens — "Warm instrument" (design/PEN_PROMPT.md §5).
+ * PROVISIONAL until P4 exports design/exports/tokens.json; then P1 maps them here once.
+ * Components never hard-code colours: use these variables or the Tailwind names below.
+ */
+:root {
+  --bg: #f5f0e8;
+  --surface: #fffdf9;
+  --surface-2: #ede6da;
+  --ink: #1f1b16;
+  --ink-2: #5c554c;
+  --line: #d9d0c2;
+  --brand: #1e6b73;
+  --future: #5a4c8c;
+  --status-ok: #2f7a4d;
+  --status-watch: #9a6a00;
+  --status-act: #b3261e;
+  --status-stale: #75787d;
+  --on-brand: #ffffff;
+  color-scheme: light;
+}
+
+:root[data-theme='night'] {
+  --bg: #1c1a17;
+  --surface: #262320;
+  --surface-2: #302c28;
+  --ink: #f2ece2;
+  --ink-2: #b8afa3;
+  --line: #403a34;
+  --brand: #5fb3b8;
+  --future: #a397d8;
+  --status-ok: #6cc48f;
+  --status-watch: #e6b64a;
+  --status-act: #f08a80;
+  --status-stale: #9a9da3;
+  --on-brand: #10201f;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-on-brand: var(--on-brand);
+  --color-future: var(--future);
+  --color-ok: var(--status-ok);
+  --color-watch: var(--status-watch);
+  --color-act: var(--status-act);
+  --color-stale: var(--status-stale);
+  --font-sans: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --radius-chip: 8px;
+  --radius-card: 16px;
+  --radius-sheet: 24px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.tabular {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Stale = hatched, never green (NASA-STD-3001: show missing/stale data). */
+.hatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--status-stale) 35%, transparent) 0 4px,
+    transparent 4px 9px
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
