@@ -44,7 +44,7 @@
     "currentHabits": "Current habits",
     "followPlan": "With my plan",
     "tasksTitle": "On landing day, can you…",
-    "insight": "{days} days of short exercise moved your arrival body. {min} more minutes a day brings most of it back.",
+    "insight": "{days} days of incomplete exercise moved your arrival body. {min} more minutes a day brings it back.",
     "insightOk": "Your habits are on track for landing day.",
     "adjustPlan": "Adjust my plan",
     "hidePlan": "Done",
@@ -61,6 +61,96 @@
     "source": "Source",
     "nasa": "NASA",
     "prototype": "Prototype",
-    "close": "Close"
+    "close": "Close",
+    "arrivalDay": "Arrival · Sol {day}"
+  },
+  "check": {
+    "title": "Daily check",
+    "progress": "{n} of {total}",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip",
+    "done": "Done",
+    "summaryOk": "All OK today",
+    "summaryAttention": "Something needs your attention",
+    "howToMeasure": "How to measure",
+    "empty": "No readings yet — start your first check (2 min)"
+  },
+  "zone": {
+    "names": {
+      "eyes": "Eyes",
+      "brain": "Brain",
+      "inner_ear": "Balance",
+      "heart": "Heart",
+      "lungs": "Lungs",
+      "bones": "Bones and spine",
+      "muscles": "Muscles",
+      "kidneys": "Kidneys",
+      "skin_immune": "Skin and immunity",
+      "gut": "Digestion"
+    },
+    "measureNow": "Measure now",
+    "updatedAgo": "Updated {age} ago",
+    "relatedRisks": "Related risks"
+  },
+  "finding": {
+    "because": "Because",
+    "doNow": "Do this now",
+    "recheck": "We'll check again in {min} min",
+    "startTimer": "Done, start the timer",
+    "hazards": "Hazards involved"
+  },
+  "verify": {
+    "title": "Did it work?",
+    "improved": "Improved — nice work.",
+    "unchanged": "No change yet. Keep going and check again.",
+    "worse": "Getting worse. Let your flight surgeon know.",
+    "close": "Close",
+    "sendToSurgeon": "Send to flight surgeon"
+  },
+  "brief": {
+    "title": "Flight surgeon brief",
+    "arrives": "Arrives on Earth in {min} min ({time})",
+    "replyEarliest": "Reply earliest {time}",
+    "whatChanged": "What changed",
+    "whatCrewDid": "What the crew member did",
+    "decision": "Decision requested",
+    "queue": "Queue for downlink",
+    "conjunction": "No contact with Earth until Sol {day} · Brief stored",
+    "footer": "Handled on board. A question to Earth would have taken {roundTrip} min just to get an answer."
+  },
+  "environment": {
+    "title": "Where are you?",
+    "iss": {
+      "name": "ISS",
+      "description": "Low Earth orbit. Earth is a quick call away."
+    },
+    "orion": {
+      "name": "Orion",
+      "description": "Deep-space capsule. Tight quarters, a short delay to Earth."
+    },
+    "moon": {
+      "name": "Moon surface (1/6 g)",
+      "description": "Low gravity, with only a brief delay to Earth."
+    },
+    "marsTransit": {
+      "name": "Mars transit",
+      "description": "Months in weightlessness, with minutes between you and Earth."
+    },
+    "marsSurface": {
+      "name": "Mars surface (3/8 g)",
+      "description": "Partial gravity, and a long wait for any answer from Earth."
+    },
+    "oneWayDelay": "One-way delay",
+    "gravity": "Gravity",
+    "conjunction": "Solar conjunction — no contact",
+    "use": "Use this environment"
+  },
+  "why": {
+    "title": "Why?",
+    "source": "Source",
+    "nasaFigure": "NASA figure",
+    "prototypeValue": "Prototype value — not a NASA figure",
+    "openSource": "Open source page"
   }
 }

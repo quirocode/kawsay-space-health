@@ -1,0 +1,252 @@
+{
+  "bp_systolic": {
+    "howToMeasure": [
+      "Sit still for 5 minutes",
+      "Put cuff on upper arm, heart level",
+      "Stay quiet and press start",
+      "Enter the top number"
+    ],
+    "whyItMatters": "Blood pressure can drop after weeks in weightlessness. Low pressure raises the risk of fainting when gravity returns.",
+    "scaleLabels": null,
+    "sources": [
+      "cardio",
+      "prototype"
+    ]
+  },
+  "bp_diastolic": {
+    "howToMeasure": [
+      "Measure right after systolic",
+      "Stay seated and relaxed",
+      "Enter the bottom number"
+    ],
+    "whyItMatters": "It shows how your blood vessels are adapting to weightlessness. A change from your own usual number is what matters.",
+    "scaleLabels": null,
+    "sources": [
+      "cardio",
+      "prototype"
+    ]
+  },
+  "heart_rate": {
+    "howToMeasure": [
+      "Sit still for 2 minutes",
+      "Put the sensor on your finger",
+      "Wait for a steady number",
+      "Enter it"
+    ],
+    "whyItMatters": "Your heart adapts to weightlessness and can struggle when gravity returns. A change from your usual number is an early sign.",
+    "scaleLabels": null,
+    "sources": [
+      "cardio",
+      "prototype"
+    ]
+  },
+  "glucose": {
+    "howToMeasure": [
+      "Wash and dry your hands",
+      "Use the fingerstick device",
+      "Touch the drop to the strip",
+      "Enter the number"
+    ],
+    "whyItMatters": "Glucose shows how your body handles food and rest in a closed cabin. A change from your usual matters more than one number.",
+    "scaleLabels": null,
+    "sources": [
+      "nutrition",
+      "prototype"
+    ]
+  },
+  "body_temp": {
+    "howToMeasure": [
+      "Wait after exercise or hot drinks",
+      "Place the thermometer as shown",
+      "Hold still until it signals",
+      "Enter the number"
+    ],
+    "whyItMatters": "Your defenses change in space, and germs pass easily between people in a closed cabin. A small rise can be an early sign.",
+    "scaleLabels": null,
+    "sources": [
+      "immune",
+      "microbes",
+      "prototype"
+    ]
+  },
+  "sleep_hours": {
+    "howToMeasure": [
+      "Open last night's sleep summary",
+      "No device? Estimate from lights-out",
+      "Enter the hours you slept"
+    ],
+    "whyItMatters": "Short or broken sleep makes isolation harder and lowers focus. Light therapy can help reset your body clock.",
+    "scaleLabels": null,
+    "sources": [
+      "sleep",
+      "isolation"
+    ]
+  },
+  "mood": {
+    "howToMeasure": [
+      "Pick the level that fits right now"
+    ],
+    "whyItMatters": "Isolation, short sleep and heavy workload can lower mood and focus. Noticing it early lets you act before it affects the mission.",
+    "scaleLabels": [
+      "Very low",
+      "Low",
+      "Okay",
+      "Good",
+      "Great"
+    ],
+    "sources": [
+      "isolation",
+      "behavioral"
+    ]
+  },
+  "headache_score": {
+    "howToMeasure": [
+      "Think about the last hour",
+      "Pick the level that fits"
+    ],
+    "whyItMatters": "Headache can come from cabin CO₂, low oxygen or poor sleep. Reporting it helps us find the cause.",
+    "scaleLabels": [
+      "None",
+      "Mild",
+      "Moderate",
+      "Strong",
+      "Severe"
+    ],
+    "sources": [
+      "co2",
+      "hypoxia",
+      "sleep"
+    ]
+  },
+  "symptom_dizziness": {
+    "howToMeasure": [
+      "Hold a handle or sit",
+      "Move your head slowly",
+      "Note any spinning or swaying",
+      "Answer yes or no"
+    ],
+    "whyItMatters": "Dizziness is common while your balance system adapts to new gravity. It can also come from low blood pressure.",
+    "scaleLabels": null,
+    "sources": [
+      "sensorimotor",
+      "cardio"
+    ]
+  },
+  "symptom_vision": {
+    "howToMeasure": [
+      "Cover one eye",
+      "Read the text on screen",
+      "Note if it looks blurry",
+      "Repeat with the other eye"
+    ],
+    "whyItMatters": "Fluids shifting toward the head can press on the eyes. About 70 % of ISS astronauts show some eye swelling.",
+    "scaleLabels": null,
+    "sources": [
+      "sans"
+    ]
+  },
+  "symptom_confusion": {
+    "howToMeasure": [
+      "Say today's Sol out loud",
+      "Recall your last task",
+      "Answer yes if either felt hard"
+    ],
+    "whyItMatters": "Confusion is one of the signs of low oxygen. It is easy to miss in yourself, so report it early.",
+    "scaleLabels": null,
+    "sources": [
+      "hypoxia"
+    ]
+  },
+  "symptom_joint_pain": {
+    "howToMeasure": [
+      "Note any joint ache or pain",
+      "Think about the last pressure change",
+      "Answer yes or no"
+    ],
+    "whyItMatters": "Joint pain after a pressure change can be a sign of decompression sickness. Stop the activity and report it.",
+    "scaleLabels": null,
+    "sources": [
+      "dcs",
+      "eva"
+    ]
+  },
+  "symptom_skin": {
+    "howToMeasure": [
+      "Look at your skin and lips",
+      "Note any rash or cold sore",
+      "Note any new itch or allergy",
+      "Answer yes or no"
+    ],
+    "whyItMatters": "Dormant viruses can wake up in space, and the immune system changes. Cold sores and rashes are early signs.",
+    "scaleLabels": null,
+    "sources": [
+      "immune"
+    ]
+  },
+  "spo2": {
+    "howToMeasure": [
+      "Rest for 2 minutes",
+      "Clip the sensor on a finger",
+      "Keep your hand still",
+      "Enter the steady number"
+    ],
+    "whyItMatters": "SpO₂ shows how much oxygen your blood carries. Low-oxygen risk is small, but worth watching in a sealed cabin.",
+    "scaleLabels": null,
+    "sources": [
+      "hypoxia",
+      "prototype"
+    ]
+  },
+  "cabin_co2": {
+    "howToMeasure": [
+      "Open the cabin panel",
+      "Find the CO₂ reading",
+      "Use the 1-hour average",
+      "Enter the number"
+    ],
+    "whyItMatters": "NASA limits cabin CO₂ to 3 mmHg as a 1-hour average. Headaches have been reported from about 2.8 mmHg.",
+    "scaleLabels": null,
+    "sources": [
+      "co2"
+    ]
+  },
+  "exercise_min": {
+    "howToMeasure": [
+      "Add up today's exercise minutes",
+      "Include strength and cardio",
+      "Enter the total"
+    ],
+    "whyItMatters": "NASA's target is 1.5 hours a day, 6–7 days a week. Exercise is the main way to slow bone and muscle loss.",
+    "scaleLabels": null,
+    "sources": [
+      "fitness",
+      "bone"
+    ]
+  },
+  "water_ml": {
+    "howToMeasure": [
+      "Add up the water you drank",
+      "Count drinks and meal liquids",
+      "Enter the total in mL"
+    ],
+    "whyItMatters": "Dehydration plus calcium released from bone raises kidney stone risk. Fluids also help prevent fainting at landing.",
+    "scaleLabels": null,
+    "sources": [
+      "gravity",
+      "cardio"
+    ]
+  },
+  "strength_self_pct": {
+    "howToMeasure": [
+      "Do the weekly strength test",
+      "Compare with your pre-flight result",
+      "Enter your result as a percent"
+    ],
+    "whyItMatters": "Fitness drops 10–12 % on average in space; 12–38 % of crew lose more than 20 %. Weekly checks catch the slide early.",
+    "scaleLabels": null,
+    "sources": [
+      "fitness",
+      "prototype"
+    ]
+  }
+}
