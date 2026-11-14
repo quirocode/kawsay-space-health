@@ -14,3 +14,4 @@ One line per decision: date/time · decision · why.
 - Sat 11:30 · Self-hosted fonts (Atkinson Hyperlegible, IBM Plex Mono via @fontsource) · offline; Atkinson is designed for legibility.
 - Sat 11:30 · Provisional engine in `src/app/engine/stubEngine.ts` implements the full Engine with simplified logic · UI work starts before P3 delivers; P1 swaps pieces in `src/app/engine/index.ts`.
 - Sat 11:30 · "Watch" amber darkened to #9A6A00 in day mode · WCAG AA contrast for text on the light background.
+- Sat 11:50 · Vercel project `kawsay` (team quirocode) linked to GitHub; public production URL https://kawsay-ten.vercel.app; previews per PR stay behind Vercel login · judges need a public link; previews only for the team.

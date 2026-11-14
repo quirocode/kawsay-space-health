@@ -7,7 +7,7 @@ Spaceflight damage is slow, silent and cumulative: bone loses 1–1.5% of its de
 
 > Prototype for a hackathon. Not a medical device.
 >
-> **Live demo:** https://kawsay-quirocode.vercel.app · works offline once loaded.
+> **Live demo:** https://kawsay-ten.vercel.app · works offline once loaded.
 
 ## For the team
 | Read | Why |
