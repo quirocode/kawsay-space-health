@@ -3,10 +3,10 @@ import ui from '../../content/ui.json';
 
 /** Status is never colour alone: icon + word + colour (AGENTS.md). Seeded by P1, owned by P2. */
 const STYLE: Record<Status, { fg: string; bg: string }> = {
-  green: { fg: 'text-ok', bg: 'bg-ok/12' },
-  yellow: { fg: 'text-watch', bg: 'bg-watch/14' },
-  red: { fg: 'text-act', bg: 'bg-act/12' },
-  stale: { fg: 'text-stale', bg: 'hatch' },
+  green: { fg: 'text-ok', bg: 'bg-ok-bg' },
+  yellow: { fg: 'text-watch', bg: 'bg-watch-bg' },
+  red: { fg: 'text-act', bg: 'bg-act-bg' },
+  stale: { fg: 'text-stale', bg: 'bg-stale-bg hatch' },
 };
 
 export function StatusIcon({ status, size = 22 }: { status: Status; size?: number }) {

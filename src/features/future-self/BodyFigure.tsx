@@ -8,11 +8,11 @@ import type { BodyZone, Status } from '../../domain/types';
 export type ZoneFill = Status | 'none';
 
 const FILL: Record<ZoneFill, string> = {
-  green: 'var(--status-ok)',
+  green: 'var(--zone-ok)',
   yellow: 'var(--status-watch)',
   red: 'var(--status-act)',
   stale: 'url(#hatch)',
-  none: 'var(--line)',
+  none: 'var(--figure-line)',
 };
 
 export const ZONE_LABEL: Record<BodyZone, string> = {
@@ -76,8 +76,8 @@ export function BodyFigure({
       <path
         data-zone="silhouette"
         d={SILHOUETTE}
-        fill={future ? 'color-mix(in srgb, var(--future) 12%, var(--surface))' : 'var(--surface)'}
-        stroke="currentColor"
+        fill={future ? 'var(--brand-bg)' : 'var(--figure-base)'}
+        stroke={future ? 'currentColor' : 'var(--figure-line)'}
         strokeWidth={future ? 2.5 : 3}
         strokeDasharray={future ? '6 5' : undefined}
       />
@@ -110,8 +110,8 @@ export function BodyFigure({
             key={zone}
             {...common}
             fill={paint}
-            fillOpacity={fill === 'none' ? 0.45 : fill === 'stale' ? 1 : 0.7}
-            stroke={isSel ? 'var(--brand)' : fill === 'none' ? 'none' : paint}
+            fillOpacity={fill === 'none' ? 0.45 : fill === 'stale' || fill === 'green' ? 1 : 0.75}
+            stroke={isSel ? 'var(--brand)' : fill === 'none' ? 'none' : fill === 'green' ? 'var(--status-ok)' : paint}
             strokeWidth={isSel ? 4 : 1.5}
           />
         );

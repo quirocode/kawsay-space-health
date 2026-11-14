@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, Route, Router, Switch, useLocation } from 'wouter';
 import { useHashLocation } from 'wouter/use-hash-location';
 import ui from '../../content/ui.json';
-import { useApp } from './store';
+import { PALETTES, useApp } from './store';
 import { missionLabel, delayLabel } from './format';
 import { FutureSelfScreen } from '../features/future-self/FutureSelfScreen';
 import { CheckInScreen } from '../features/check-in';
@@ -37,6 +37,8 @@ function TopBar() {
   const ctx = useApp((s) => s.context);
   const theme = useApp((s) => s.theme);
   const toggleTheme = useApp((s) => s.toggleTheme);
+  const palette = useApp((s) => s.palette);
+  const setPalette = useApp((s) => s.setPalette);
   const online = useOnline();
   return (
     <header className="flex flex-wrap items-center gap-3 border-b border-line bg-surface px-6 py-3">
@@ -45,6 +47,22 @@ function TopBar() {
       <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{delayLabel(ctx.commDelayMin)}</span>
       <span className="ml-auto rounded-full border border-future px-3 py-1 text-[15px] text-future">{ui.app.demo}</span>
       {!online && <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{ui.app.offline}</span>}
+      {theme === 'night' && (
+        <div role="radiogroup" aria-label="Night palette" className="flex gap-1">
+          {PALETTES.map((p) => (
+            <button
+              key={p}
+              type="button"
+              role="radio"
+              aria-checked={palette === p}
+              onClick={() => setPalette(p)}
+              className={`min-h-14 rounded-full px-3 text-[15px] capitalize ${palette === p ? 'bg-brand font-bold text-on-brand' : 'text-ink-2'}`}
+            >
+              {p === 'jwst' ? 'JWST' : p}
+            </button>
+          ))}
+        </div>
+      )}
       <button
         type="button"
         onClick={toggleTheme}
@@ -96,9 +114,11 @@ function Disclaimer() {
 
 export function App() {
   const theme = useApp((s) => s.theme);
+  const palette = useApp((s) => s.palette);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-  }, [theme]);
+    document.documentElement.dataset.palette = palette;
+  }, [theme, palette]);
 
   return (
     <Router hook={useHashLocation}>

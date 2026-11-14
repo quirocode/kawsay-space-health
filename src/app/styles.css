@@ -5,48 +5,22 @@
 @import '@fontsource/ibm-plex-mono/600.css';
 
 /*
- * Design tokens — "Warm instrument" (design/PEN_PROMPT.md §5).
- * PROVISIONAL until P4 exports design/exports/tokens.json; then P1 maps them here once.
+ * Design tokens come from P4's pen.dev file (design/kawsay.pen → design/exports/tokens.json),
+ * generated into ./tokens.css by scripts/tokens-to-css.mjs. Light theme + 5 night palettes.
  * Components never hard-code colours: use these variables or the Tailwind names below.
  */
-:root {
-  --bg: #f5f0e8;
-  --surface: #fffdf9;
-  --surface-2: #ede6da;
-  --ink: #1f1b16;
-  --ink-2: #5c554c;
-  --line: #d9d0c2;
-  --brand: #1e6b73;
-  --future: #5a4c8c;
-  --status-ok: #2f7a4d;
-  --status-watch: #9a6a00;
-  --status-act: #b3261e;
-  --status-stale: #75787d;
-  --on-brand: #ffffff;
-  color-scheme: light;
-}
-
-:root[data-theme='night'] {
-  --bg: #1c1a17;
-  --surface: #262320;
-  --surface-2: #302c28;
-  --ink: #f2ece2;
-  --ink-2: #b8afa3;
-  --line: #403a34;
-  --brand: #5fb3b8;
-  --future: #a397d8;
-  --status-ok: #6cc48f;
-  --status-watch: #e6b64a;
-  --status-act: #f08a80;
-  --status-stale: #9a9da3;
-  --on-brand: #10201f;
-  color-scheme: dark;
-}
+@import './tokens.css';
 
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-brand-bg: var(--brand-bg);
+  --color-ok-bg: var(--status-ok-bg);
+  --color-watch-bg: var(--status-watch-bg);
+  --color-act-bg: var(--status-act-bg);
+  --color-stale-bg: var(--status-stale-bg);
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
   --color-line: var(--line);
@@ -57,11 +31,12 @@
   --color-watch: var(--status-watch);
   --color-act: var(--status-act);
   --color-stale: var(--status-stale);
-  --font-sans: 'Atkinson Hyperlegible', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --radius-chip: 8px;
-  --radius-card: 16px;
-  --radius-sheet: 24px;
+  /* Design fonts first (P4); local fallbacks keep the app readable offline until they are bundled. */
+  --font-sans: 'Instrument Sans', 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --radius-chip: var(--radius-sm);
+  --radius-card: var(--radius);
+  --radius-sheet: calc(var(--radius) + 8px);
 }
 
 html,

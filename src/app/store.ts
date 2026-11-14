@@ -7,6 +7,10 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import type { CountermeasurePlan, Environment, MissionContext, Reading, VerificationResult } from '../domain/types';
 import { loadDemoMission } from './engine';
 
+/** Night palettes from P4's design file (design/exports/tokens.json). */
+export const PALETTES = ['mars', 'jwst', 'lunar', 'aurora', 'earthrise'] as const;
+export type Palette = (typeof PALETTES)[number];
+
 export interface PendingRecheck {
   ruleId: string;
   actionId: string;
@@ -27,6 +31,7 @@ export interface AppState {
   briefQueuedTs: number | null;
   disclaimerSeen: boolean;
   theme: 'day' | 'night';
+  palette: Palette;
 
   addReadings(rs: Reading[]): void;
   setPlan(p: CountermeasurePlan): void;
@@ -40,6 +45,7 @@ export interface AppState {
   setClock(ts: number): void;
   dismissDisclaimer(): void;
   toggleTheme(): void;
+  setPalette(p: Palette): void;
   resetDemo(): void;
 }
 
@@ -64,6 +70,7 @@ export const useApp = create<AppState>()(
       ...initial(),
       disclaimerSeen: false,
       theme: 'day',
+      palette: 'mars',
 
       addReadings: (rs) => set((s) => ({ readings: [...s.readings, ...rs].sort((a, b) => a.ts - b.ts) })),
       setPlan: (p) => set((s) => ({ plan: { ...s.plan, ...p } })),
@@ -85,6 +92,7 @@ export const useApp = create<AppState>()(
       setClock: (ts) => set({ nowTs: ts }),
       dismissDisclaimer: () => set({ disclaimerSeen: true }),
       toggleTheme: () => set((s) => ({ theme: s.theme === 'day' ? 'night' : 'day' })),
+      setPalette: (palette) => set({ palette, theme: 'night' }),
       resetDemo: () => set(initial()),
     }),
     {
