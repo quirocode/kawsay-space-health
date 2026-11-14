@@ -38,7 +38,7 @@ const SHAPES: { zone: BodyZone; d: string; kind?: 'stroke' }[] = [
   { zone: 'bones', d: 'M120 112 L120 290 M104 296 L100 466 M136 296 L140 466 M98 296 L142 296', kind: 'stroke' },
   { zone: 'brain', d: 'M88 56 C88 30 104 18 120 18 C136 18 152 30 152 56 C140 50 100 50 88 56 Z' },
   { zone: 'eyes', d: 'M98 66 a8 6 0 1 0 16 0 a8 6 0 1 0 -16 0 Z M126 66 a8 6 0 1 0 16 0 a8 6 0 1 0 -16 0 Z' },
-  { zone: 'inner_ear', d: 'M80 60 a7 10 0 1 0 0.1 0 Z M160 60 a7 10 0 1 0 0.1 0 Z' },
+  { zone: 'inner_ear', d: 'M73 60 a7 10 0 1 0 14 0 a7 10 0 1 0 -14 0 Z M153 60 a7 10 0 1 0 14 0 a7 10 0 1 0 -14 0 Z' },
   { zone: 'skin_immune', d: 'M40 262 a12 12 0 1 0 24 0 a12 12 0 1 0 -24 0 Z M176 262 a12 12 0 1 0 24 0 a12 12 0 1 0 -24 0 Z' },
 ];
 

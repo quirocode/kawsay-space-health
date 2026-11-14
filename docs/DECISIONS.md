@@ -25,3 +25,4 @@ One line per decision: date/time · decision · why.
 - Sat 13:00 · The arrival-day ("future") body uses Inti; the old violet "Dusk" is dropped · the design reserves violet-grey for stale data, and two violets would confuse "projected" with "old data".
 - Sat 13:00 · The .pen file contains only variables (no screens or body artwork yet); layout stays as built until P4 adds screens · nothing to implement beyond the design system.
 - Sat 13:00 · Design fonts referenced first with Atkinson/IBM Plex as offline fallback · npm registry unreachable (ECONNRESET) at the time; bundle @fontsource/instrument-sans and @fontsource/jetbrains-mono when the network is back.
+- Sat 13:15 · Screens designed in pen.dev on top of P4's variables; the body figure in the design uses the same geometry as the app (`design/exports/body.svg`) · design and code stay in sync, and the figure keeps one id per zone.
