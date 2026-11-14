@@ -5,75 +5,16 @@
  */
 import type {
   Action, BodyZone, CountermeasurePlan, Engine, Evaluation, Finding, FlightSurgeonBrief,
-  IndicatorDef, LandingReadiness, LandingTask, MissionContext, Projection, Reading, Source, Status,
+  LandingReadiness, LandingTask, MissionContext, Projection, Reading, Source, Status,
   Threshold, VerificationResult,
 } from '../../domain/types';
+import { INDICATORS, SRC } from '../../domain/indicators';
 
-const nasa = (label: string, url: string): Source => ({ label, url, official: true });
-export const STUB_SRC = {
-  bone: nasa('NASA — Risk of Spaceflight-Induced Bone Changes', 'https://www.nasa.gov/reference/risk-of-spaceflight-induced-bone-changes/'),
-  fitness: nasa('NASA — Risk of Reduced Cardiorespiratory and Musculoskeletal Fitness', 'https://www.nasa.gov/reference/risk-of-reduced-cardiorespiratory-and-musculoskeletal-fitness/'),
-  sans: nasa('NASA — Risk of Spaceflight Associated Neuro-ocular Syndrome (SANS)', 'https://www.nasa.gov/reference/risk-of-spaceflight-associated-neuro-ocular-syndrome-sans/'),
-  cardio: nasa('NASA — Risk of Cardiovascular Adaptations', 'https://www.nasa.gov/reference/risk-of-cardiovascular-adaptations/'),
-  hypoxia: nasa('NASA — Risk of Hypoxia', 'https://www.nasa.gov/reference/risk-of-hypoxia/'),
-  sleep: nasa('NASA — Risk of Inadequate Sleep and Irregular Schedules', 'https://www.nasa.gov/reference/risk-from-inadequate-sleep-and-irregular-schedules/'),
-  gravity: nasa('NASA HRP — Hazard: Gravity Fields', 'https://www.nasa.gov/hrp/hazard-gravity-fields/'),
-  environment: nasa('NASA HRP — Hazard: Hostile and Closed Environments', 'https://www.nasa.gov/hrp/hazard-hostile-closed-environments/'),
-  distance: nasa('NASA HRP — Hazard: Distance from Earth', 'https://www.nasa.gov/hrp/hazard-distance-from-earth/'),
-  co2: nasa('NASA-STD-3001 Technical Brief OCHMO-TB-004 — Carbon Dioxide', 'https://www.nasa.gov/ochmo-tb-004-carbon-dioxide-2/'),
-  prototype: {
-    label: 'KAWSAY prototype value (general adult reference, not a NASA figure)',
-    url: 'https://github.com/quirocode/kawsay-space-health/blob/main/docs/04-recursos-nasa.md',
-    official: false,
-  },
-} satisfies Record<string, Source>;
+/** One source registry for the whole app: P3's catalog (src/domain/indicators.ts). */
+export const STUB_SRC = SRC;
 const P = STUB_SRC.prototype;
 
-// ── Indicators (subset of P3-01, same ids) ────────────────────────────────────
-type Def = Omit<IndicatorDef, 'howToMeasure' | 'whyItMatters' | 'risks' | 'hazards' | 'sources'> &
-  Partial<Pick<IndicatorDef, 'risks' | 'hazards' | 'sources'>>;
-const t = (status: 'yellow' | 'red', label: string, b: { min?: number; max?: number }, source: Source = P): Threshold => ({ status, label, source, ...b });
-
-const DEFS: Def[] = [
-  { id: 'bp_systolic', name: 'Blood pressure (systolic)', unit: 'mmHg', zone: 'heart', input: 'number', cadence: 'daily', staleAfterHours: 36,
-    thresholds: [t('red', '160 or more', { min: 160 }), t('red', 'Below 85', { max: 85 }), t('yellow', '140–159', { min: 140, max: 160 }), t('yellow', '85–94', { min: 85, max: 95 })] },
-  { id: 'bp_diastolic', name: 'Blood pressure (diastolic)', unit: 'mmHg', zone: 'heart', input: 'number', cadence: 'daily', staleAfterHours: 36,
-    thresholds: [t('red', '100 or more', { min: 100 }), t('red', 'Below 50', { max: 50 }), t('yellow', '90–99', { min: 90, max: 100 }), t('yellow', '50–59', { min: 50, max: 60 })] },
-  { id: 'heart_rate', name: 'Resting heart rate', unit: 'bpm', zone: 'heart', input: 'number', cadence: 'daily', staleAfterHours: 36,
-    thresholds: [t('red', '120 or more', { min: 120 }), t('red', 'Below 40', { max: 40 }), t('yellow', '100–119', { min: 100, max: 120 }), t('yellow', '40–49', { min: 40, max: 50 })] },
-  { id: 'glucose', name: 'Blood glucose', unit: 'mg/dL', zone: 'gut', input: 'number', cadence: 'daily', staleAfterHours: 36,
-    thresholds: [t('red', '250 or more', { min: 250 }), t('red', 'Below 60', { max: 60 }), t('yellow', '140–249', { min: 140, max: 250 }), t('yellow', '60–69', { min: 60, max: 70 })] },
-  { id: 'body_temp', name: 'Body temperature', unit: '°C', zone: 'skin_immune', input: 'number', cadence: 'daily', staleAfterHours: 36,
-    thresholds: [t('red', '39.0 or more', { min: 39 }), t('red', 'Below 35.0', { max: 35 }), t('yellow', '37.8–38.9', { min: 37.8, max: 39 }), t('yellow', '35.0–35.9', { min: 35, max: 36 })] },
-  { id: 'sleep_hours', name: 'Sleep last night', unit: 'h', zone: 'brain', input: 'number', cadence: 'daily', staleAfterHours: 36,
-    thresholds: [t('red', 'Below 4 h', { max: 4 }), t('yellow', '4 to 6 h', { min: 4, max: 6 })], sources: [STUB_SRC.sleep, P] },
-  { id: 'mood', name: 'Mood', unit: '1–5', zone: 'brain', input: 'scale_1_5', cadence: 'daily', staleAfterHours: 36,
-    thresholds: [t('red', 'Very low', { max: 1.5 }), t('yellow', 'Low', { min: 1.5, max: 2.5 })] },
-  { id: 'headache_score', name: 'Headache', unit: '1–5', zone: 'brain', input: 'scale_1_5', cadence: 'per_event', staleAfterHours: 12,
-    thresholds: [t('red', 'Severe', { min: 5 }), t('yellow', 'Moderate', { min: 3, max: 5 })] },
-  { id: 'symptom_dizziness', name: 'Dizziness', unit: 'yes/no', zone: 'inner_ear', input: 'boolean', cadence: 'per_event', staleAfterHours: 24, thresholds: [t('yellow', 'Reported', { min: 1 })] },
-  { id: 'symptom_vision', name: 'Blurred vision', unit: 'yes/no', zone: 'eyes', input: 'boolean', cadence: 'per_event', staleAfterHours: 24, thresholds: [t('yellow', 'Reported', { min: 1 })] },
-  { id: 'symptom_confusion', name: 'Confusion', unit: 'yes/no', zone: 'brain', input: 'boolean', cadence: 'per_event', staleAfterHours: 12, thresholds: [t('yellow', 'Reported', { min: 1 })] },
-  { id: 'symptom_joint_pain', name: 'Joint pain', unit: 'yes/no', zone: 'bones', input: 'boolean', cadence: 'per_event', staleAfterHours: 12, thresholds: [t('yellow', 'Reported', { min: 1 })] },
-  { id: 'symptom_skin', name: 'Rash or cold sore', unit: 'yes/no', zone: 'skin_immune', input: 'boolean', cadence: 'per_event', staleAfterHours: 48, thresholds: [t('yellow', 'Reported', { min: 1 })] },
-  { id: 'spo2', name: 'Blood oxygen (SpO₂)', unit: '%', zone: 'lungs', input: 'number', cadence: 'daily', staleAfterHours: 48,
-    thresholds: [t('red', 'Below 88 %', { max: 88 }), t('yellow', '88–91 %', { min: 88, max: 92 })] },
-  { id: 'cabin_co2', name: 'Cabin CO₂', unit: 'mmHg', zone: 'lungs', input: 'number', cadence: 'daily', staleAfterHours: 2,
-    thresholds: [t('red', '6 mmHg or more', { min: 6 }), t('yellow', 'Above the NASA limit of 3 mmHg (1-hour average)', { min: 3 }, STUB_SRC.co2)], sources: [STUB_SRC.co2, STUB_SRC.environment, P] },
-  { id: 'exercise_min', name: 'Exercise today', unit: 'min', zone: 'muscles', input: 'number', cadence: 'daily', staleAfterHours: 36,
-    thresholds: [t('red', 'Under 45 min', { max: 45 }), t('yellow', 'Under the NASA target of 90 min/day', { max: 90 }, STUB_SRC.fitness)], sources: [STUB_SRC.fitness, P] },
-  { id: 'water_ml', name: 'Water today', unit: 'mL', zone: 'kidneys', input: 'number', cadence: 'daily', staleAfterHours: 36,
-    thresholds: [t('red', 'Under 1.5 L', { max: 1500 }), t('yellow', '1.5–2 L', { min: 1500, max: 2000 })] },
-  { id: 'strength_self_pct', name: 'Strength self-test', unit: '% of pre-flight', zone: 'muscles', input: 'test', cadence: 'weekly', staleAfterHours: 24 * 8,
-    thresholds: [t('red', 'More than 20 % below pre-flight', { max: 80 }), t('yellow', '10–20 % below pre-flight', { min: 80, max: 90 })], sources: [STUB_SRC.fitness, P] },
-];
-
-const INDICATORS: IndicatorDef[] = DEFS.map((d) => ({
-  risks: [], hazards: [], sources: [P],
-  howToMeasure: 'Steps coming from content/ (P5).',
-  whyItMatters: 'Explanation coming from content/ (P5).',
-  ...d,
-}));
+// ── Indicators: P3-01 catalog ──────────────────────────────────────────────────
 const byId = new Map(INDICATORS.map((d) => [d.id, d]));
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
