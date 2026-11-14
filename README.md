@@ -6,6 +6,8 @@ NASA Space Apps Challenge 2026 · *Create Health Monitoring Software for Astrona
 Spaceflight damage is slow, silent and cumulative: bone loses 1–1.5% of its density every month and no single day feels different. KAWSAY shows crew members their projected self on landing day, connects indicators the way NASA's five hazards compound each other, and closes the loop — measure, understand, act, verify, escalate — when Earth is 20 minutes away.
 
 > Prototype for a hackathon. Not a medical device.
+>
+> **Live demo:** https://kawsay-quirocode.vercel.app · works offline once loaded.
 
 ## For the team
 | Read | Why |
@@ -15,6 +17,13 @@ Spaceflight damage is slow, silent and cumulative: bone loses 1–1.5% of its de
 | [`PROMPT_MAESTRO.md`](PROMPT_MAESTRO.md) | Prompts for Claude Code |
 | [`AGENTS.md`](AGENTS.md) | Rules for every AI assistant |
 | [`docs/04-recursos-nasa.md`](docs/04-recursos-nasa.md) | NASA/CSA resources and official figures |
+
+## Develop
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm run check    # types + tests + build (same as CI)
+```
 
 ## Layout
 ```
