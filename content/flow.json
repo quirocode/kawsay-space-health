@@ -109,7 +109,7 @@
     "others": "Also active"
   },
   "brief": {
-    "heading": "Brief · Sol {day} · {crew}",
+    "heading": "Brief · Day {day} · {crew}",
     "draft": "Draft · {time} ship time",
     "sent": "Sent {time} ship time",
     "arrivesSeconds": "Reaches Earth within seconds",

@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import { ui, useLang } from '../../app/i18n';
+import { fill } from '../../app/format';
 
 /**
  * The woven timeline (signature element, design/PEN_PROMPT.md §4): one thread per mission day.
@@ -52,10 +53,10 @@ export function WovenTimeline({
       <div className="mb-1 flex justify-between text-[15px] text-ink-2">
         <span>{lang === 'es' ? 'Lanzamiento' : 'Launch'}</span>
         <span>
-          {ui.future.today} · <span className="tabular">Sol {today}</span>
+          {ui.future.today} · <span className="tabular">{fill(ui.future.dayLabel, { day: today })}</span>
         </span>
         <span>
-          {ui.future.arrival} · <span className="tabular">Sol {arrival}</span>
+          {ui.future.arrival} · <span className="tabular">{fill(ui.future.dayLabel, { day: arrival })}</span>
         </span>
       </div>
       <div className="relative h-16">
@@ -74,7 +75,7 @@ export function WovenTimeline({
           step={1}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
-          aria-valuetext={`Sol ${value}`}
+          aria-valuetext={fill(ui.future.dayLabel, { day: value })}
           className="woven-range absolute inset-y-0 h-full"
           style={{ left: x(today), right: 0, width: 'auto' }}
         />

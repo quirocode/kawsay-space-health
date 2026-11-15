@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { ui } from '../../app/i18n';
 import { flow } from '../../app/i18n';
 import type { Environment } from '../../domain/types';
-import { useApp } from '../../app/store';
+import { MAX_MISSION_DAYS, useApp } from '../../app/store';
 import { fill } from '../../app/format';
-import { CARD, Screen } from '../../components/ui';
+import { BTN_PRIMARY, CARD, Screen } from '../../components/ui';
 
 /**
  * One-way delay per environment, in minutes. Mars values sit inside NASA's "up to 20 min";
@@ -35,8 +35,9 @@ export function EnvironmentScreen() {
 
   return (
     <Screen>
+      <MissionEditor />
       <div className={`${CARD} flex flex-1 flex-col gap-4`}>
-        <h1 className="text-[34px] font-bold">{ui.environment.title}</h1>
+        <h2 className="text-[34px] font-bold">{ui.environment.title}</h2>
         <p className="text-ink-2">{flow.environment.hint}</p>
 
         <div role="radiogroup" aria-label={ui.environment.title} className="grid flex-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -67,5 +68,66 @@ export function EnvironmentScreen() {
         <p className="min-h-6 text-ink-2" role="status">{applied ? fill(flow.environment.applied, { name: applied }) : ''}</p>
       </div>
     </Screen>
+  );
+}
+
+/** Mission name, crew member, today's mission day and landing day. Day 1 is launch day. */
+function MissionEditor() {
+  const ctx = useApp((s) => s.context);
+  const mission = useApp((s) => s.mission);
+  const setMission = useApp((s) => s.setMission);
+  const m = ui.mission;
+  const [name, setName] = useState(mission.name);
+  const [crew, setCrew] = useState(mission.crew);
+  const [day, setDay] = useState(String(ctx.missionDay));
+  const [landing, setLanding] = useState(String(ctx.arrivalDay));
+  const [saved, setSaved] = useState<string | null>(null);
+
+  const d = Number(day);
+  const l = Number(landing);
+  const whole = (n: number) => Number.isInteger(n) && n >= 1 && n <= MAX_MISSION_DAYS;
+  const error = !whole(d) || !whole(l) ? fill(m.invalidRange, { max: MAX_MISSION_DAYS }) : l < d ? m.invalidOrder : null;
+  const field = 'min-h-14 w-full rounded-card border-2 border-line bg-surface-2 px-4 text-[20px] focus:border-brand-ink';
+  const onlyDigits = (v: string) => v.replace(/\D/g, '').slice(0, 4);
+
+  const save = (e: FormEvent) => {
+    e.preventDefault();
+    if (error) return;
+    setMission({ name, crew, missionDay: d, arrivalDay: l });
+    const st = useApp.getState();
+    setName(st.mission.name);
+    setCrew(st.mission.crew);
+    setSaved(fill(m.saved, { name: st.mission.name, day: st.context.missionDay, total: st.context.arrivalDay }));
+  };
+
+  return (
+    <form onSubmit={save} className={`${CARD} flex flex-col gap-4`} aria-labelledby="mission-edit-title">
+      <h1 id="mission-edit-title" className="text-[34px] font-bold">{m.editTitle}</h1>
+      <p className="text-ink-2">{m.editHint}</p>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <label className="flex flex-col gap-1 text-[15px] text-ink-2">
+          {m.name}
+          <input className={`${field} text-ink`} value={name} maxLength={40} onChange={(e) => { setName(e.target.value); setSaved(null); }} />
+        </label>
+        <label className="flex flex-col gap-1 text-[15px] text-ink-2">
+          {m.crew}
+          <input className={`${field} text-ink`} value={crew} maxLength={40} onChange={(e) => { setCrew(e.target.value); setSaved(null); }} />
+        </label>
+        <label className="flex flex-col gap-1 text-[15px] text-ink-2">
+          {m.dayField}
+          <input className={`${field} tabular text-ink`} inputMode="numeric" value={day} aria-invalid={!!error}
+            onChange={(e) => { setDay(onlyDigits(e.target.value)); setSaved(null); }} />
+        </label>
+        <label className="flex flex-col gap-1 text-[15px] text-ink-2">
+          {m.landingField}
+          <input className={`${field} tabular text-ink`} inputMode="numeric" value={landing} aria-invalid={!!error}
+            onChange={(e) => { setLanding(onlyDigits(e.target.value)); setSaved(null); }} />
+        </label>
+      </div>
+      <div className="flex flex-wrap items-center gap-4">
+        <button type="submit" className={`${BTN_PRIMARY} min-h-14`} disabled={!!error}>{m.save}</button>
+        <p role="status" className={error ? 'font-bold text-act' : 'text-ink-2'}>{error ?? saved ?? ''}</p>
+      </div>
+    </form>
   );
 }

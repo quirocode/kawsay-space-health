@@ -64,17 +64,20 @@ export function FutureSelfScreen() {
               {ui.future.today} · <span className="tabular">{fill(ui.future.dayLabel, { day: ctx.missionDay })}</span>
             </figcaption>
             <div className="h-[360px] w-full max-w-[220px]">
-              <BodyFigure zones={today} variant="today" title={lang === 'es' ? `Tu cuerpo hoy, Sol ${ctx.missionDay}` : `Your body today, Sol ${ctx.missionDay}`} selected={selected} onSelect={setSelected} />
+              <BodyFigure zones={today} variant="today" title={lang === 'es' ? `Tu cuerpo hoy, día ${ctx.missionDay}` : `Your body today, day ${ctx.missionDay}`} selected={selected} onSelect={setSelected} />
             </div>
           </figure>
           <figure className="flex flex-col items-center">
-            <figcaption className="text-[20px] font-bold text-future" aria-live="polite">
+            <figcaption className="flex flex-col items-center text-[20px] font-bold text-future" aria-live="polite">
               {futureTitle}
+              <span className="text-[15px] font-normal text-ink-2">
+                {viewDay - ctx.missionDay === 1 ? ui.future.inOneDay : fill(ui.future.inDays, { days: viewDay - ctx.missionDay })}
+              </span>
             </figcaption>
             <div className="h-[360px] w-full max-w-[220px]">
               <BodyFigure zones={future} variant="future" title={lang === 'es'
-                ? `Tu cuerpo proyectado, Sol ${viewDay}, ${withPlan ? 'con tu plan' : 'con tus hábitos actuales'}`
-                : `Your projected body, Sol ${viewDay}, ${withPlan ? 'with your plan' : 'with current habits'}`} selected={selected} onSelect={setSelected} />
+                ? `Tu cuerpo proyectado, día ${viewDay}, ${withPlan ? 'con tu plan' : 'con tus hábitos actuales'}`
+                : `Your projected body, day ${viewDay}, ${withPlan ? 'with your plan' : 'with current habits'}`} selected={selected} onSelect={setSelected} />
             </div>
           </figure>
         </div>

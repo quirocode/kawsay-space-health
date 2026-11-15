@@ -109,7 +109,7 @@
     "others": "También activos"
   },
   "brief": {
-    "heading": "Informe · Sol {day} · {crew}",
+    "heading": "Informe · Día {day} · {crew}",
     "draft": "Borrador · {time} hora de la nave",
     "sent": "Enviado {time} hora de la nave",
     "arrivesSeconds": "Llega a la Tierra en segundos",

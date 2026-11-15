@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import copy from '../../content/landing.json';
+import english from '../../content/landing.json';
+import spanish from '../../content/landing.es.json';
 
 /**
  * Public landing page (P1). A single scrolling page: hero, video, challenge,
@@ -7,10 +8,36 @@ import copy from '../../content/landing.json';
  * Copy lives in content/landing.json.
  */
 
-const L = copy.links;
+type Copy = typeof english;
+type Language = 'en' | 'es';
+type Theme = 'day' | 'night';
+
+const COPY: Record<Language, Copy> = { en: english, es: spanish };
+const L = english.links;
+const PREFERENCES_KEY = 'kawsay:landing-preferences';
+
+function readPreferences(): { language: Language; theme: Theme } {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PREFERENCES_KEY) ?? '{}');
+    return {
+      language: saved?.language === 'es' ? 'es' : 'en',
+      theme: saved?.theme === 'day' ? 'day' : 'night',
+    };
+  } catch {
+    return { language: 'en', theme: 'night' };
+  }
+}
+
+function demoLink(path: string, language: Language): string {
+  const url = new URL(path, window.location.origin);
+  url.searchParams.set('lang', language);
+  return url.pathname + url.search + url.hash;
+}
 
 // ── Icons: 24×24 strokes, drawn here so the page needs no icon library ─────────
 const PATHS: Record<string, ReactNode> = {
+  sun: <><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" /></>,
+  moon: <path d="M20.8 15.5A9 9 0 0 1 8.5 3.2a9 9 0 1 0 12.3 12.3Z" />,
   slope: <><path d="M3 6l7 7 4-4 7 7" /><path d="M21 11v5h-5" /></>,
   link: <><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" /><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /></>,
   signal: <><path d="M5 12.5a10 10 0 0 1 14 0" /><path d="M8.5 16a5 5 0 0 1 7 0" /><circle cx="12" cy="19.5" r="1" /><path d="M3 3l18 18" /></>,
@@ -81,7 +108,13 @@ const BTN = 'inline-flex items-center justify-center gap-2 rounded-[10px] px-8 p
 const BTN_FILLED = `${BTN} btn-glow bg-l-nasa text-white hover:bg-l-nasa-hover`;
 const BTN_OUTLINE = `${BTN} border border-l-accent bg-l-bg text-l-accent hover:bg-l-bg-2`;
 
-function Nav() {
+function Nav({ copy, language, theme, onLanguageChange, onThemeChange }: {
+  copy: Copy;
+  language: Language;
+  theme: Theme;
+  onLanguageChange: () => void;
+  onThemeChange: () => void;
+}) {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 24);
@@ -96,22 +129,45 @@ function Nav() {
   ];
   return (
     <header className={`fixed inset-x-0 top-0 z-50 border-b backdrop-blur-md transition-colors ${scrolled ? 'border-l-line bg-l-bg/80' : 'border-transparent bg-transparent'}`}>
-      <nav aria-label="Main" className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 md:px-8">
-        <a href="#top" className="text-2xl font-bold tracking-tight text-l-accent">{copy.hero.title}</a>
-        <ul className="ml-auto hidden items-center gap-6 text-sm md:flex">
+      <nav aria-label={copy.nav.label} className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-2 px-3 py-2 sm:px-4 lg:gap-6 lg:px-8">
+        <a href="#top" className="text-lg font-bold tracking-tight text-l-accent sm:text-2xl">{copy.hero.title}</a>
+        <ul className="ml-auto hidden items-center gap-4 text-sm md:flex lg:gap-6">
           {links.map((l) => (
             <li key={l.href}><a href={l.href} className="text-l-muted transition-colors hover:text-l-ink">{l.label}</a></li>
           ))}
         </ul>
-        <a href={L.app} className="ml-auto rounded-[10px] bg-l-nasa px-4 py-2 text-sm font-medium text-white hover:bg-l-nasa-hover md:ml-0">
-          {copy.nav.demo}
-        </a>
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <button
+            type="button"
+            role="switch"
+            aria-checked={theme === 'night'}
+            aria-label={copy.nav.nightMode}
+            title={theme === 'night' ? copy.nav.switchToDay : copy.nav.switchToNight}
+            className="landing-theme-switch"
+            onClick={onThemeChange}
+          >
+            <Icon name="sun" className="h-4 w-4" />
+            <Icon name="moon" className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            aria-label={copy.nav.switchLanguage}
+            title={copy.nav.switchLanguage}
+            className="landing-language-button"
+            onClick={onLanguageChange}
+          >
+            <span lang={language === 'en' ? 'es' : 'en'}>{language === 'en' ? 'ES' : 'EN'}</span>
+          </button>
+          <a href={demoLink(L.app, language)} className="rounded-[10px] bg-l-nasa px-3 py-2 text-sm font-medium whitespace-nowrap text-white hover:bg-l-nasa-hover sm:px-4">
+            {copy.nav.demo}
+          </a>
+        </div>
       </nav>
     </header>
   );
 }
 
-function Hero() {
+function Hero({ copy, language }: { copy: Copy; language: Language }) {
   return (
     <section id="top" className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-4">
       <div className="stars" aria-hidden />
@@ -125,7 +181,7 @@ function Hero() {
         <h1 className="mt-6 text-6xl font-bold tracking-tight text-l-accent sm:text-7xl md:text-8xl">{copy.hero.title}</h1>
         <p className="mt-6 max-w-2xl text-lg text-pretty text-l-ink/85 md:text-2xl">{copy.hero.subtitle}</p>
         <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-          <a href={L.app} className={BTN_FILLED}>
+          <a href={demoLink(L.app, language)} className={BTN_FILLED}>
             {copy.hero.primary}
             <Icon name="arrow" className="h-5 w-5" />
           </a>
@@ -142,7 +198,7 @@ function Hero() {
   );
 }
 
-function Video() {
+function Video({ copy, language }: { copy: Copy; language: Language }) {
   return (
     <section id="video" className="bg-l-bg px-4 py-20 md:py-24">
       <div className="mx-auto max-w-5xl">
@@ -154,7 +210,7 @@ function Video() {
           </span>
           <p className="relative text-2xl font-semibold">{copy.video.soon}</p>
           <p className="relative max-w-md px-4 text-l-muted">{copy.video.soonHint}</p>
-          <a href={L.app} className="relative mt-2 inline-flex items-center gap-2 font-medium text-l-accent hover:underline">
+          <a href={demoLink(L.app, language)} className="relative mt-2 inline-flex items-center gap-2 font-medium text-l-accent hover:underline">
             {copy.hero.primary}
             <Icon name="arrow" className="h-4 w-4" />
           </a>
@@ -177,7 +233,7 @@ function FeatureCard({ icon, title, text, tone }: { icon: string; title: string;
   );
 }
 
-function Challenge() {
+function Challenge({ copy }: { copy: Copy }) {
   const c = copy.challenge;
   return (
     <section id="challenge" className="bg-gradient-to-b from-l-bg to-l-bg-2 px-4 py-24">
@@ -190,7 +246,7 @@ function Challenge() {
               {c.problemsTitle}
             </h3>
             <ul className="flex flex-col gap-4">
-              {c.problems.map((p) => <FeatureCard key={p.title} {...p} tone="danger" />)}
+              {c.problems.map((p) => <FeatureCard key={p.icon} {...p} tone="danger" />)}
             </ul>
           </div>
           <div>
@@ -199,7 +255,7 @@ function Challenge() {
               {c.solutionsTitle}
             </h3>
             <ul className="flex flex-col gap-4">
-              {c.solutions.map((s) => <FeatureCard key={s.title} {...s} tone="accent" />)}
+              {c.solutions.map((s) => <FeatureCard key={s.icon} {...s} tone="accent" />)}
             </ul>
           </div>
         </div>
@@ -235,7 +291,7 @@ function CountUp({ value }: { value: number }) {
   return <span ref={ref}>{shown}</span>;
 }
 
-function Advantages() {
+function Advantages({ copy }: { copy: Copy }) {
   const a = copy.advantages;
   return (
     <section id="advantages" className="relative overflow-hidden bg-gradient-to-b from-l-bg-2 via-l-bg to-l-bg-2 px-4 py-24">
@@ -243,7 +299,7 @@ function Advantages() {
         <SectionTitle title={a.title} accent={a.titleAccent} subtitle={a.subtitle} />
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {a.stats.map((s) => (
-            <li key={s.label} className="reveal flex flex-col items-center rounded-xl border border-l-line bg-l-card px-6 py-8 text-center">
+            <li key={s.icon} className="reveal flex flex-col items-center rounded-xl border border-l-line bg-l-card px-6 py-8 text-center">
               <span className="flex h-12 w-12 items-center justify-center rounded-full bg-l-accent-soft text-l-accent"><Icon name={s.icon} /></span>
               <p className="mt-5 text-5xl font-bold text-l-accent tabular-nums">
                 {s.prefix}<CountUp value={s.value} /><span className="text-2xl">{s.suffix}</span>
@@ -258,7 +314,7 @@ function Advantages() {
   );
 }
 
-function Technology() {
+function Technology({ copy }: { copy: Copy }) {
   const t = copy.technology;
   return (
     <section id="technology" className="bg-l-bg px-4 py-24">
@@ -266,14 +322,14 @@ function Technology() {
         <SectionTitle title={t.title} accent={t.titleAccent} subtitle={t.subtitle} />
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {t.items.map((item) => (
-            <li key={item.title} className="reveal group rounded-xl border border-l-line bg-l-card p-6 transition-colors hover:border-l-accent/50">
+            <li key={item.icon} className="reveal group rounded-xl border border-l-line bg-l-card p-6 transition-colors hover:border-l-accent/50">
               <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-l-accent-soft text-l-accent"><Icon name={item.icon} className="h-5 w-5" /></span>
               <h3 className="mt-5 text-xl font-semibold">{item.title}</h3>
               <p className="mt-2 text-l-muted">{item.text}</p>
             </li>
           ))}
         </ul>
-        <ul className="reveal mt-12 flex flex-wrap justify-center gap-3" aria-label="Technology stack">
+        <ul className="reveal mt-12 flex flex-wrap justify-center gap-3" aria-label={t.stackLabel}>
           {t.stack.map((s) => (
             <li key={s} className="rounded-full border border-l-line px-4 py-1.5 text-sm text-l-muted">{s}</li>
           ))}
@@ -283,7 +339,7 @@ function Technology() {
   );
 }
 
-function CallToAction() {
+function CallToAction({ copy, language }: { copy: Copy; language: Language }) {
   const c = copy.cta;
   return (
     <section id="demo" className="bg-gradient-to-b from-l-bg to-l-bg-2 px-4 py-24">
@@ -292,7 +348,7 @@ function CallToAction() {
         <h2 className="relative text-3xl font-bold md:text-4xl">{c.title}</h2>
         <p className="relative mx-auto mt-4 max-w-2xl text-lg text-l-muted">{c.text}</p>
         <div className="relative mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-          <a href={L.app} className={BTN_FILLED}>
+          <a href={demoLink(L.app, language)} className={BTN_FILLED}>
             {c.web}
             <Icon name="arrow" className="h-5 w-5" />
           </a>
@@ -306,15 +362,15 @@ function CallToAction() {
   );
 }
 
-function Footer() {
+function Footer({ copy, language }: { copy: Copy; language: Language }) {
   const f = copy.footer;
   const col = (title: string, items: { label: string; href: string }[]) => (
     <div>
       <h3 className="font-semibold">{title}</h3>
       <ul className="mt-4 flex flex-col gap-2 text-sm text-l-muted">
         {items.map((i) => (
-          <li key={i.label}>
-            <a href={i.href} className="hover:text-l-ink" {...(i.href.startsWith('http') ? { target: '_blank', rel: 'noreferrer' } : {})}>{i.label}</a>
+          <li key={i.href}>
+            <a href={i.href.startsWith('/app/') ? demoLink(i.href, language) : i.href} className="hover:text-l-ink" {...(i.href.startsWith('http') ? { target: '_blank', rel: 'noreferrer' } : {})}>{i.label}</a>
           </li>
         ))}
       </ul>
@@ -346,19 +402,51 @@ function Footer() {
 }
 
 export function Landing() {
+  const [preferences, setPreferences] = useState(readPreferences);
+  const { language, theme } = preferences;
+  const copy = COPY[language];
+
   useReveal();
+  useEffect(() => {
+    const root = document.documentElement;
+    root.lang = language;
+    root.dataset.landingTheme = theme;
+    document.title = copy.pageTitle;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', copy.pageDescription);
+    const background = getComputedStyle(root).getPropertyValue('--l-bg').trim();
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', background);
+
+    try {
+      localStorage.setItem(PREFERENCES_KEY, JSON.stringify(preferences));
+    } catch {
+      // Keep the controls usable when browser storage is unavailable.
+    }
+  }, [copy, language, preferences, theme]);
+
   return (
     <>
-      <Nav />
+      <Nav
+        copy={copy}
+        language={language}
+        theme={theme}
+        onLanguageChange={() => setPreferences((current) => ({
+          ...current,
+          language: current.language === 'en' ? 'es' : 'en',
+        }))}
+        onThemeChange={() => setPreferences((current) => ({
+          ...current,
+          theme: current.theme === 'night' ? 'day' : 'night',
+        }))}
+      />
       <main>
-        <Hero />
-        <Video />
-        <Challenge />
-        <Advantages />
-        <Technology />
-        <CallToAction />
+        <Hero copy={copy} language={language} />
+        <Video copy={copy} language={language} />
+        <Challenge copy={copy} />
+        <Advantages copy={copy} />
+        <Technology copy={copy} />
+        <CallToAction copy={copy} language={language} />
       </main>
-      <Footer />
+      <Footer copy={copy} language={language} />
     </>
   );
 }

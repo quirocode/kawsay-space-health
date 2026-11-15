@@ -8,11 +8,37 @@ import type {
   CountermeasurePlan, Environment, Finding, FlightSurgeonBrief, MissionContext, Reading, WatchAlert, WatchSample,
 } from '../domain/types';
 import { engine, loadDemoMission, watchEngine } from './engine';
-import { indexedDatabase, memoryDatabase, type AlertRecord, type CaseRecord, type Database, type LoggedVerification, type PendingRecheck, type Session, type Snapshot } from './db';
+import { indexedDatabase, memoryDatabase, type AlertRecord, type CaseRecord, type Database, type LoggedVerification, type MissionInfo, type PendingRecheck, type Session, type Snapshot } from './db';
 import { sampleAt, windowOf } from '../data/watchSeries';
 import { tsOf } from '../data/sol142';
 
-export type { AlertRecord, CaseRecord, PendingRecheck } from './db';
+export type { AlertRecord, CaseRecord, MissionInfo, PendingRecheck } from './db';
+
+/** The seeded demo mission. Fictional name; the crew name matches the brief. */
+export const DEFAULT_MISSION: MissionInfo = { name: 'Inti-1', crew: 'A. Quispe' };
+/** Longest mission the editor accepts, in days (a Mars round trip is under 1,000). */
+export const MAX_MISSION_DAYS = 1000;
+
+export interface MissionEdit extends MissionInfo {
+  missionDay: number;
+  arrivalDay: number;
+}
+
+/**
+ * Make an edit safe: names trimmed (blank keeps the old one), whole days, today at least day 1,
+ * landing no earlier than today and no later than MAX_MISSION_DAYS.
+ */
+export function normalizeMission(edit: MissionEdit, current: MissionInfo): MissionEdit {
+  const whole = (n: number, fallback: number) => (Number.isFinite(n) ? Math.round(n) : fallback);
+  const arrivalDay = Math.min(MAX_MISSION_DAYS, Math.max(1, whole(edit.arrivalDay, 1)));
+  const missionDay = Math.min(arrivalDay, Math.max(1, whole(edit.missionDay, 1)));
+  return {
+    name: edit.name.trim().slice(0, 40) || current.name,
+    crew: edit.crew.trim().slice(0, 40) || current.crew,
+    missionDay,
+    arrivalDay,
+  };
+}
 
 /** Bump when the demo data or the stored shape changes, so returning devices reload the seeded mission. */
 export const DEMO_VERSION = 3;
@@ -48,6 +74,7 @@ export interface AppState extends Prefs {
   briefs: FlightSurgeonBrief[];
   recoveryStartTs: number | null;
   lastCheckTs: number | null;
+  mission: MissionInfo;
 
   hydrate(db?: Database): Promise<void>;
   addReadings(rs: Reading[]): void;
@@ -56,6 +83,7 @@ export interface AppState extends Prefs {
   acceptPlan(): void;
   setViewDay(d: number): void;
   setEnvironment(env: Environment, commDelayMin: number): void;
+  setMission(edit: MissionEdit): void;
 
   startRecheck(finding: Finding): void;
   acknowledge(ruleId: string): void;
@@ -126,6 +154,7 @@ export function seedSnapshot(): Snapshot {
       acknowledged: {},
       recoveryStartTs: null,
       lastCheckTs: null,
+      mission: DEFAULT_MISSION,
     },
     readings: demo.history,
     cases: [],
@@ -137,12 +166,14 @@ export function seedSnapshot(): Snapshot {
 const sessionOf = (s: AppState): Session => ({
   demoVersion: DEMO_VERSION, context: s.context, nowTs: s.nowTs, plan: s.plan, planAccepted: s.planAccepted, viewDay: s.viewDay,
   pending: s.pending, acknowledged: s.acknowledged, recoveryStartTs: s.recoveryStartTs, lastCheckTs: s.lastCheckTs,
+  mission: s.mission,
 });
 
 const fromSnapshot = (snap: Snapshot) => ({
   context: snap.session.context, nowTs: snap.session.nowTs, plan: snap.session.plan, planAccepted: snap.session.planAccepted,
   viewDay: snap.session.viewDay, pending: snap.session.pending, acknowledged: snap.session.acknowledged,
   recoveryStartTs: snap.session.recoveryStartTs, lastCheckTs: snap.session.lastCheckTs,
+  mission: snap.session.mission ?? DEFAULT_MISSION,
   readings: snap.readings, cases: snap.cases, alerts: snap.alerts, briefs: snap.briefs,
 });
 
@@ -294,6 +325,13 @@ export const useApp = create<AppState>()((set, get) => {
       const c = get().context;
       const phase = !Number.isFinite(commDelayMin) ? 'conjunction' : c.phase === 'conjunction' ? 'cruise' : c.phase;
       commit({ context: { ...c, environment, commDelayMin, phase } });
+    },
+    setMission: (edit) => {
+      const s = get();
+      const m = normalizeMission(edit, s.mission);
+      // Future Self keeps looking at landing day when that was where it stood.
+      const viewDay = s.viewDay >= s.context.arrivalDay ? m.arrivalDay : Math.min(m.arrivalDay, Math.max(m.missionDay, s.viewDay));
+      commit({ mission: { name: m.name, crew: m.crew }, context: { ...s.context, missionDay: m.missionDay, arrivalDay: m.arrivalDay }, viewDay });
     },
 
     startRecheck: (finding) => {
