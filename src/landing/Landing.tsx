@@ -14,6 +14,7 @@ type Theme = 'day' | 'night';
 
 const COPY: Record<Language, Copy> = { en: english, es: spanish };
 const L = english.links;
+const DEMO_LABEL = english.hero.primary;
 const PREFERENCES_KEY = 'kawsay:landing-preferences';
 
 function readPreferences(): { language: Language; theme: Theme } {
@@ -136,7 +137,7 @@ function Nav({ copy, language, theme, onLanguageChange, onThemeChange }: {
             <li key={l.href}><a href={l.href} className="text-l-muted transition-colors hover:text-l-ink">{l.label}</a></li>
           ))}
         </ul>
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
           <button
             type="button"
             role="switch"
@@ -158,8 +159,12 @@ function Nav({ copy, language, theme, onLanguageChange, onThemeChange }: {
           >
             <span lang={language === 'en' ? 'es' : 'en'}>{language === 'en' ? 'ES' : 'EN'}</span>
           </button>
-          <a href={demoLink(L.app, language)} className="rounded-[10px] bg-l-nasa px-3 py-2 text-sm font-medium whitespace-nowrap text-white hover:bg-l-nasa-hover sm:px-4">
-            {copy.nav.demo}
+          <a
+            href={demoLink(L.app, language)}
+            lang="en"
+            className="inline-flex min-h-11 w-24 items-center justify-center rounded-[10px] bg-l-nasa text-sm font-medium whitespace-nowrap text-white hover:bg-l-nasa-hover sm:w-32"
+          >
+            {DEMO_LABEL}
           </a>
         </div>
       </nav>
@@ -180,9 +185,9 @@ function Hero({ copy, language }: { copy: Copy; language: Language }) {
         </p>
         <h1 className="mt-6 text-6xl font-bold tracking-tight text-l-accent sm:text-7xl md:text-8xl">{copy.hero.title}</h1>
         <p className="mt-6 max-w-2xl text-lg text-pretty text-l-ink/85 md:text-2xl">{copy.hero.subtitle}</p>
-        <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-          <a href={demoLink(L.app, language)} className={BTN_FILLED}>
-            {copy.hero.primary}
+        <div className="mt-10 grid w-full max-w-[17rem] gap-4 sm:w-[29rem] sm:max-w-none sm:grid-cols-2">
+          <a href={demoLink(L.app, language)} lang="en" className={BTN_FILLED}>
+            {DEMO_LABEL}
             <Icon name="arrow" className="h-5 w-5" />
           </a>
           <a href="#video" className={BTN_OUTLINE}>
@@ -210,8 +215,8 @@ function Video({ copy, language }: { copy: Copy; language: Language }) {
           </span>
           <p className="relative text-2xl font-semibold">{copy.video.soon}</p>
           <p className="relative max-w-md px-4 text-l-muted">{copy.video.soonHint}</p>
-          <a href={demoLink(L.app, language)} className="relative mt-2 inline-flex items-center gap-2 font-medium text-l-accent hover:underline">
-            {copy.hero.primary}
+          <a href={demoLink(L.app, language)} lang="en" className="relative mt-2 inline-flex items-center gap-2 font-medium text-l-accent hover:underline">
+            {DEMO_LABEL}
             <Icon name="arrow" className="h-4 w-4" />
           </a>
         </div>
