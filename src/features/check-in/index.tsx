@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'wouter';
-import ui from '../../../content/ui.json';
-import flow from '../../../content/flow.json';
-import indicatorCopy from '../../../content/indicators.json';
+import { ui } from '../../app/i18n';
+import { flow } from '../../app/i18n';
+import { indicators as indicatorCopy } from '../../app/i18n';
+import { te, useLang } from '../../app/i18n';
 import type { BodyZone, Evaluation, IndicatorDef, Reading } from '../../domain/types';
 import { engine } from '../../app/engine';
 import { useApp } from '../../app/store';
-import { ago, clock, fill } from '../../app/format';
+import { ago, clock, dec, fill } from '../../app/format';
 import { StatusBadge } from '../../components/StatusBadge';
 import { BTN_PRIMARY, BTN_SECONDARY, CARD, NumberPad, PANEL, Screen, SourceList } from '../../components/ui';
 import { BodyFigure } from '../future-self/BodyFigure';
@@ -66,6 +67,7 @@ export function CheckInScreen() {
   const nowTs = useApp((s) => s.nowTs);
   const lastCheckTs = useApp((s) => s.lastCheckTs);
   const saveCheck = useApp((s) => s.saveCheck);
+  const lang = useLang();
 
   const [editing, setEditing] = useState(lastCheckTs === null);
   const [index, setIndex] = useState(0);
@@ -154,7 +156,7 @@ export function CheckInScreen() {
                       autoComplete="off"
                       enterKeyHint={i < step.fields.length - 1 ? 'next' : 'done'}
                       autoFocus={i === 0 && hasFinePointer()}
-                      aria-label={`${def.name}${def.unit ? ` (${def.unit})` : ''}`}
+                      aria-label={`${te(def.name)}${def.unit ? ` (${def.unit})` : ''}`}
                       placeholder="–"
                       value={text}
                       style={{ width: `${Math.max(2, text.length)}ch` }}
@@ -209,7 +211,7 @@ export function CheckInScreen() {
                     <button key={id} type="button" role="switch" aria-checked={on} onClick={() => set(id, on ? '0' : '1')}
                       className={`flex min-h-14 items-center justify-between rounded-card border-2 px-4 text-left text-[18px] ${on ? 'border-watch bg-watch-bg font-bold' : 'border-line'}`}>
                       {flow.check.symptomNames[id]}
-                      <span className="text-[15px] text-ink-2">{on ? 'Yes' : 'No'}</span>
+                      <span className="text-[15px] text-ink-2">{on ? (lang === 'es' ? 'Sí' : 'Yes') : 'No'}</span>
                     </button>
                   );
                 })}
@@ -257,6 +259,7 @@ function Summary({ onAgain }: { onAgain: () => void }) {
   const ctx = useApp((s) => s.context);
   const nowTs = useApp((s) => s.nowTs);
   const lastCheckTs = useApp((s) => s.lastCheckTs);
+  const lang = useLang();
   const [zone, setZone] = useState<BodyZone | null>(null);
 
   const defs = engine.indicators();
@@ -281,7 +284,7 @@ function Summary({ onAgain }: { onAgain: () => void }) {
       <div className="grid flex-1 gap-5 lg:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.6fr)]">
         <div className={`${CARD} flex flex-col items-center gap-3`}>
           <div className="h-[420px] w-full max-w-[240px]">
-            <BodyFigure zones={zones} variant="today" title={`Your body today, Sol ${ctx.missionDay}`} selected={zone} onSelect={(z) => setZone(zone === z ? null : z)} />
+            <BodyFigure zones={zones} variant="today" title={lang === 'es' ? `Tu cuerpo hoy, Sol ${ctx.missionDay}` : `Your body today, Sol ${ctx.missionDay}`} selected={zone} onSelect={(z) => setZone(zone === z ? null : z)} />
           </div>
           <p className="text-center text-[15px] text-ink-2">{flow.check.tapZone}</p>
         </div>
@@ -312,16 +315,17 @@ function Summary({ onAgain }: { onAgain: () => void }) {
 }
 
 function IndicatorRow({ def, e, reading, nowTs }: { def: IndicatorDef; e: Evaluation; reading: Reading | undefined; nowTs: number }) {
-  const value = !reading ? '–' : def.input === 'boolean' ? (reading.value ? 'Yes' : 'No') : String(reading.value);
+  const lang = useLang();
+  const value = !reading ? '–' : def.input === 'boolean' ? (reading.value ? (lang === 'es' ? 'Sí' : 'Yes') : 'No') : dec(String(reading.value), lang);
   return (
     <li className={`${PANEL} flex flex-col gap-1`}>
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-[18px] font-bold">{def.name}</span>
+        <span className="text-[18px] font-bold">{te(def.name)}</span>
         <span className="tabular text-[20px]">{value}{def.input === 'number' && reading ? ` ${def.unit}` : ''}</span>
         <span className="ml-auto"><StatusBadge status={e.status} size="sm" /></span>
       </div>
       <p className="text-[15px] text-ink-2">
-        {e.reason}
+        {te(e.reason)}
         {reading && ` · ${flow.check.from[reading.origin]} · ${fill(flow.check.ageAgo, { age: ago(nowTs - reading.ts) })}`}
       </p>
       <SourceList sources={e.sources} />

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import ui from '../../../content/ui.json';
-import flow from '../../../content/flow.json';
+import { ui } from '../../app/i18n';
+import { flow, te, useLang } from '../../app/i18n';
 import type { Finding, HazardId } from '../../domain/types';
 import { engine } from '../../app/engine';
 import { isOpen, useApp, type AlertRecord, type CaseRecord } from '../../app/store';
@@ -55,7 +55,7 @@ export function LoopScreen() {
           {others.map((f) => (
             <button key={f.ruleId} type="button" onClick={() => setPicked(f.ruleId)} className={`${CARD} flex min-h-[72px] items-center gap-3 !p-4 text-left`}>
               <StatusBadge status={f.status} size="sm" />
-              <span className="text-[18px] font-bold">{f.title}</span>
+              <span className="text-[18px] font-bold">{te(f.title)}</span>
               <span className="ml-auto font-bold text-brand-ink">{flow.findings.open}</span>
             </button>
           ))}
@@ -75,14 +75,14 @@ function Because({ finding }: { finding: Finding }) {
       <ul className="flex flex-col gap-2">
         {finding.because.map((line) => (
           <li key={line} className={`${PANEL} flex items-center gap-3 text-[18px]`}>
-            <span className="flex-1">{line}</span>
+            <span className="flex-1">{te(line)}</span>
             {official && line.includes('NASA') && <SourceTag official />}
           </li>
         ))}
       </ul>
       <div className="flex flex-wrap items-center gap-2 text-[15px] text-ink-2">
         {ui.finding.hazards}
-        {finding.hazards.map((h) => <span key={h} className="rounded-full bg-surface-3 px-3 py-1 font-bold text-ink">{HAZARD[h]}</span>)}
+        {finding.hazards.map((h) => <span key={h} className="rounded-full bg-surface-3 px-3 py-1 font-bold text-ink">{te(HAZARD[h])}</span>)}
       </div>
       <SourceList sources={finding.sources} />
     </>
@@ -96,7 +96,7 @@ function FindingDetail({ finding }: { finding: Finding }) {
   const action = finding.actions[0];
   const nextDay = (action.recheckInMin ?? 0) >= DAY_MIN;
   const defs = engine.indicators();
-  const recheckName = defs.find((d) => d.id === action.recheckIndicatorId)?.name.toLowerCase() ?? '';
+  const recheckName = te(defs.find((d) => d.id === action.recheckIndicatorId)?.name ?? '').toLowerCase();
 
   return (
     <div className="grid flex-1 gap-5 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
@@ -105,13 +105,13 @@ function FindingDetail({ finding }: { finding: Finding }) {
           <p className="text-[15px] text-ink-2">{fill(flow.findings.compound, { time: clock(nowTs) })}</p>
           <StatusBadge status={finding.status} />
         </div>
-        <h1 className="text-[34px] font-bold leading-tight">{finding.title}</h1>
+        <h1 className="text-[34px] font-bold leading-tight">{te(finding.title)}</h1>
         <Because finding={finding} />
       </div>
 
       <div className="flex flex-col gap-4 rounded-sheet border-2 border-brand-ink bg-brand-bg p-6">
         <h2 className="font-bold text-brand-ink">{ui.finding.doNow}</h2>
-        <p className="text-[24px] font-bold leading-snug">{action.text}</p>
+        <p className="text-[24px] font-bold leading-snug">{te(action.text)}</p>
         {!nextDay && (
           <div className="flex items-center gap-3 rounded-card bg-surface p-4">
             <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--brand-ink)" strokeWidth="2.4" strokeLinecap="round" aria-hidden><path d="M12 3a9 9 0 1 0 9 9" /></svg>
@@ -139,12 +139,12 @@ function Waiting({ finding }: { finding: Finding }) {
       <div className="grid flex-1 gap-5 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <div className={`${CARD} flex flex-col gap-3`}>
           <StatusBadge status={finding.status} />
-          <h1 className="text-[34px] font-bold leading-tight">{finding.title}</h1>
+          <h1 className="text-[34px] font-bold leading-tight">{te(finding.title)}</h1>
           <Because finding={finding} />
         </div>
         <div className={`${CARD} flex flex-col gap-4`}>
           <h2 className="font-bold text-brand-ink">{ui.finding.doNow}</h2>
-          <p className="text-[20px]">{finding.actions[0].text}</p>
+          <p className="text-[20px]">{te(finding.actions[0].text)}</p>
           <p className="text-[26px] font-bold" role="timer" aria-live="off">
             {fill(flow.findings.timer, { time: '' })}<span className="tabular">{countdown(pending.dueTs - nowTs)}</span>
           </p>
@@ -158,10 +158,11 @@ function Waiting({ finding }: { finding: Finding }) {
 function Remeasure({ finding }: { finding: Finding }) {
   const pending = useApp((s) => s.pending)!;
   const complete = useApp((s) => s.completeRecheck);
+  const lang = useLang();
   const def = engine.indicators().find((d) => d.id === pending.indicatorId)!;
   const [value, setValue] = useState<number | null>(null);
   const [text, setText] = useState('');
-  const options = def.input === 'boolean' ? [{ v: 0, label: 'No' }, { v: 1, label: 'Yes' }]
+  const options = def.input === 'boolean' ? [{ v: 0, label: 'No' }, { v: 1, label: lang === 'es' ? 'Sí' : 'Yes' }]
     : def.input === 'scale_1_5' ? (def.id === 'headache_score' ? flow.check.headacheScale : ['1', '2', '3', '4', '5']).map((label, i) => ({ v: i + 1, label }))
     : null;
   const chosen = options ? value : text === '' ? null : Number(text);
@@ -169,11 +170,11 @@ function Remeasure({ finding }: { finding: Finding }) {
   return (
     <Screen>
       <div className={`${CARD} flex flex-1 flex-col gap-4`}>
-        <p className="text-[15px] text-ink-2">{finding.title}</p>
-        <h1 className="text-[34px] font-bold">{fill(flow.findings.remeasure, { name: def.name.toLowerCase() })}</h1>
+        <p className="text-[15px] text-ink-2">{te(finding.title)}</p>
+        <h1 className="text-[34px] font-bold">{fill(flow.findings.remeasure, { name: te(def.name).toLowerCase() })}</h1>
         <p className="text-ink-2">{flow.findings.remeasureHint}</p>
         {options ? (
-          <div role="radiogroup" aria-label={def.name} className="grid gap-3" style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}>
+          <div role="radiogroup" aria-label={te(def.name)} className="grid gap-3" style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}>
             {options.map((o) => (
               <button key={o.v} type="button" role="radio" aria-checked={value === o.v} onClick={() => setValue(o.v)}
                 className={`flex min-h-[120px] flex-col items-center justify-center gap-1 rounded-card border-2 ${value === o.v ? 'border-brand-ink bg-brand-bg font-bold' : 'border-line'}`}>
@@ -184,7 +185,7 @@ function Remeasure({ finding }: { finding: Finding }) {
           </div>
         ) : (
           <label className="flex items-baseline gap-3 text-[20px]">
-            <input inputMode="decimal" value={text} onChange={(e) => setText(e.target.value.replace(/[^0-9.]/g, ''))} aria-label={def.name}
+            <input inputMode="decimal" value={text} onChange={(e) => setText(e.target.value.replace(/[^0-9.]/g, ''))} aria-label={te(def.name)}
               className="tabular w-48 rounded-card border-2 border-line bg-surface-2 px-4 py-3 text-[34px]" />
             {def.unit}
           </label>
@@ -213,10 +214,10 @@ function Verification({ record }: { record: CaseRecord }) {
           <div className="grid gap-4 sm:grid-cols-2">
             {record.compared.map((c) => (
               <div key={c.label} className={PANEL}>
-                <p className="font-bold">{c.label}</p>
+                <p className="font-bold">{te(c.label)}</p>
                 <p className="tabular mt-1 flex items-baseline gap-3 text-[44px]">
                   <span className="text-ink-2">{c.before}</span>
-                  <span className="text-[24px] text-ink-2" aria-label="to">→</span>
+                  <span className="text-[24px] text-ink-2" aria-label={te('to')}>→</span>
                   <span className={tone}>{c.after}</span>
                   <span className="font-sans text-[15px] text-ink-2">{c.unit}</span>
                 </p>
@@ -227,7 +228,7 @@ function Verification({ record }: { record: CaseRecord }) {
             <span className={tone}><StatusIcon status={status} size={40} /></span>
             <div>
               <p className={`text-[24px] font-bold ${tone}`}>{ui.verify[v.outcome]}</p>
-              <p>{v.reason}</p>
+              <p>{te(v.reason)}</p>
             </div>
           </div>
           <div className="mt-auto grid grid-cols-2 gap-3">
@@ -260,16 +261,16 @@ function Verification({ record }: { record: CaseRecord }) {
 function History({ cases, alerts, noted, acknowledged }: { cases: CaseRecord[]; alerts: AlertRecord[]; noted: Finding[]; acknowledged: Record<string, number> }) {
   const rows = [
     ...cases.filter((c) => c.kind === 'finding').map((c) => ({
-      key: c.id, ts: c.startedTs, title: c.finding.title, status: c.finding.status,
+      key: c.id, ts: c.startedTs, title: te(c.finding.title), status: c.finding.status,
       outcome: c.sentToSurgeon ? flow.findings.outcome.sent : c.verification ? flow.findings.outcome[c.verification.outcome] : flow.findings.outcome.open, href: null as string | null,
     })),
     ...alerts.map((a) => ({
-      key: a.id, ts: a.alert.detectedTs, title: a.alert.title, status: a.alert.level === 'caution' ? ('yellow' as const) : ('red' as const),
+      key: a.id, ts: a.alert.detectedTs, title: te(a.alert.title), status: a.alert.level === 'caution' ? ('yellow' as const) : ('red' as const),
       outcome: isOpen(a) ? flow.findings.outcome.open : a.state === 'escalated' ? flow.findings.outcome.escalated : a.caseId ? flow.findings.outcome.improved : flow.findings.outcome.cleared,
       href: isOpen(a) && a.alert.level !== 'caution' ? '/respond' : null,
     })),
     ...noted.map((f) => ({
-      key: `noted:${f.ruleId}`, ts: acknowledged[f.ruleId], title: f.title, status: f.status,
+      key: `noted:${f.ruleId}`, ts: acknowledged[f.ruleId], title: te(f.title), status: f.status,
       outcome: fill(flow.findings.noted, { time: clock(acknowledged[f.ruleId]) }), href: null as string | null,
     })),
   ].sort((a, b) => b.ts - a.ts);

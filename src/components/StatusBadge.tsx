@@ -1,5 +1,5 @@
 import type { Status } from '../domain/types';
-import ui from '../../content/ui.json';
+import { ui } from '../app/i18n';
 
 /** Status is never colour alone: icon + word + colour (AGENTS.md). Seeded by P1, owned by P2. */
 const STYLE: Record<Status, { fg: string; bg: string }> = {

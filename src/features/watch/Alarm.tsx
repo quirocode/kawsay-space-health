@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
-import flow from '../../../content/flow.json';
+import { flow, te, useLang } from '../../app/i18n';
 import type { Status } from '../../domain/types';
 import { CREW_ALERT_AFTER_MS, demandingAlert, isOpen, useApp, type AlertRecord } from '../../app/store';
-import { clock, countdown, fill } from '../../app/format';
+import { clock, countdown, dec, fill } from '../../app/format';
 import { sampleAt, windowOf } from '../../data/watchSeries';
 import { StatusBadge } from '../../components/StatusBadge';
 import { BTN_PRIMARY, BTN_SECONDARY, SourceList, Thread } from '../../components/ui';
@@ -14,6 +14,7 @@ import { startAlarm, stopAlarm } from './alarmSound';
 export function StateNow({ compact = false }: { compact?: boolean }) {
   const nowTs = useApp((s) => s.nowTs);
   const recoveryStartTs = useApp((s) => s.recoveryStartTs);
+  const lang = useLang();
   const slot = Math.floor(nowTs / 5000) * 5000;
   const now = sampleAt(slot, { recoveryStartTs });
   const trace = windowOf(slot, 600, { recoveryStartTs }, 10).map((s) => s.heartRate);
@@ -24,12 +25,12 @@ export function StateNow({ compact = false }: { compact?: boolean }) {
     [flow.watch.signals.heartRate, String(now.heartRate), flow.watch.units.heartRate, hr],
     [flow.watch.signals.spo2, String(now.spo2), flow.watch.units.spo2, spo2],
     [flow.watch.signals.respRate, String(now.respRate), flow.watch.units.respRate, resp],
-    [flow.watch.signals.skinTemp, `${now.skinTempDelta >= 0 ? '+' : ''}${now.skinTempDelta.toFixed(1)}`, flow.watch.units.skinTemp, 'green'],
+    [flow.watch.signals.skinTemp, `${now.skinTempDelta >= 0 ? '+' : ''}${dec(now.skinTempDelta.toFixed(1), lang)}`, flow.watch.units.skinTemp, 'green'],
   ];
   return (
     <div className="flex flex-col gap-2 rounded-card bg-surface p-4" aria-live="off">
       <h2 className="font-bold text-ink-2">{flow.alarm.stateNow}</h2>
-      {!compact && <Thread values={trace} min={40} max={150} band={RESTING_BAND} tone={hr === 'red' ? 'act' : hr === 'yellow' ? 'watch' : 'ink'} height={56} label="Heart rate, last 10 minutes" />}
+      {!compact && <Thread values={trace} min={40} max={150} band={RESTING_BAND} tone={hr === 'red' ? 'act' : hr === 'yellow' ? 'watch' : 'ink'} height={56} label={te('Heart rate, last 10 minutes')} />}
       <ul className="flex flex-col gap-1">
         {rows.map(([name, value, unit, status]) => (
           <li key={name} className="flex items-center gap-3">
@@ -67,9 +68,9 @@ function AlarmBody({ record }: { record: AlertRecord }) {
         <StatusBadge status="red" label={flow.level[alert.level]} />
         <span className="tabular text-ink-2">{clock(alert.detectedTs)}</span>
       </div>
-      <h1 id="alarm-title" className="max-w-[22ch] text-[48px] font-bold leading-[1.05]">{headline}</h1>
+      <h1 id="alarm-title" className="max-w-[22ch] text-[48px] font-bold leading-[1.05]">{te(headline)}</h1>
       <p className="text-[20px] text-ink-2">
-        {alert.because[1]} {alert.signal === 'heartRate' && fill(flow.alarm.usual, { low: RESTING_BAND[0], high: RESTING_BAND[1] })}
+        {te(alert.because[1])} {alert.signal === 'heartRate' && fill(flow.alarm.usual, { low: RESTING_BAND[0], high: RESTING_BAND[1] })}
       </p>
       <SourceList sources={alert.sources} />
 
@@ -78,7 +79,7 @@ function AlarmBody({ record }: { record: AlertRecord }) {
         <div className="flex flex-col gap-3">
           <div className="rounded-card border-2 border-brand-ink bg-brand-bg p-5">
             <h2 className="font-bold text-brand-ink">{flow.alarm.doFirst}</h2>
-            <p className="text-[26px] font-bold leading-snug">{alert.firstStep}</p>
+            <p className="text-[26px] font-bold leading-snug">{te(alert.firstStep)}</p>
           </div>
           <button type="button" autoFocus className={BTN_PRIMARY} onClick={() => { ack(record.id); navigate('/respond'); }}>{flow.alarm.imHere}</button>
           <button type="button" className={BTN_SECONDARY} disabled={record.crewAlertedTs !== null} onClick={() => callCrew(record.id)}>
@@ -146,7 +147,7 @@ export function AlertBanner() {
     return (
       <div role="status" className="flex items-center gap-3 border-b border-line bg-act-bg px-6 py-2">
         <StatusBadge status="red" label={flow.level[inProgress.alert.level]} size="sm" />
-        <span className="font-bold">{inProgress.alert.title}</span>
+        <span className="font-bold">{te(inProgress.alert.title)}</span>
         <Link href="/respond" className="ml-auto flex min-h-12 items-center font-bold text-brand-ink underline">{flow.alarm.bannerRespond}</Link>
       </div>
     );
@@ -155,8 +156,8 @@ export function AlertBanner() {
     return (
       <div role="status" className="flex items-center gap-3 border-b border-line bg-watch-bg px-6 py-2">
         <StatusBadge status="yellow" size="sm" />
-        <span className="font-bold">{caution.alert.title}</span>
-        <span className="tabular">{caution.alert.because[0]}</span>
+        <span className="font-bold">{te(caution.alert.title)}</span>
+        <span className="tabular">{te(caution.alert.because[0])}</span>
         <Link href="/watch" className="ml-auto flex min-h-12 items-center font-bold text-brand-ink underline">{flow.alarm.bannerSee}</Link>
       </div>
     );

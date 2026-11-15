@@ -1,5 +1,6 @@
 import type { KeyboardEvent } from 'react';
 import type { BodyZone, Status } from '../../domain/types';
+import { te, ui } from '../../app/i18n';
 
 /**
  * Provisional human figure (P1) with one shape per BodyZone id, until P4 exports
@@ -59,6 +60,9 @@ export function BodyFigure({
   onSelect?: (z: BodyZone) => void;
 }) {
   const future = variant === 'future';
+  const statusWord: Record<Exclude<ZoneFill, 'none'>, string> = {
+    green: ui.status.green, yellow: ui.status.yellow, red: ui.status.red, stale: ui.status.stale,
+  };
   return (
     <svg
       viewBox="0 0 240 490"
@@ -91,7 +95,7 @@ export function BodyFigure({
           'data-status': fill,
           role: onSelect ? 'button' : undefined,
           tabIndex: onSelect ? 0 : undefined,
-          'aria-label': onSelect ? `${ZONE_LABEL[zone]}: ${fill === 'none' ? 'no projection' : fill}` : undefined,
+          'aria-label': onSelect ? `${te(ZONE_LABEL[zone])}: ${fill === 'none' ? te('no projection') : statusWord[fill]}` : undefined,
           onClick: onSelect ? () => onSelect(zone) : undefined,
           onKeyDown: onSelect
             ? (e: KeyboardEvent) => {

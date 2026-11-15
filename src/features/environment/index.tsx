@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import ui from '../../../content/ui.json';
-import flow from '../../../content/flow.json';
+import { ui } from '../../app/i18n';
+import { flow } from '../../app/i18n';
 import type { Environment } from '../../domain/types';
 import { useApp } from '../../app/store';
 import { fill } from '../../app/format';
@@ -10,13 +10,6 @@ import { CARD, Screen } from '../../components/ui';
  * One-way delay per environment, in minutes. Mars values sit inside NASA's "up to 20 min";
  * the rest are seconds. Same table as DELAY_MIN in src/domain/loop.ts.
  */
-const OPTIONS: { env: Environment; name: string; description: string; gravity: string; delay: string; delayMin: number }[] = [
-  { env: 'iss', name: ui.environment.iss.name, description: ui.environment.iss.description, gravity: flow.environment.microG, delay: flow.environment.seconds, delayMin: 0 },
-  { env: 'orion', name: ui.environment.orion.name, description: ui.environment.orion.description, gravity: flow.environment.microG, delay: flow.environment.seconds, delayMin: 0 },
-  { env: 'moon', name: ui.environment.moon.name, description: ui.environment.moon.description, gravity: flow.environment.moonG, delay: flow.environment.seconds, delayMin: 0 },
-  { env: 'mars_transit', name: ui.environment.marsTransit.name, description: ui.environment.marsTransit.description, gravity: flow.environment.microG, delay: fill(flow.environment.transitDelay, { min: 14 }), delayMin: 14 },
-  { env: 'mars_surface', name: ui.environment.marsSurface.name, description: ui.environment.marsSurface.description, gravity: flow.environment.marsG, delay: flow.environment.surfaceDelay, delayMin: 20 },
-];
 
 /** Where the crew is: sets gravity for the projection and the delay the brief has to respect. */
 export function EnvironmentScreen() {
@@ -24,10 +17,18 @@ export function EnvironmentScreen() {
   const setEnvironment = useApp((s) => s.setEnvironment);
   const [applied, setApplied] = useState<string | null>(null);
 
+  const options: { env: Environment; name: string; description: string; gravity: string; delay: string; delayMin: number }[] = [
+    { env: 'iss', name: ui.environment.iss.name, description: ui.environment.iss.description, gravity: flow.environment.microG, delay: flow.environment.seconds, delayMin: 0 },
+    { env: 'orion', name: ui.environment.orion.name, description: ui.environment.orion.description, gravity: flow.environment.microG, delay: flow.environment.seconds, delayMin: 0 },
+    { env: 'moon', name: ui.environment.moon.name, description: ui.environment.moon.description, gravity: flow.environment.moonG, delay: flow.environment.seconds, delayMin: 0 },
+    { env: 'mars_transit', name: ui.environment.marsTransit.name, description: ui.environment.marsTransit.description, gravity: flow.environment.microG, delay: fill(flow.environment.transitDelay, { min: 14 }), delayMin: 14 },
+    { env: 'mars_surface', name: ui.environment.marsSurface.name, description: ui.environment.marsSurface.description, gravity: flow.environment.marsG, delay: flow.environment.surfaceDelay, delayMin: 20 },
+  ];
+
   // Choosing applies at once, so the header always shows where the crew is.
   const env = ctx.environment;
   const conjunction = !Number.isFinite(ctx.commDelayMin);
-  const choose = (o: (typeof OPTIONS)[number], conj: boolean) => {
+  const choose = (o: (typeof options)[number], conj: boolean) => {
     setEnvironment(o.env, conj ? Infinity : o.delayMin);
     setApplied(conj ? ui.environment.conjunction : o.name);
   };
@@ -39,7 +40,7 @@ export function EnvironmentScreen() {
         <p className="text-ink-2">{flow.environment.hint}</p>
 
         <div role="radiogroup" aria-label={ui.environment.title} className="grid flex-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {OPTIONS.map((o) => {
+          {options.map((o) => {
             const on = o.env === env;
             return (
               <button key={o.env} type="button" role="radio" aria-checked={on} onClick={() => choose(o, conjunction)}
@@ -54,7 +55,7 @@ export function EnvironmentScreen() {
               </button>
             );
           })}
-          <button type="button" role="switch" aria-checked={conjunction} onClick={() => choose(OPTIONS.find((o) => o.env === env)!, !conjunction)}
+          <button type="button" role="switch" aria-checked={conjunction} onClick={() => choose(options.find((o) => o.env === env)!, !conjunction)}
             className={`flex min-h-[150px] flex-col justify-center gap-3 rounded-card border-2 p-5 text-left ${conjunction ? 'border-stale bg-stale-bg' : 'border-line'}`}>
             <span className={`flex h-9 w-16 items-center rounded-full p-1 ${conjunction ? 'justify-end bg-stale' : 'justify-start bg-surface-3'}`} aria-hidden>
               <span className="h-7 w-7 rounded-full bg-surface" />

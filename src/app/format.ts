@@ -1,22 +1,29 @@
 import type { Environment, MissionContext } from '../domain/types';
 import { shipTime } from '../data/sol142';
 
-export const ENV_LABEL: Record<Environment, string> = {
-  iss: 'ISS',
-  orion: 'Orion',
-  moon: 'Moon surface',
-  mars_transit: 'Mars transit',
-  mars_surface: 'Mars surface',
+export type Lang = 'en' | 'es';
+
+const ENV_LABEL: Record<Environment, Record<Lang, string>> = {
+  iss: { en: 'ISS', es: 'ISS' },
+  orion: { en: 'Orion', es: 'Orión' },
+  moon: { en: 'Moon surface', es: 'Superficie lunar' },
+  mars_transit: { en: 'Mars transit', es: 'Tránsito a Marte' },
+  mars_surface: { en: 'Mars surface', es: 'Superficie de Marte' },
 };
 
-export function missionLabel(ctx: MissionContext): string {
-  return `Sol ${ctx.missionDay} of ${ctx.arrivalDay}`;
+export function envLabel(env: Environment, lang: Lang = 'en'): string {
+  return ENV_LABEL[env][lang];
 }
 
-export function delayLabel(min: number): string {
-  if (!Number.isFinite(min)) return 'No contact with Earth (conjunction)';
-  if (min < 1) return 'Earth delay: seconds';
-  return `Earth delay ${Math.round(min)} min`;
+export function missionLabel(ctx: MissionContext, lang: Lang = 'en'): string {
+  const tail = lang === 'es' ? `de ${ctx.arrivalDay}` : `of ${ctx.arrivalDay}`;
+  return `Sol ${ctx.missionDay} ${tail}`; // the environment has its own chip next to the title
+}
+
+export function delayLabel(min: number, lang: Lang = 'en'): string {
+  if (!Number.isFinite(min)) return lang === 'es' ? 'Sin contacto con Tierra (conjunción)' : 'No contact with Earth (conjunction)';
+  if (min < 1) return lang === 'es' ? 'Retraso con Tierra: segundos' : 'Earth delay: seconds';
+  return lang === 'es' ? `Retraso con Tierra ${Math.round(min)} min` : `Earth delay ${Math.round(min)} min`;
 }
 
 const two = (n: number) => String(n).padStart(2, '0');
@@ -34,12 +41,19 @@ export function countdown(ms: number): string {
 }
 
 /** How long ago, in the largest unit that fits: '2 s', '14 min', '7 h', '3 days'. */
-export function ago(ms: number): string {
+export function ago(ms: number, lang: Lang = 'en'): string {
   const s = Math.max(0, Math.floor(ms / 1000));
   if (s < 60) return `${s} s`;
   if (s < 3600) return `${Math.floor(s / 60)} min`;
   if (s < 172_800) return `${Math.floor(s / 3600)} h`;
-  return `${Math.floor(s / 86_400)} days`;
+  const days = Math.floor(s / 86_400);
+  return lang === 'es' ? `${days} ${days === 1 ? 'día' : 'días'}` : `${days} days`;
+}
+
+/** Decimal separator for the active language: 1.5 becomes 1,5 in Spanish. */
+export function dec(value: number | string, lang: Lang = 'en'): string {
+  const s = String(value);
+  return lang === 'es' ? s.replace('.', ',') : s;
 }
 
 /** Fill {placeholders} in a copy string from content/. */

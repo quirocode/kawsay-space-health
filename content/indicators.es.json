@@ -1,0 +1,252 @@
+{
+  "bp_systolic": {
+    "howToMeasure": [
+      "Siéntate quieto 5 minutos",
+      "Pon el brazalete en el brazo, a la altura del corazón",
+      "Quédate en silencio y presiona iniciar",
+      "Ingresa el número de arriba"
+    ],
+    "whyItMatters": "La presión arterial puede bajar tras semanas en ausencia de gravedad. La presión baja aumenta el riesgo de desmayo cuando vuelve la gravedad.",
+    "scaleLabels": null,
+    "sources": [
+      "cardio",
+      "prototype"
+    ]
+  },
+  "bp_diastolic": {
+    "howToMeasure": [
+      "Mide justo después de la sistólica",
+      "Sigue sentado y relajado",
+      "Ingresa el número de abajo"
+    ],
+    "whyItMatters": "Muestra cómo se adaptan tus vasos sanguíneos a la ausencia de gravedad. Lo que importa es el cambio frente a tu número habitual.",
+    "scaleLabels": null,
+    "sources": [
+      "cardio",
+      "prototype"
+    ]
+  },
+  "heart_rate": {
+    "howToMeasure": [
+      "Siéntate quieto 2 minutos",
+      "Pon el sensor en tu dedo",
+      "Espera un número estable",
+      "Ingrésalo"
+    ],
+    "whyItMatters": "Tu corazón se adapta a la ausencia de gravedad y puede costarle cuando vuelve la gravedad. Un cambio frente a tu número habitual es una señal temprana.",
+    "scaleLabels": null,
+    "sources": [
+      "cardio",
+      "prototype"
+    ]
+  },
+  "glucose": {
+    "howToMeasure": [
+      "Lávate y seca tus manos",
+      "Usa el dispositivo de punción",
+      "Toca la gota en la tira",
+      "Ingresa el número"
+    ],
+    "whyItMatters": "La glucosa muestra cómo maneja tu cuerpo la comida y el descanso en una cabina cerrada. Un cambio frente a tu valor habitual importa más que un solo número.",
+    "scaleLabels": null,
+    "sources": [
+      "nutrition",
+      "prototype"
+    ]
+  },
+  "body_temp": {
+    "howToMeasure": [
+      "Espera después del ejercicio o de bebidas calientes",
+      "Coloca el termómetro como se indica",
+      "Quédate quieto hasta que suene",
+      "Ingresa el número"
+    ],
+    "whyItMatters": "Tus defensas cambian en el espacio, y los gérmenes pasan fácil entre personas en una cabina cerrada. Una subida pequeña puede ser una señal temprana.",
+    "scaleLabels": null,
+    "sources": [
+      "immune",
+      "microbes",
+      "prototype"
+    ]
+  },
+  "sleep_hours": {
+    "howToMeasure": [
+      "Abre el resumen de sueño de anoche",
+      "¿Sin dispositivo? Estima desde el apagado de luces",
+      "Ingresa las horas que dormiste"
+    ],
+    "whyItMatters": "Dormir poco o entrecortado hace más difícil el aislamiento y baja la concentración. La terapia de luz puede ayudar a ajustar tu reloj biológico.",
+    "scaleLabels": null,
+    "sources": [
+      "sleep",
+      "isolation"
+    ]
+  },
+  "mood": {
+    "howToMeasure": [
+      "Elige el nivel que se ajuste ahora"
+    ],
+    "whyItMatters": "El aislamiento, el sueño corto y la carga de trabajo alta pueden bajar el ánimo y la concentración. Notarlo temprano te deja actuar antes de que afecte la misión.",
+    "scaleLabels": [
+      "Muy bajo",
+      "Bajo",
+      "Normal",
+      "Bien",
+      "Muy bien"
+    ],
+    "sources": [
+      "isolation",
+      "behavioral"
+    ]
+  },
+  "headache_score": {
+    "howToMeasure": [
+      "Piensa en la última hora",
+      "Elige el nivel que se ajuste"
+    ],
+    "whyItMatters": "El dolor de cabeza puede venir del CO₂ de la cabina, poco oxígeno o mal sueño. Reportarlo nos ayuda a encontrar la causa.",
+    "scaleLabels": [
+      "Ninguno",
+      "Leve",
+      "Moderado",
+      "Fuerte",
+      "Severo"
+    ],
+    "sources": [
+      "co2",
+      "hypoxia",
+      "sleep"
+    ]
+  },
+  "symptom_dizziness": {
+    "howToMeasure": [
+      "Agárrate de un asa o siéntate",
+      "Mueve la cabeza despacio",
+      "Nota si hay giro o vaivén",
+      "Responde sí o no"
+    ],
+    "whyItMatters": "El mareo es común mientras tu sistema de equilibrio se adapta a la nueva gravedad. También puede venir de presión arterial baja.",
+    "scaleLabels": null,
+    "sources": [
+      "sensorimotor",
+      "cardio"
+    ]
+  },
+  "symptom_vision": {
+    "howToMeasure": [
+      "Cubre un ojo",
+      "Lee el texto en pantalla",
+      "Nota si se ve borroso",
+      "Repite con el otro ojo"
+    ],
+    "whyItMatters": "Los líquidos que se desplazan hacia la cabeza pueden presionar los ojos. Cerca del 70 % de los astronautas de la ISS muestra algo de hinchazón en los ojos.",
+    "scaleLabels": null,
+    "sources": [
+      "sans"
+    ]
+  },
+  "symptom_confusion": {
+    "howToMeasure": [
+      "Di en voz alta el Sol de hoy",
+      "Recuerda tu última tarea",
+      "Responde sí si alguna te costó"
+    ],
+    "whyItMatters": "La confusión es una de las señales de poco oxígeno. Es fácil no notarla en ti mismo, así que repórtala temprano.",
+    "scaleLabels": null,
+    "sources": [
+      "hypoxia"
+    ]
+  },
+  "symptom_joint_pain": {
+    "howToMeasure": [
+      "Nota cualquier dolor o molestia articular",
+      "Piensa en el último cambio de presión",
+      "Responde sí o no"
+    ],
+    "whyItMatters": "El dolor articular después de un cambio de presión puede ser una señal de enfermedad por descompresión. Detén la actividad y repórtalo.",
+    "scaleLabels": null,
+    "sources": [
+      "dcs",
+      "eva"
+    ]
+  },
+  "symptom_skin": {
+    "howToMeasure": [
+      "Mira tu piel y tus labios",
+      "Nota cualquier sarpullido o herpes labial",
+      "Nota cualquier picazón o alergia nueva",
+      "Responde sí o no"
+    ],
+    "whyItMatters": "Los virus latentes pueden despertar en el espacio, y el sistema inmune cambia. El herpes labial y los sarpullidos son señales tempranas.",
+    "scaleLabels": null,
+    "sources": [
+      "immune"
+    ]
+  },
+  "spo2": {
+    "howToMeasure": [
+      "Descansa 2 minutos",
+      "Pon el sensor en un dedo",
+      "Mantén la mano quieta",
+      "Ingresa el número estable"
+    ],
+    "whyItMatters": "SpO₂ muestra cuánto oxígeno transporta tu sangre. El riesgo por poco oxígeno es pequeño, pero vale la pena vigilarlo en una cabina sellada.",
+    "scaleLabels": null,
+    "sources": [
+      "hypoxia",
+      "prototype"
+    ]
+  },
+  "cabin_co2": {
+    "howToMeasure": [
+      "Abre el panel de la cabina",
+      "Busca la lectura de CO₂",
+      "Usa el promedio de 1 hora",
+      "Ingresa el número"
+    ],
+    "whyItMatters": "NASA limita el CO₂ de la cabina a 3 mmHg como promedio de 1 hora. Se han reportado dolores de cabeza desde unos 2,8 mmHg.",
+    "scaleLabels": null,
+    "sources": [
+      "co2"
+    ]
+  },
+  "exercise_min": {
+    "howToMeasure": [
+      "Suma los minutos de ejercicio de hoy",
+      "Incluye fuerza y cardio",
+      "Ingresa el total"
+    ],
+    "whyItMatters": "La meta de NASA es 1,5 horas al día, 6–7 días a la semana. El ejercicio es la principal forma de frenar la pérdida de hueso y músculo.",
+    "scaleLabels": null,
+    "sources": [
+      "fitness",
+      "bone"
+    ]
+  },
+  "water_ml": {
+    "howToMeasure": [
+      "Suma el agua que tomaste",
+      "Cuenta bebidas y líquidos de las comidas",
+      "Ingresa el total en mL"
+    ],
+    "whyItMatters": "La deshidratación más el calcio que libera el hueso aumentan el riesgo de cálculos renales. Los líquidos también ayudan a evitar desmayos al aterrizar.",
+    "scaleLabels": null,
+    "sources": [
+      "gravity",
+      "cardio"
+    ]
+  },
+  "strength_self_pct": {
+    "howToMeasure": [
+      "Haz la prueba de fuerza semanal",
+      "Compara con tu resultado antes del vuelo",
+      "Ingresa tu resultado como porcentaje"
+    ],
+    "whyItMatters": "La condición física baja un 10–12 % en promedio en el espacio; un 12–38 % de la tripulación pierde más del 20 %. Las revisiones semanales detectan la caída a tiempo.",
+    "scaleLabels": null,
+    "sources": [
+      "fitness",
+      "prototype"
+    ]
+  }
+}

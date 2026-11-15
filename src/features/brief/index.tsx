@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import ui from '../../../content/ui.json';
-import flow from '../../../content/flow.json';
+import { ui } from '../../app/i18n';
+import { flow, te, teList } from '../../app/i18n';
 import type { FlightSurgeonBrief } from '../../domain/types';
 import { engine } from '../../app/engine';
 import { briefInput, useApp } from '../../app/store';
@@ -53,22 +53,22 @@ export function BriefScreen() {
             )}
           </div>
 
-          <p className="text-[22px] font-bold leading-snug">{shown.headline}</p>
+          <p className="text-[22px] font-bold leading-snug">{te(shown.headline)}</p>
 
           <div className="grid gap-5 sm:grid-cols-2">
             <section>
               <h2 className="font-bold text-ink-2">{ui.brief.whatChanged}</h2>
               <ul className="mt-1 list-disc pl-5 text-[18px]">
-                {shown.changed.length ? shown.changed.map((c) => <li key={c}>{c}</li>) : <li>{flow.brief.nothingChanged}</li>}
+                {shown.changed.length ? teList(shown.changed).map((c) => <li key={c}>{c}</li>) : <li>{flow.brief.nothingChanged}</li>}
               </ul>
             </section>
             <section>
               <h2 className="font-bold text-ink-2">{ui.brief.whatCrewDid}</h2>
               <ul className="mt-1 list-disc pl-5 text-[18px]">
-                {shown.actionsTaken.length ? shown.actionsTaken.map((a) => <li key={a}>{a}</li>) : <li>{flow.brief.nothingDone}</li>}
+                {shown.actionsTaken.length ? teList(shown.actionsTaken).map((a) => <li key={a}>{a}</li>) : <li>{flow.brief.nothingDone}</li>}
               </ul>
               <h2 className="mt-3 font-bold text-ink-2">{ui.brief.decision}</h2>
-              <p className="text-[18px]">{shown.decisionRequested}</p>
+              <p className="text-[18px]">{te(shown.decisionRequested)}</p>
             </section>
           </div>
 
@@ -106,7 +106,7 @@ export function BriefScreen() {
               <h2 className="font-bold text-ink-2">{flow.brief.earlier}</h2>
               <ul className="flex flex-col gap-2 text-[15px]">
                 {[...briefs].reverse().map((b) => (
-                  <li key={b.generatedTs}><span className="tabular text-ink-2">{clock(b.generatedTs)}</span> · {b.headline}</li>
+                  <li key={b.generatedTs}><span className="tabular text-ink-2">{clock(b.generatedTs)}</span> · {te(b.headline)}</li>
                 ))}
               </ul>
             </div>
