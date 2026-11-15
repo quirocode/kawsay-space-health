@@ -55,6 +55,8 @@
     "water": "Agua",
     "whyItMatters": "Por qué importa",
     "prefilled": "Mostrando tu último valor. Cámbialo si hoy es distinto.",
+    "typeHint": "Escribe el número o usa el teclado. Enter pasa al siguiente.",
+    "scaleHint": "Toca una respuesta o presiona un número del 1 al 5.",
     "empty": "Aún sin medir",
     "save": "Guardar chequeo",
     "summaryTitle": "Chequeo de hoy",

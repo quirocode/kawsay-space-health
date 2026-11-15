@@ -77,8 +77,8 @@ function AlarmBody({ record }: { record: AlertRecord }) {
       <div className="grid flex-1 gap-5 lg:grid-cols-2">
         <StateNow />
         <div className="flex flex-col gap-3">
-          <div className="rounded-card border-2 border-brand bg-brand-bg p-5">
-            <h2 className="font-bold text-brand">{flow.alarm.doFirst}</h2>
+          <div className="rounded-card border-2 border-brand-ink bg-brand-bg p-5">
+            <h2 className="font-bold text-brand-ink">{flow.alarm.doFirst}</h2>
             <p className="text-[26px] font-bold leading-snug">{te(alert.firstStep)}</p>
           </div>
           <button type="button" autoFocus className={BTN_PRIMARY} onClick={() => { ack(record.id); navigate('/respond'); }}>{flow.alarm.imHere}</button>
@@ -148,7 +148,7 @@ export function AlertBanner() {
       <div role="status" className="flex items-center gap-3 border-b border-line bg-act-bg px-6 py-2">
         <StatusBadge status="red" label={flow.level[inProgress.alert.level]} size="sm" />
         <span className="font-bold">{te(inProgress.alert.title)}</span>
-        <Link href="/respond" className="ml-auto flex min-h-12 items-center font-bold text-brand underline">{flow.alarm.bannerRespond}</Link>
+        <Link href="/respond" className="ml-auto flex min-h-12 items-center font-bold text-brand-ink underline">{flow.alarm.bannerRespond}</Link>
       </div>
     );
   }
@@ -158,7 +158,7 @@ export function AlertBanner() {
         <StatusBadge status="yellow" size="sm" />
         <span className="font-bold">{te(caution.alert.title)}</span>
         <span className="tabular">{te(caution.alert.because[0])}</span>
-        <Link href="/watch" className="ml-auto flex min-h-12 items-center font-bold text-brand underline">{flow.alarm.bannerSee}</Link>
+        <Link href="/watch" className="ml-auto flex min-h-12 items-center font-bold text-brand-ink underline">{flow.alarm.bannerSee}</Link>
       </div>
     );
   }

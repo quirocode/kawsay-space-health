@@ -115,7 +115,7 @@ export function BodyFigure({
             {...common}
             fill={paint}
             fillOpacity={fill === 'none' ? 0.45 : fill === 'stale' || fill === 'green' ? 1 : 0.75}
-            stroke={isSel ? 'var(--brand)' : fill === 'none' ? 'none' : fill === 'green' ? 'var(--status-ok)' : paint}
+            stroke={isSel ? 'var(--brand-ink)' : fill === 'none' ? 'none' : fill === 'green' ? 'var(--status-ok)' : paint}
             strokeWidth={isSel ? 4 : 1.5}
           />
         );

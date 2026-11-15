@@ -17,7 +17,7 @@ export function envLabel(env: Environment, lang: Lang = 'en'): string {
 
 export function missionLabel(ctx: MissionContext, lang: Lang = 'en'): string {
   const tail = lang === 'es' ? `de ${ctx.arrivalDay}` : `of ${ctx.arrivalDay}`;
-  return `Sol ${ctx.missionDay} ${tail} · ${envLabel(ctx.environment, lang)}`;
+  return `Sol ${ctx.missionDay} ${tail}`; // the environment has its own chip next to the title
 }
 
 export function delayLabel(min: number, lang: Lang = 'en'): string {

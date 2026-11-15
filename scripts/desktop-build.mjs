@@ -13,7 +13,7 @@ import { packager } from '@electron/packager';
 export const ELECTRON_VERSION = '45.3.2';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-if (!existsSync(join(root, 'dist', 'index.html'))) {
+if (!existsSync(join(root, 'dist', 'app', 'index.html'))) {
   console.error('dist/ is missing. Run `npm run build` first (or use `npm run desktop:build`).');
   process.exit(1);
 }

@@ -138,7 +138,7 @@ export function WatchScreen() {
           </div>
 
           <details className={`${CARD} !p-4`}>
-            <summary className="min-h-12 cursor-pointer text-[18px] font-bold text-brand">{flow.watch.rulesTitle}</summary>
+            <summary className="min-h-12 cursor-pointer text-[18px] font-bold text-brand-ink">{flow.watch.rulesTitle}</summary>
             <ul className="mt-2 list-disc pl-5">{flow.watch.rules.map((r) => <li key={r}>{r}</li>)}</ul>
             <p className="mt-2 text-[15px] text-ink-2">{flow.watch.rulesNote}</p>
           </details>
@@ -174,7 +174,7 @@ export function WatchScreen() {
                   <li key={a.id} className={PANEL}>
                     <p className="flex items-center gap-2"><span className="tabular text-ink-2">{clock(a.alert.detectedTs)}</span><StatusBadge status={a.alert.level === 'caution' ? 'yellow' : 'red'} label={flow.level[a.alert.level]} size="sm" /></p>
                     <p className="font-bold">{te(a.alert.title)}</p>
-                    {isOpen(a) && a.alert.level !== 'caution' && <Link href="/respond" className="font-bold text-brand underline">{flow.findings.continue}</Link>}
+                    {isOpen(a) && a.alert.level !== 'caution' && <Link href="/respond" className="font-bold text-brand-ink underline">{flow.findings.continue}</Link>}
                   </li>
                 ))}
               </ul>

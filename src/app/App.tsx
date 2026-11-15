@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, Route, Router, Switch, useLocation } from 'wouter';
 import { useHashLocation } from 'wouter/use-hash-location';
-import { PALETTES, useApp, type Scene } from './store';
-import { clock, missionLabel, delayLabel } from './format';
+import { useApp, type Scene } from './store';
+import { clock, missionLabel, delayLabel, envLabel } from './format';
 import { LANGS, syncLang, useCopy, useLang } from './i18n';
 import { FutureSelfScreen } from '../features/future-self/FutureSelfScreen';
 import { CheckInScreen } from '../features/check-in';
@@ -41,35 +41,28 @@ function TopBar() {
   const ctx = useApp((s) => s.context);
   const theme = useApp((s) => s.theme);
   const toggleTheme = useApp((s) => s.toggleTheme);
-  const palette = useApp((s) => s.palette);
-  const setPalette = useApp((s) => s.setPalette);
   const setLang = useApp((s) => s.setLang);
   const lang = useLang();
   const { ui } = useCopy();
   const online = useOnline();
+  const env = envLabel(ctx.environment, lang);
   return (
     <header className="flex flex-wrap items-center gap-3 border-b border-line bg-surface px-6 py-3">
-      <span className="text-xl font-bold tracking-wide text-brand">{ui.app.name}</span>
+      <a href="/" className="text-xl font-bold tracking-wide text-brand-ink" aria-label={`${ui.app.name}: ${lang === 'es' ? 'sobre el proyecto' : 'about the project'}`}>{ui.app.name}</a>
+      <Link
+        href="/environment"
+        aria-label={`${ui.nav.environment}: ${env}`}
+        className="flex min-h-11 items-center gap-2 rounded-full bg-brand px-4 text-[16px] font-bold text-on-brand"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+          <circle cx="12" cy="12" r="5" /><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-25 12 12)" />
+        </svg>
+        {env}
+      </Link>
       <span className="text-ink-2">{missionLabel(ctx, lang)}</span>
       <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{delayLabel(ctx.commDelayMin, lang)}</span>
       <DemoMenu />
       {!online && <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{ui.app.offline}</span>}
-      {theme === 'night' && (
-        <div role="radiogroup" aria-label={lang === 'es' ? 'Paleta nocturna' : 'Night palette'} className="flex gap-1">
-          {PALETTES.map((p) => (
-            <button
-              key={p}
-              type="button"
-              role="radio"
-              aria-checked={palette === p}
-              onClick={() => setPalette(p)}
-              className={`min-h-14 rounded-full px-3 text-[15px] capitalize ${palette === p ? 'bg-brand font-bold text-on-brand' : 'text-ink-2'}`}
-            >
-              {p === 'jwst' ? 'JWST' : p}
-            </button>
-          ))}
-        </div>
-      )}
       <div role="radiogroup" aria-label={lang === 'es' ? 'Idioma' : 'Language'} className="flex gap-1">
         {LANGS.map((l) => (
           <button
@@ -175,7 +168,7 @@ function Disclaimer() {
   return (
     <div role="note" className="flex items-center gap-4 border-b border-line bg-surface-2 px-6 py-2 text-[15px]">
       <span>{ui.app.disclaimer}</span>
-      <button type="button" onClick={dismiss} className="ml-auto min-h-14 rounded-full px-4 font-bold text-brand">
+      <button type="button" onClick={dismiss} className="ml-auto min-h-14 rounded-full px-4 font-bold text-brand-ink">
         {ui.app.disclaimerOk}
       </button>
     </div>
@@ -184,13 +177,11 @@ function Disclaimer() {
 
 export function App() {
   const theme = useApp((s) => s.theme);
-  const palette = useApp((s) => s.palette);
   const lang = syncLang(useLang());
   useShipClock();
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    document.documentElement.dataset.palette = palette;
-  }, [theme, palette]);
+  }, [theme]);
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);

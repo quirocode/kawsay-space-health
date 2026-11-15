@@ -35,13 +35,13 @@ protocol.registerSchemesAsPrivileged([
   { scheme: SCHEME, privileges: { standard: true, secure: true, supportFetchAPI: true } },
 ]);
 
-/** Map a kawsay://app/... URL to a file inside dist/. Unknown paths get index.html. */
+/** Map a kawsay://app/... URL to a file inside dist/. Unknown paths get the app (app/index.html). */
 function resolveAsset(requestUrl) {
   const rel = decodeURIComponent(new URL(requestUrl).pathname).replace(/^\/+/, '');
-  const file = path.resolve(DIST, rel || 'index.html');
+  const file = path.resolve(DIST, rel || 'app/index.html');
   const inside = file.startsWith(DIST + path.sep);
   if (inside && fs.existsSync(file) && fs.statSync(file).isFile()) return file;
-  return path.join(DIST, 'index.html');
+  return path.join(DIST, 'app', 'index.html'); // the desktop window is the app, not the landing page
 }
 
 function serveFromDisk(request) {
@@ -64,7 +64,7 @@ function createWindow() {
     minWidth: 1024,
     minHeight: 720,
     title: 'KAWSAY',
-    backgroundColor: '#F7EFE8',
+    backgroundColor: '#0F1517',
     autoHideMenuBar: true,
     webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
@@ -79,7 +79,7 @@ function createWindow() {
     openOutside(url);
   });
 
-  void win.loadURL(`${ORIGIN}/index.html`);
+  void win.loadURL(`${ORIGIN}/app/index.html`);
   return win;
 }
 

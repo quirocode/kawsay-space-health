@@ -186,7 +186,7 @@ function ZoneWhy({ zone, projection, onClose, withPlan }: { zone: BodyZone; proj
     <div className="rounded-sheet bg-surface p-5 shadow-sm" role="region" aria-label={lang === 'es' ? `Detalles de ${te(ZONE_LABEL[zone])}` : `${ZONE_LABEL[zone]} details`}>
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-[22px] font-bold">{te(ZONE_LABEL[zone])}</h2>
-        <button type="button" onClick={onClose} className="min-h-14 rounded-full px-4 font-bold text-brand">
+        <button type="button" onClick={onClose} className="min-h-14 rounded-full px-4 font-bold text-brand-ink">
           {ui.future.close}
         </button>
       </div>

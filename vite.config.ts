@@ -3,8 +3,17 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { fileURLToPath } from 'node:url';
+
+// Two pages: the public landing page (/) and the app (/app/).
+const page = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      input: { landing: page('./index.html'), app: page('./app/index.html') },
+    },
+  },
   plugins: [
     react(),
     tailwindcss(),
@@ -15,15 +24,18 @@ export default defineConfig({
         name: 'KAWSAY — What body will you land with?',
         short_name: 'KAWSAY',
         description: 'Health copilot for astronauts on long-duration missions. Prototype, not a medical device.',
-        theme_color: '#B5602D',
-        background_color: '#F7EFE8',
+        theme_color: '#0B3D91',
+        background_color: '#0F1517',
+        start_url: '/app/',
+        scope: '/',
         display: 'standalone',
         orientation: 'landscape',
         icons: [{ src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff,woff2,json}'],
-        navigateFallback: 'index.html',
+        navigateFallback: 'app/index.html',
+        navigateFallbackAllowlist: [/^\/app\//],
       },
     }),
   ],
