@@ -3,9 +3,9 @@ import { ui, useLang } from '../app/i18n';
 import type { Source } from '../domain/types';
 
 /** Shared building blocks (P2). Colours come from the design tokens, never hard-coded. */
-export const BTN_PRIMARY = 'flex min-h-[72px] items-center justify-center rounded-card bg-brand px-6 text-[20px] font-bold text-on-brand disabled:opacity-40';
-export const BTN_SECONDARY = 'flex min-h-[72px] items-center justify-center rounded-card border-2 border-brand-ink px-6 text-[18px] font-bold text-brand-ink disabled:opacity-40';
-export const CARD = 'rounded-sheet bg-surface p-6 shadow-sm';
+export const BTN_PRIMARY = 'workspace-primary flex min-h-[72px] items-center justify-center rounded-card bg-brand px-6 text-[20px] font-bold text-on-brand disabled:opacity-40';
+export const BTN_SECONDARY = 'workspace-secondary flex min-h-[72px] items-center justify-center rounded-card border-2 border-brand-ink px-6 text-[18px] font-bold text-brand-ink disabled:opacity-40';
+export const CARD = 'workspace-card rounded-sheet bg-surface p-6 shadow-sm';
 export const PANEL = 'rounded-card bg-surface-2 p-4';
 
 /** NASA (official figure) or Prototype (our value). Honest numbers, at a glance. */

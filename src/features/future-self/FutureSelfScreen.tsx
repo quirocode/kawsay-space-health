@@ -5,10 +5,12 @@ import type { BodyZone, Projection } from '../../domain/types';
 import { engine } from '../../app/engine';
 import { useApp } from '../../app/store';
 import { StatusBadge } from '../../components/StatusBadge';
-import { BodyFigure, ZONE_LABEL } from './BodyFigure';
+import { AnatomyModeSwitch, BodyFigure, ZONE_LABEL } from './BodyFigure';
 import { PlanPanel } from './PlanPanel';
 import { WovenTimeline } from './WovenTimeline';
 import { arrivalZones, biggestDrops, currentHabits, exerciseByDay, exerciseGap, fill, todayZones } from './zones';
+import { Glyph } from '../../app/WorkspaceNav';
+import anatomyCopy from '../../../content/anatomy.json';
 import { dec } from '../../app/format';
 
 const METRIC_LABEL: Record<string, string> = {
@@ -30,6 +32,7 @@ export function FutureSelfScreen() {
   const plan = useApp((s) => s.plan);
   const setPlan = useApp((s) => s.setPlan);
   const lang = useLang();
+  const es = lang === 'es';
   const storeViewDay = useApp((s) => s.viewDay);
   const setViewDay = useApp((s) => s.setViewDay);
 
@@ -54,35 +57,52 @@ export function FutureSelfScreen() {
   const selProjection: Projection | undefined = selected ? readiness.projections.find((p) => p.zone === selected) : undefined;
   const futureTitle = atArrival ? `${ui.future.arrival} · ${fill(ui.future.dayLabel, { day: viewDay })}` : fill(ui.future.ifLanding, { day: viewDay });
 
+  const showDetails = () => document.getElementById('dashboard-details')?.focus();
+
   return (
-    <section className="mx-auto grid max-w-[1400px] gap-5 p-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(360px,1fr)]">
-      {/* Left: the double body + woven timeline */}
-      <div className="flex flex-col gap-4 rounded-sheet bg-surface p-5 shadow-sm">
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <figure className="flex flex-col items-center">
-            <figcaption className="min-h-12 text-[20px] font-bold">
-              {ui.future.today} · <span className="tabular">{fill(ui.future.dayLabel, { day: ctx.missionDay })}</span>
+    <section className="dashboard">
+      <div className="dashboard-heading">
+        <div>
+          <h1>{es ? 'Tu salud al aterrizar' : 'Your health at landing'}</h1>
+          <p>{es ? 'Compara tu estado actual con la proyección para el día de llegada.' : 'Compare your health today with the projection for landing day.'}</p>
+        </div>
+        <Link className="dashboard-primary" href="/check"><Glyph name="check"/>{ui.home.startCheck}<span aria-hidden="true">→</span></Link>
+      </div>
+      <div className="dashboard-grid">
+      <div className="dashboard-anatomy dashboard-card">
+        <header className="dashboard-card-heading">
+          <div><h2>{es ? 'Comparación corporal' : 'Body comparison'}</h2><p>{anatomyCopy[lang].gesture}</p></div>
+          <AnatomyModeSwitch />
+        </header>
+        <div className="dashboard-timeline">
+          <div><strong>{es ? 'Día de proyección' : 'Projection day'}</strong><span>{ui.future.sliderHint}</span></div>
+          <WovenTimeline today={ctx.missionDay} arrival={ctx.arrivalDay} value={viewDay} onChange={setViewDay} exercise={exercise} />
+        </div>
+        <div className="dashboard-figures">
+          <figure className="dashboard-figure">
+            <figcaption className="dashboard-figure-title">
+              <span>{ui.future.today} · {fill(ui.future.dayLabel, { day: ctx.missionDay })}</span>
             </figcaption>
-            <div className="min-h-[540px] w-full">
-              <BodyFigure zones={today} variant="today" title={lang === 'es' ? `Tu cuerpo hoy, día ${ctx.missionDay}` : `Your body today, day ${ctx.missionDay}`} selected={selected} onSelect={setSelected} />
+            <div className="w-full">
+              <BodyFigure sharedControls onShowDetails={showDetails} zones={today} variant="today" title={lang === 'es' ? `Tu cuerpo hoy, día ${ctx.missionDay}` : `Your body today, day ${ctx.missionDay}`} selected={selected} onSelect={setSelected} />
             </div>
           </figure>
-          <figure className="flex flex-col items-center">
-            <figcaption className="flex min-h-12 flex-col items-center text-[20px] font-bold text-future" aria-live="polite">
+          <figure className="dashboard-figure">
+            <figcaption className="dashboard-figure-title text-future" aria-live="polite">
               {futureTitle}
               <span className="text-[15px] font-normal text-ink-2">
                 {viewDay - ctx.missionDay === 1 ? ui.future.inOneDay : fill(ui.future.inDays, { days: viewDay - ctx.missionDay })}
               </span>
             </figcaption>
-            <div className="min-h-[540px] w-full">
-              <BodyFigure zones={future} variant="future" title={lang === 'es'
+            <div className="w-full">
+              <BodyFigure sharedControls onShowDetails={showDetails} zones={future} variant="future" title={lang === 'es'
                 ? `Tu cuerpo proyectado, día ${viewDay}, ${withPlan ? 'con tu plan' : 'con tus hábitos actuales'}`
                 : `Your projected body, day ${viewDay}, ${withPlan ? 'with your plan' : 'with current habits'}`} selected={selected} onSelect={setSelected} />
             </div>
           </figure>
         </div>
 
-        <ul className="flex min-h-10 flex-wrap justify-end gap-2" aria-label={lang === 'es' ? 'Mayores cambios para entonces' : 'Biggest changes by then'}>
+        <ul className="dashboard-impact" aria-label={lang === 'es' ? 'Mayores cambios para entonces' : 'Biggest changes by then'}>
           {drops.map((d) => (
             <li key={d.zone}>
               <button
@@ -97,19 +117,18 @@ export function FutureSelfScreen() {
           ))}
         </ul>
 
-        <WovenTimeline today={ctx.missionDay} arrival={ctx.arrivalDay} value={viewDay} onChange={setViewDay} exercise={exercise} />
-        <p className="text-center text-[15px] text-ink-2">{ui.future.sliderHint}</p>
       </div>
-
-      {/* Right: readiness, plan toggle, landing tasks */}
-      <div className="flex flex-col gap-4">
-        <div className="rounded-sheet bg-surface p-5 shadow-sm">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h1 className="text-[22px] font-bold">{ui.future.readiness}</h1>
-              <p className="text-[15px] text-ink-2">{futureTitle}</p>
-            </div>
-            <div role="radiogroup" aria-label={lang === 'es' ? 'Modo de proyección' : 'Projection mode'} className="flex rounded-full bg-surface-2 p-1">
+        <div className="dashboard-readiness dashboard-card">
+          <div className="dashboard-card-heading">
+            <div><h2>{ui.future.readiness}</h2><p>{futureTitle}</p></div>
+            <span className="dashboard-score-mark"><Glyph name="watch" /></span>
+          </div>
+          <div className="dashboard-score-row">
+            <div><span data-testid="readiness-score">{score}</span><small> / 100</small></div>
+            <p>{withPlan ? ui.future.currentHabits : ui.future.withPlan}<strong>{otherScore} / 100</strong></p>
+          </div>
+          <div className="dashboard-meter" aria-hidden="true"><span style={{ width: `${score}%` }} /></div>
+          <div role="radiogroup" aria-label={es ? 'Modo de proyección' : 'Projection mode'} className="workspace-segmented dashboard-plan-switch">
               {[false, true].map((v) => (
                 <button
                   key={String(v)}
@@ -117,34 +136,20 @@ export function FutureSelfScreen() {
                   role="radio"
                   aria-checked={withPlan === v}
                   onClick={() => setWithPlan(v)}
-                  className={`min-h-12 rounded-full px-4 text-[15px] font-bold ${withPlan === v ? (v ? 'bg-future text-on-brand' : 'bg-ink text-bg') : 'text-ink-2'}`}
                 >
                   {v ? ui.future.followPlan : ui.future.currentHabits}
                 </button>
               ))}
-            </div>
           </div>
-          <p className="mt-2 flex items-baseline gap-3">
-            <span className={`tabular text-[64px] font-semibold leading-none ${withPlan ? 'text-future' : ''}`} data-testid="readiness-score">
-              {score}
-            </span>
-            <span className="text-[18px] text-ink-2">
-              {withPlan ? ui.future.currentHabits.toLowerCase() : ui.future.withPlan}:{' '}
-              <span className="tabular font-semibold">{otherScore}</span>
-            </span>
-          </p>
-          <p className="mt-3 text-[17px]">
+          <p className="dashboard-insight">
             {gap.shortDays > 0 ? fill(ui.future.insight, { days: gap.shortDays, min: gap.missingMinPerDay }) : ui.future.insightOk}
           </p>
-          <div className="mt-4 flex gap-3">
-            <Link href="/check" className="flex min-h-[72px] flex-1 items-center justify-center rounded-card bg-brand px-5 text-center text-[19px] font-bold text-on-brand">
-              {ui.home.startCheck}
-            </Link>
+          <div className="mt-4">
             <button
               type="button"
               aria-expanded={planOpen}
               onClick={() => setPlanOpen((o) => !o)}
-              className="min-h-[72px] rounded-card border-2 border-future px-5 text-[17px] font-bold text-future"
+              className="dashboard-secondary"
             >
               {planOpen ? ui.future.hidePlan : ui.future.adjustPlan}
             </button>
@@ -163,21 +168,23 @@ export function FutureSelfScreen() {
           )}
         </div>
 
+        <div className="dashboard-details" id="dashboard-details" tabIndex={-1}>
         {selected ? (
           <ZoneWhy zone={selected} projection={selProjection} onClose={() => setSelected(null)} withPlan={withPlan} />
         ) : (
-          <div className="rounded-sheet bg-surface p-5 shadow-sm">
-            <h2 className="mb-3 text-[20px] font-bold">{ui.future.tasksTitle}</h2>
+          <div className="dashboard-card">
+            <h2 className="mb-3 text-[19px] font-bold">{ui.future.tasksTitle}</h2>
             <ul className="grid gap-2" aria-label={lang === 'es' ? 'Tareas del día de aterrizaje' : 'Landing day tasks'}>
               {readiness.tasks.map((t) => (
-                <li key={t.id} className="flex items-center gap-3 rounded-card bg-surface-2 px-4 py-3">
-                  <p className="flex-1 text-[18px] font-bold">{te(t.label)}</p>
+                <li key={t.id} className="dashboard-task">
+                  <p className="flex-1 text-[15px] font-bold">{te(t.label)}</p>
                   <StatusBadge status={withPlan ? t.statusIfPlan : t.status} />
                 </li>
               ))}
             </ul>
           </div>
         )}
+        </div>
       </div>
     </section>
   );
@@ -186,7 +193,7 @@ export function FutureSelfScreen() {
 function ZoneWhy({ zone, projection, onClose, withPlan }: { zone: BodyZone; projection?: Projection; onClose: () => void; withPlan: boolean }) {
   const lang = useLang();
   return (
-    <div className="rounded-sheet bg-surface p-5 shadow-sm" role="region" aria-label={lang === 'es' ? `Detalles de ${te(ZONE_LABEL[zone])}` : `${ZONE_LABEL[zone]} details`}>
+    <div className="dashboard-card" role="region" aria-label={lang === 'es' ? `Detalles de ${te(ZONE_LABEL[zone])}` : `${ZONE_LABEL[zone]} details`}>
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-[22px] font-bold">{te(ZONE_LABEL[zone])}</h2>
         <button type="button" onClick={onClose} className="min-h-14 rounded-full px-4 font-bold text-brand-ink">

@@ -124,7 +124,7 @@ export function CheckInScreen() {
 
   return (
     <Screen>
-      <div className="grid flex-1 gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+      <div className="check-layout grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div className={`${CARD} flex flex-col gap-4`}>
           <ol className="flex gap-2" aria-label={fill(ui.check.progress, { n: index + 1, total: STEPS.length })}>
             {STEPS.map((s, i) => (
@@ -165,7 +165,7 @@ export function CheckInScreen() {
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || (e.key === '/' && i < step.fields.length - 1)) { e.preventDefault(); toNext(); }
                       }}
-                      className="tabular min-w-0 bg-transparent text-[64px] leading-none outline-none placeholder:text-ink-2"
+                      className="tabular min-w-0 bg-transparent text-[clamp(32px,6vw,56px)] leading-none outline-none placeholder:text-ink-2"
                     />
                     <span className="text-[20px] text-ink-2">{step.key === 'bp' && i === 0 ? '/' : def.unit}</span>
                   </label>
@@ -187,11 +187,6 @@ export function CheckInScreen() {
             <div className="mt-1"><SourceList sources={defs.get(copyId)!.sources} /></div>
           </div>
 
-          <div className="mt-auto grid grid-cols-[1fr_1fr_2.4fr] gap-3">
-            <button type="button" className={BTN_SECONDARY} disabled={index === 0} onClick={() => go(index - 1)}>{ui.check.back}</button>
-            <button type="button" className={BTN_SECONDARY} onClick={() => next(true)}>{ui.check.skip}</button>
-            <button type="button" className={BTN_PRIMARY} onClick={() => next(false)}>{index === STEPS.length - 1 ? flow.check.save : ui.check.next}</button>
-          </div>
         </div>
 
         <div className={`${CARD} flex flex-col gap-4`}>
@@ -219,6 +214,11 @@ export function CheckInScreen() {
             </>
           )}
         </div>
+          <div className="check-actions">
+            <button type="button" className={BTN_SECONDARY} disabled={index === 0} onClick={() => go(index - 1)}>{ui.check.back}</button>
+            <button type="button" className={BTN_SECONDARY} onClick={() => next(true)}>{ui.check.skip}</button>
+            <button type="button" className={BTN_PRIMARY} onClick={() => next(false)}>{index === STEPS.length - 1 ? flow.check.save : ui.check.next}</button>
+          </div>
       </div>
     </Screen>
   );
