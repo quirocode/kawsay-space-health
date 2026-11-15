@@ -89,9 +89,10 @@ function Notice({ title, hint, children }: { title: string; hint: string; childr
 }
 
 /**
- * Automatic key fetch: the crew signs in to Zepp once and KAWSAY gets the band key for them.
- * The sign-in runs in the desktop app's own process (Zepp blocks a browser from calling it),
- * so on the web build this shows a short note pointing at the manual methods instead.
+ * Automatic key fetch: the crew signs in to their fitness account once and KAWSAY gets the
+ * band key for them — the terminal tool's job, as a form. A browser can't call Zepp directly
+ * (CORS), so the sign-in runs server-side: the desktop app does it in its own process; the
+ * web build posts to the /api/band-key function. The password is used for the one request.
  */
 function ZeppSignIn({ onKey }: { onKey: (key: string) => void }) {
   const bridge = typeof window === 'undefined' ? undefined : window.kawsayBandKey;
@@ -100,11 +101,27 @@ function ZeppSignIn({ onKey }: { onKey: (key: string) => void }) {
   const [state, setState] = useState<'idle' | 'working' | 'done' | 'error'>('idle');
   const [error, setError] = useState('');
 
+  async function fetchKey(creds: { email: string; password: string }) {
+    if (bridge) return bridge.fetch(creds);
+    // Web build: the serverless endpoint signs in to Zepp for us. A non-JSON answer (e.g. the
+    // dev server with no function) means automatic sign-in is not available on this page.
+    try {
+      const r = await fetch('/api/band-key', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(creds),
+      });
+      const data = await r.json().catch(() => null);
+      if (!data || typeof data.ok !== 'boolean') return { ok: false as const, error: flow.connect.zeppUnavailable };
+      return data as { ok: true; keys: { key: string }[] } | { ok: false; error: string };
+    } catch {
+      return { ok: false as const, error: flow.connect.zeppFailed };
+    }
+  }
+
   const submit = () => {
-    if (!bridge || !email || !password || state === 'working') return;
+    if (!email || !password || state === 'working') return;
     setState('working');
     setError('');
-    void bridge.fetch({ email, password }).then((res) => {
+    void fetchKey({ email, password }).then((res) => {
       setPassword(''); // never keep the password around after the request
       if (res.ok) {
         onKey(res.keys[0].key);
@@ -113,10 +130,6 @@ function ZeppSignIn({ onKey }: { onKey: (key: string) => void }) {
         setError(res.error);
         setState('error');
       }
-    }).catch(() => {
-      setPassword('');
-      setError(flow.connect.zeppFailed);
-      setState('error');
     });
   };
 
@@ -124,33 +137,28 @@ function ZeppSignIn({ onKey }: { onKey: (key: string) => void }) {
     <div className="mt-1 flex flex-col gap-2 rounded-card border border-line bg-surface p-3">
       <p className="font-bold text-brand-ink">{flow.connect.zeppTitle}</p>
       <p className="text-[15px] text-ink-2">{flow.connect.zeppIntro}</p>
-      {!bridge ? (
-        <p className="text-[15px] text-ink-2">{flow.connect.zeppDesktopOnly}</p>
-      ) : (
-        <>
-          <label htmlFor="zepp-email" className="text-[15px] font-bold">{flow.connect.zeppEmail}</label>
-          <input
-            id="zepp-email" type="email" autoComplete="username" spellCheck={false}
-            value={email} onChange={(e) => { setEmail(e.target.value); setState('idle'); }}
-            className="min-h-14 rounded-card border border-line bg-surface-2 px-3 text-[17px]"
-          />
-          <label htmlFor="zepp-password" className="text-[15px] font-bold">{flow.connect.zeppPassword}</label>
-          <input
-            id="zepp-password" type="password" autoComplete="current-password"
-            value={password} onChange={(e) => { setPassword(e.target.value); setState('idle'); }}
-            onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
-            className="min-h-14 rounded-card border border-line bg-surface-2 px-3 text-[17px]"
-          />
-          <button type="button" onClick={submit} disabled={state === 'working' || !email || !password} className={`${BTN_PRIMARY} w-full`}>
-            {state === 'working' ? flow.connect.zeppWorking : flow.connect.zeppButton}
-          </button>
-          <p className="text-[15px]" role={state === 'done' || state === 'error' ? 'status' : undefined}>
-            {state === 'done' ? <span className="font-bold text-brand-ink">{flow.connect.zeppDone}</span>
-              : state === 'error' ? <span className="font-bold text-act">{error}</span>
-              : <span className="text-ink-2">{flow.connect.zeppPrivacy}</span>}
-          </p>
-        </>
-      )}
+      <label htmlFor="zepp-email" className="text-[15px] font-bold">{flow.connect.zeppEmail}</label>
+      <input
+        id="zepp-email" type="email" autoComplete="username" spellCheck={false}
+        value={email} onChange={(e) => { setEmail(e.target.value); setState('idle'); }}
+        className="min-h-14 rounded-card border border-line bg-surface-2 px-3 text-[17px]"
+      />
+      <label htmlFor="zepp-password" className="text-[15px] font-bold">{flow.connect.zeppPassword}</label>
+      <input
+        id="zepp-password" type="password" autoComplete="current-password"
+        value={password} onChange={(e) => { setPassword(e.target.value); setState('idle'); }}
+        onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
+        className="min-h-14 rounded-card border border-line bg-surface-2 px-3 text-[17px]"
+      />
+      <button type="button" onClick={submit} disabled={state === 'working' || !email || !password} className={`${BTN_PRIMARY} w-full`}>
+        {state === 'working' ? flow.connect.zeppWorking : flow.connect.zeppButton}
+      </button>
+      <p className="text-[15px]" role={state === 'done' || state === 'error' ? 'status' : undefined}>
+        {state === 'done' ? <span className="font-bold text-brand-ink">{flow.connect.zeppDone}</span>
+          : state === 'error' ? <span className="font-bold text-act">{error}</span>
+          : <span className="text-ink-2">{flow.connect.zeppPrivacy}</span>}
+      </p>
+      <p className="text-[15px] text-ink-2">{flow.connect.zeppSamsung}</p>
     </div>
   );
 }
