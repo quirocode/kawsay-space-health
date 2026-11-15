@@ -10,6 +10,7 @@ import { StatusBadge } from '../../components/StatusBadge';
 
 /** One screen for the flight surgeon: what changed, what was done, what is being asked. */
 export function BriefScreen() {
+  const crewName = useApp((st) => st.mission.crew);
   const readings = useApp((s) => s.readings);
   const ctx = useApp((s) => s.context);
   const nowTs = useApp((s) => s.nowTs);
@@ -36,7 +37,7 @@ export function BriefScreen() {
       <div className="grid flex-1 gap-5 lg:grid-cols-[minmax(0,2.1fr)_minmax(0,1fr)]">
         <article className={`${CARD} flex flex-col gap-4`}>
           <header className="flex flex-wrap items-baseline justify-between gap-2">
-            <h1 className="text-[22px] font-bold">{fill(flow.brief.heading, { day: shown.missionDay, crew: flow.crew.name })}</h1>
+            <h1 className="text-[22px] font-bold">{fill(flow.brief.heading, { day: shown.missionDay, crew: crewName })}</h1>
             <p className="tabular text-[15px] text-ink-2">{fill(sent ? flow.brief.sent : flow.brief.draft, { time: clock(shown.generatedTs) })}</p>
           </header>
 

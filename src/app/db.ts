@@ -66,6 +66,13 @@ export interface Session {
   acknowledged: Record<string, number>;   // ruleId → ts, for findings with a next-day recheck
   recoveryStartTs: number | null;         // simulated watch: when the crew member finished responding
   lastCheckTs: number | null;
+  mission?: MissionInfo;                 // optional: saves from before it existed get the demo default
+}
+
+/** Who and what is flying. Shown in the header; editable on the Mission screen. */
+export interface MissionInfo {
+  name: string;
+  crew: string;
 }
 
 export interface Snapshot {
