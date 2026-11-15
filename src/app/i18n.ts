@@ -15,11 +15,6 @@ import { TR } from './translate.es';
 
 export type Lang = 'en' | 'es';
 
-export const LANGS: { id: Lang; label: string; title: string }[] = [
-  { id: 'en', label: 'EN', title: 'English' },
-  { id: 'es', label: 'ES', title: 'Español' },
-];
-
 export interface Copy {
   ui: typeof uiEn;
   flow: typeof flowEn;
