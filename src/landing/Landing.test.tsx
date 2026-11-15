@@ -56,6 +56,32 @@ describe('Landing page', () => {
     expect(screen.getByText(copy.hero.subtitle)).toBeInTheDocument();
   });
 
+  it('updates the tour screenshot and route using the keyboard and the selected language', async () => {
+    const user = userEvent.setup();
+    render(<Landing />);
+    const tabs = screen.getByRole('tablist', { name: copy.tour.title });
+    const future = within(tabs).getByRole('tab', { name: copy.tour.steps.future.tab });
+    const check = within(tabs).getByRole('tab', { name: copy.tour.steps.check.tab });
+    expect(future).toHaveAttribute('aria-selected', 'true');
+
+    future.focus();
+    await user.keyboard('{ArrowRight}');
+    expect(check).toHaveFocus();
+    expect(check).toHaveAttribute('aria-selected', 'true');
+    let panel = within(screen.getByRole('tabpanel', { name: copy.tour.steps.check.tab }));
+    expect(panel.getByRole('img', { name: copy.tour.steps.check.imageAlt })).toHaveAttribute('src', '/demo-tour/check-en.webp');
+    expect(panel.getByRole('link', { name: copy.tour.openScreen })).toHaveAttribute('href', '/app/?lang=en#/check');
+
+    await user.click(screen.getByRole('button', { name: copy.nav.switchLanguage }));
+    panel = within(screen.getByRole('tabpanel', { name: spanish.tour.steps.check.tab }));
+    expect(panel.getByRole('img', { name: spanish.tour.steps.check.imageAlt })).toHaveAttribute('src', '/demo-tour/check-es.webp');
+    expect(panel.getByRole('link', { name: spanish.tour.openScreen })).toHaveAttribute('href', '/app/?lang=es#/check');
+
+    await user.click(screen.getByRole('tab', { name: spanish.tour.steps.suit.tab }));
+    panel = within(screen.getByRole('tabpanel', { name: spanish.tour.steps.suit.tab }));
+    expect(panel.getByRole('link', { name: spanish.tour.openScreen })).toHaveAttribute('href', '/app/?lang=es#/suit');
+  });
+
   it('switches the theme with the keyboard and restores it after reopening the landing page', async () => {
     const user = userEvent.setup();
     const { unmount } = render(<Landing />);

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import english from '../../content/landing.json';
 import spanish from '../../content/landing.es.json';
+import { DemoTour } from './DemoTour';
 
 /**
  * Public landing page (P1). A single scrolling page: hero, video, challenge,
@@ -124,6 +125,7 @@ function Nav({ copy, language, theme, onLanguageChange, onThemeChange }: {
     return () => window.removeEventListener('scroll', on);
   }, []);
   const links = [
+    { href: '#demo-tour', label: copy.tour.nav },
     { href: '#challenge', label: copy.nav.challenge },
     { href: '#advantages', label: copy.nav.advantages },
     { href: '#technology', label: copy.nav.technology },
@@ -195,8 +197,9 @@ function Hero({ copy, language }: { copy: Copy; language: Language }) {
             {copy.hero.secondary}
           </a>
         </div>
-        <a href="#video" aria-label={copy.hero.scroll} className="mt-14 flex h-10 w-6 justify-center rounded-full border-2 border-l-accent/60 pt-2">
-          <span className="scroll-dot h-2 w-1 rounded-full bg-l-accent" />
+        <a href="#demo-tour" className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-l-accent hover:underline">
+          {copy.tour.nav}
+          <span aria-hidden>↓</span>
         </a>
       </div>
     </section>
@@ -445,6 +448,7 @@ export function Landing() {
       />
       <main>
         <Hero copy={copy} language={language} />
+        <DemoTour copy={copy.tour} language={language} linkTo={(path) => demoLink(path, language)} />
         <Video copy={copy} language={language} />
         <Challenge copy={copy} />
         <Advantages copy={copy} />
