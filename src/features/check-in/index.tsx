@@ -283,7 +283,7 @@ function Summary({ onAgain }: { onAgain: () => void }) {
     <Screen>
       <div className="grid flex-1 gap-5 lg:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.6fr)]">
         <div className={`${CARD} flex flex-col items-center gap-3`}>
-          <div className="h-[420px] w-full max-w-[240px]">
+          <div className="min-h-[540px] w-full max-w-[400px]">
             <BodyFigure zones={zones} variant="today" title={lang === 'es' ? `Tu cuerpo hoy, día ${ctx.missionDay}` : `Your body today, day ${ctx.missionDay}`} selected={zone} onSelect={(z) => setZone(zone === z ? null : z)} />
           </div>
           <p className="text-center text-[15px] text-ink-2">{flow.check.tapZone}</p>
