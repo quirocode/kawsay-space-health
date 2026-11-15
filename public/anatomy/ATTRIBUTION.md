@@ -13,6 +13,10 @@ https://creativecommons.org/licenses/by-sa/4.0/
 The original BodyParts3D attribution also identifies CC BY-SA 2.1 Japan.
 https://creativecommons.org/licenses/by-sa/2.1/jp/
 
-KAWSAY modifications: selected muscle meshes and selected heart, lung, digestive, brain and eye structures; reduced polygon counts; merged systems into two models; added names and KAWSAY body-zone metadata; applied runtime colors. No kidney or reproductive assets were included. Anatomical labels retain the source English terminology. The models are illustrative references; health assessments are calculated at the existing KAWSAY zone level.
+KAWSAY modifications: selected muscle meshes and selected heart, lung, digestive, brain and eye structures; reduced polygon counts; merged systems into two models; added names and KAWSAY body-zone metadata; applied runtime colors. No kidney or reproductive assets were included. Mesh metadata retains the source English terminology. The viewer shows localized anatomical regions. The models are illustrative references; health assessments are calculated at the existing KAWSAY zone level.
 
 The CC BY-SA license applies to the anatomy model assets and their derivatives. The application's existing code license continues to apply to application code.
+
+## Translucent body surface
+
+The skin mesh comes from [Anatomy Explorer by ArianArsenal](https://github.com/ArianArsenal/anatomy-explorer/blob/8375d6ce7fec36e677c0eda66cae829ba55a4717/public/models/skin.glb), also derived from Z-Anatomy and BodyParts3D. The source and this derivative are distributed under CC BY-SA 4.0. KAWSAY reduced the polygon count, recompressed the mesh, and applies translucent shading in the viewer.

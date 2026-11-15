@@ -1,10 +1,10 @@
-import { lazy, Suspense, useId, useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { create } from 'zustand';
 import type { BodyZone, Status } from '../../domain/types';
 import { BODY_ZONES } from '../../domain/types';
 import { te, ui, useLang } from '../../app/i18n';
 import copy from '../../../content/anatomy.json';
-import type { AnatomyPart } from './AnatomyCanvas';
+import { MUSCLE_GROUPS, ORGAN_GROUPS, regionZone, type AnatomyMode, type AnatomyRegion } from './anatomyRegions';
 const AnatomyCanvas = lazy(() => import('./AnatomyCanvas'));
 export type ZoneFill = Status | 'none';
 export const ZONE_LABEL: Record<BodyZone, string> = {
@@ -21,7 +21,7 @@ export const ZONE_LABEL: Record<BodyZone, string> = {
 };
 
 
-const useAnatomy = create<{ mode: 'muscles' | 'organs'; toggle: () => void }>((set) => ({
+const useAnatomy = create<{ mode: AnatomyMode; toggle: () => void }>((set) => ({
   mode: 'muscles',
   toggle: () => set((s) => ({ mode: s.mode === 'muscles' ? 'organs' : 'muscles' })),
 }));
@@ -35,16 +35,20 @@ export function BodyFigure({ zones, variant, title, selected, onSelect }: {
 }) {
   const lang = useLang();
   const t = copy[lang];
-  const id = useId();
   const { mode, toggle } = useAnatomy();
-  const [parts, setParts] = useState<AnatomyPart[]>([]);
-  const [part, setPart] = useState<AnatomyPart | null>(null);
+  const [region, setRegion] = useState<AnatomyRegion | null>(null);
+  const [hover, setHover] = useState<AnatomyRegion | null>(null);
   const [isolate, setIsolate] = useState(false);
   const [reset, setReset] = useState(0);
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [retry, setRetry] = useState(0);
-  const activePart = parts.find((p) => p.id === part?.id && p.zone === selected);
-  const pick = (p: AnatomyPart) => { setPart(p); onSelect?.(p.zone); };
+  const regions: readonly AnatomyRegion[] = mode === 'muscles' ? MUSCLE_GROUPS : ORGAN_GROUPS;
+  const active = region && regions.includes(region) && regionZone(mode, region) === selected ? region : null;
+  const preview = hover && regions.includes(hover) ? hover : null;
+  const pick = (next: AnatomyRegion) => {
+    setRegion(next);
+    onSelect?.(regionZone(mode, next));
+  };
   const word = (zone: BodyZone) => {
     const status = zones[zone] ?? 'none';
     return status === 'none' ? t.noData : ui.status[status];
@@ -52,7 +56,7 @@ export function BodyFigure({ zones, variant, title, selected, onSelect }: {
   return (
     <div className="flex h-full w-full flex-col gap-2" data-anatomy={variant}>
       <div className="flex flex-wrap justify-center gap-2">
-        <button type="button" onClick={toggle} className="min-h-10 rounded-full border border-line bg-surface-2 px-3 text-sm font-bold">
+        <button type="button" onClick={() => { setRegion(null); setHover(null); setIsolate(false); toggle(); }} className="min-h-10 rounded-full border border-line bg-surface-2 px-3 text-sm font-bold">
           {mode === 'muscles' ? t.toOrgans : t.toMuscles}
         </button>
         <button type="button" onClick={() => { setIsolate(false); setReset((n) => n + 1); }} className="min-h-10 rounded-full border border-line px-3 text-sm">{t.reset}</button>
@@ -61,33 +65,41 @@ export function BodyFigure({ zones, variant, title, selected, onSelect }: {
       <div className="relative min-h-[300px] flex-1 overflow-hidden rounded-card bg-surface-2">
         <Suspense fallback={<p className="p-4 text-sm">{t.loading}</p>}>
           <AnatomyCanvas key={retry} mode={mode} zones={zones} selected={selected}
-            part={activePart?.id ?? ''} title={title} reset={reset} isolate={isolate}
-            onParts={setParts} onPick={pick} onReady={setState} />
+            region={active} hover={preview} title={title} reset={reset} isolate={isolate}
+            onHover={setHover} onPick={pick} onReady={setState} />
         </Suspense>
         {state === 'loading' && <p role="status" className="pointer-events-none absolute bottom-2 inset-x-2 rounded bg-surface p-2 text-sm">{t.loading}</p>}
         {state === 'error' && <div role="status" className="absolute inset-x-2 top-2 rounded bg-surface p-3 text-sm">
           <p>{t.error}</p>
           <button type="button" onClick={() => setRetry((n) => n + 1)} className="mt-2 min-h-10 underline">{t.retry}</button>
         </div>}
+        {(preview ?? active) && state === 'ready' && (
+          <span className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-future bg-surface px-3 py-1 text-xs font-semibold text-brand-ink">
+            {t.regions[(preview ?? active)!]}
+          </span>
+        )}
       </div>
-      <label htmlFor={id} className="text-xs font-semibold">{t.select}</label>
-      <select id={id} value={activePart?.id ?? ''} onChange={(event) => {
-        const found = parts.find((p) => p.id === event.target.value);
-        if (found) pick(found);
-      }} className="min-h-10 w-full rounded border border-line bg-surface px-2 text-sm">
-        <option value="">{t.tap}</option>
-        {parts.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-      </select>
-      {activePart && <div className="text-sm" aria-live="polite">
-        <p className="font-bold">{activePart.name} · {word(activePart.zone)}</p>
-        <p className="text-xs text-ink-2">{t.assessment}</p>
+      <div role="group" aria-label={t.select} className="flex flex-wrap justify-center gap-1.5">
+        {regions.map((item) => (
+          <button key={item} type="button" aria-pressed={active === item}
+            onClick={() => pick(item)}
+            onMouseEnter={() => setHover(item)} onMouseLeave={() => setHover(null)}
+            onFocus={() => setHover(item)} onBlur={() => setHover(null)}
+            className={`min-h-10 rounded-full border px-2.5 text-xs font-semibold ${active === item ? 'border-future bg-brand-bg text-brand-ink' : 'border-line hover:border-future hover:text-brand-ink'}`}>
+            {t.regions[item]}
+          </button>
+        ))}
+      </div>
+      {active && <div className="flex flex-wrap items-center justify-between gap-x-2 text-sm" aria-live="polite">
+        <p className="font-bold">{t.regions[active]} · {word(regionZone(mode, active))}</p>
         <button type="button" aria-pressed={isolate} onClick={() => setIsolate((v) => !v)} className="min-h-10 text-brand-ink underline">{isolate ? t.showAll : t.isolate}</button>
+        {mode === 'muscles' && <p className="basis-full text-xs text-ink-2">{t.assessment}</p>}
       </div>}
       <details className="text-xs text-ink-2">
         <summary className="cursor-pointer py-2">{t.zones}</summary>
         <p className="mb-2">{t.zoneNote}</p>
         <div className="flex flex-wrap gap-1">
-          {BODY_ZONES.map((zone) => <button key={zone} type="button" onClick={() => { setPart(null); setIsolate(false); onSelect?.(zone); }}
+          {BODY_ZONES.map((zone) => <button key={zone} type="button" onClick={() => { setRegion(null); setHover(null); setIsolate(false); onSelect?.(zone); }}
             className="min-h-9 rounded border border-line px-2" aria-pressed={selected === zone}>{te(ZONE_LABEL[zone])}: {word(zone)}</button>)}
         </div>
       </details>
