@@ -272,8 +272,8 @@
     "readyList": [
       "El Bluetooth de esta computadora está encendido.",
       "La banda está cargada, en tu muñeca y a menos de 1 m.",
-      "La app de la banda en tu celular está cerrada, o el Bluetooth del celular está apagado. Una banda habla con un solo dispositivo a la vez.",
-      "Xiaomi Smart Band 7: activa «Compartir frecuencia cardíaca» en los ajustes de la banda. Si no aparece ningún número, inicia un entrenamiento en la banda."
+      "Apaga el Bluetooth de tu celular. La banda mantiene un solo enlace Bluetooth a la vez, y la app del celular lo ocupa.",
+      "Xiaomi Mi Band 4, 5 o 6: ten a mano la clave de la banda. La Xiaomi Smart Band 7 y posteriores usan otra verificación que KAWSAY aún no soporta."
     ],
     "readyNote": "Ahora se abre una lista de dispositivos cercanos. Elige tu banda.",
     "openList": "Abrir lista de dispositivos",
@@ -311,8 +311,52 @@
       "lost": {
         "title": "Banda desconectada",
         "hint": "Dejó de responder. Acércala y vuelve a intentarlo."
+      },
+      "needs-key": {
+        "title": "Esta banda Xiaomi necesita su clave",
+        "hint": "Las Mi Band 4, 5 y 6 solo comparten el pulso tras verificar una clave. Pega la clave de la banda abajo."
+      },
+      "wrong-key": {
+        "title": "La banda rechazó la clave",
+        "hint": "Revisa la clave. Cambia cuando la banda se reinicia o se vuelve a vincular en el celular."
+      },
+      "auth-refused": {
+        "title": "La banda rechazó la conexión",
+        "hint": "Apaga el Bluetooth de tu celular y vuelve a intentarlo."
       }
     },
-    "prototype": "Los límites del enlace son valores de prototipo: dato viejo a los 5 s sin lectura, desconectada a los 30 s."
+    "prototype": "Los límites del enlace son valores de prototipo: dato viejo a los 5 s sin lectura, desconectada a los 30 s.",
+    "keyLabel": "Clave de la banda (bandas Xiaomi)",
+    "keyPlaceholder": "0x + 32 caracteres",
+    "keyHint": "Se guarda solo en esta computadora. Las bandas de pecho y otras bandas no la necesitan.",
+    "keyInvalid": "Eso no es una clave de banda. Tiene 32 caracteres, 0–9 y a–f.",
+    "keySaved": "Clave guardada en esta computadora.",
+    "getKeyIntro": "¿Aún sin clave? Obtenla desde tu cuenta Xiaomi — solo se hace una vez, con internet.",
+    "getKeyButton": "Obtener la clave de mi banda",
+    "getKeyOpened": "Abrimos la página de inicio de sesión de Xiaomi y copiamos un pequeño ayudante en tu portapapeles.",
+    "getKeySteps": [
+      "Inicia sesión en la página que se acaba de abrir — usa la cuenta de tu app Xiaomi / Mi Fitness.",
+      "En esa página pulsa F12, abre «Console», pega con Ctrl+V y pulsa Enter.",
+      "Mostrará tu clave como 0x… — vuelve aquí, pégala en el recuadro de arriba y pulsa Guardar."
+    ],
+    "keyHelpTitle": "Otras formas de obtener la clave",
+    "keyHelp": [
+      "La banda nunca envía su clave por Bluetooth, así que se obtiene una vez desde tu cuenta; después KAWSAY solo necesita Bluetooth.",
+      "En una computadora con Node: ejecuta  node tools/get-band-key.mjs  e inicia sesión con la cuenta de la banda; imprime una clave 0x….",
+      "Los pasos completos y una opción de banda de pecho que no necesita clave están en tools/README-band-key.md.",
+      "No reinicies ni vuelvas a vincular la banda después: eso cambia la clave y tendrías que obtenerla de nuevo."
+    ],
+    "saveAndConnect": "Guardar clave y conectar",
+    "stages": {
+      "connecting": "Conectando…",
+      "authenticating": "Verificando la clave de la banda…",
+      "starting": "Iniciando el pulso…"
+    },
+    "detail": "Detalle técnico: {text}",
+    "keySave": "Guardar",
+    "pickTitle": "Elige tu banda",
+    "searching": "Buscando dispositivos cercanos…",
+    "unnamed": "Dispositivo sin nombre",
+    "pickHint": "¿No aparece? Apaga el Bluetooth de tu celular y toca la pantalla de la banda para despertarla."
   }
 }

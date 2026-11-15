@@ -23,6 +23,9 @@ interface BluetoothRemoteGATTCharacteristic extends EventTarget {
   startNotifications(): Promise<BluetoothRemoteGATTCharacteristic>;
   stopNotifications(): Promise<BluetoothRemoteGATTCharacteristic>;
   readValue(): Promise<DataView>;
+  writeValue(value: BufferSource): Promise<void>;
+  writeValueWithResponse(value: BufferSource): Promise<void>;
+  writeValueWithoutResponse(value: BufferSource): Promise<void>;
 }
 
 interface BluetoothRemoteGATTService {
@@ -49,4 +52,15 @@ interface Bluetooth extends EventTarget {
 
 interface Navigator {
   readonly bluetooth?: Bluetooth;
+}
+
+/** Desktop app only (desktop/preload.cjs): the device list Electron does not draw itself. */
+interface KawsayBluetoothBridge {
+  onDevices(callback: (devices: { id: string; name: string }[]) => void): () => void;
+  choose(id: string): void;
+  cancel(): void;
+}
+
+interface Window {
+  readonly kawsayBluetooth?: KawsayBluetoothBridge;
 }
