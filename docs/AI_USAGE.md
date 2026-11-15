@@ -31,3 +31,4 @@ Log every use as you go. One line each.
 | Sun 14:43 | Anatomy | Codex (OpenAI) | Added a translucent body surface, interactive region outlines, and bilingual anatomy region controls | `src/features/future-self/`, `public/anatomy/`, `content/anatomy.json` |
 | Sun 15:17 | Demo | Codex (OpenAI) | Integrated the reviewed demo redesign and refreshed the bilingual tour captures | `src/app/`, `src/features/`, `public/demo-tour/` |
 | Sun 15:59 | Mission guide | Codex (OpenAI) | Implemented bilingual guided mission, hourly cabin CO₂ evidence, and data provenance for the 3D comparison | `src/features/mission-guide/`, `src/domain/cabinCo2.ts`, `src/features/future-self/` |
+| Sun 16:25 | Mission guide | Codex (OpenAI) | Integrated the reviewed guided mission with editable simulated symptom and cabin readings, evidence comparison, and an updated Earth brief | `src/features/mission-guide/`, `src/app/workspace.css`, `content/mission-guide.json` |
