@@ -141,19 +141,10 @@ body {
   transform: none;
 }
 
-.scroll-dot {
-  animation: scroll-dot 1.8s ease-in-out infinite;
-}
-@keyframes scroll-dot {
-  0% { transform: translateY(0); opacity: 1; }
-  70% { transform: translateY(12px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 0; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
-  .stars::before, .stars::after, .scroll-dot { animation: none; }
+  .stars::before, .stars::after { animation: none; }
 }
 
 :root[data-landing-theme='day'] {
@@ -226,4 +217,38 @@ body {
 .landing-theme-switch:hover,
 .landing-language-button:hover {
   border-color: var(--l-accent);
+}
+
+.demo-tour-step {
+  background: var(--l-accent-soft);
+  color: var(--l-accent);
+}
+
+.demo-tour-tab[aria-selected='true'] {
+  border-color: var(--l-accent);
+  background: var(--l-accent-soft);
+  color: var(--l-accent);
+}
+
+.demo-tour-tab[aria-selected='true'] .demo-tour-step {
+  background: var(--l-accent);
+  color: var(--l-bg);
+}
+
+.demo-tour-dialog {
+  position: fixed;
+  inset: 0;
+  width: max-content;
+  max-width: min(96vw, 86rem);
+  max-height: 94dvh;
+  margin: auto;
+  padding: 0;
+}
+
+.demo-tour-dialog::backdrop {
+  background: rgb(5 10 20 / 0.8);
+}
+
+.demo-tour-dialog img {
+  max-height: calc(94dvh - 4rem);
 }

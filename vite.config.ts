@@ -33,7 +33,7 @@ export default defineConfig({
         icons: [{ src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,woff,woff2,json}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,webp,woff,woff2,json}'],
         navigateFallback: 'app/index.html',
         navigateFallbackAllowlist: [/^\/app\//],
       },

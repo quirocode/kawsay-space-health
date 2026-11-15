@@ -16,8 +16,46 @@
     "title": "KAWSAY",
     "subtitle": "A health copilot for astronauts on long missions. It answers the one question no dashboard does: what body will you land with?",
     "primary": "Try the demo",
-    "secondary": "Watch the video",
-    "scroll": "Scroll to learn more"
+    "secondary": "Watch the video"
+  },
+  "tour": {
+    "nav": "Explore the demo",
+    "title": "Inside the KAWSAY demo",
+    "intro": "You’re on day 142 of a simulated mission. Choose a screen below to see what it does and try it yourself.",
+    "tryThis": "Try this",
+    "openScreen": "Open in the demo",
+    "enlarge": "Enlarge screenshot",
+    "close": "Close",
+    "steps": {
+      "future": {
+        "tab": "Future Self",
+        "title": "See how you might land",
+        "description": "Compare your body today with its projected state on landing day. The two figures show which areas could improve with a plan.",
+        "action": "Move the day slider, then tap a body area to see what drives the projection.",
+        "imageAlt": "Future Self screen with two body figures, a mission timeline and a landing readiness score."
+      },
+      "check": {
+        "tab": "Daily check",
+        "title": "Turn a symptom into a next step",
+        "description": "Log how you feel and review the day’s readings. KAWSAY combines symptoms with context such as sleep and cabin CO₂ to explain what it flags.",
+        "action": "Open the “Demo” menu and choose the headache scene to see a finding with data already filled in.",
+        "imageAlt": "Daily check screen showing the blood pressure fields and the on-screen keypad."
+      },
+      "watch": {
+        "tab": "Watch & alerts",
+        "title": "Follow a change in heart rate",
+        "description": "See a rolling heart-rate chart and other signals. The demo can simulate an alert and guide you through a response.",
+        "action": "Open “Demo,” choose “Heart rate climbs at rest,” and wait for the alert.",
+        "imageAlt": "Watch screen with a heart-rate graph, a simulated sensor indicator and other readings."
+      },
+      "suit": {
+        "tab": "Suit & phases",
+        "title": "Change the phase of the mission",
+        "description": "The suit check adapts its simulated sensor readings and checklist to the mission phase, from launch to landing.",
+        "action": "Select “Entry & landing,” choose “Act now,” and run the check to see the simulated result.",
+        "imageAlt": "Suit check showing the simulated result for entry and landing, plus the recommended next steps."
+      }
+    }
   },
   "video": {
     "title": "KAWSAY in",
