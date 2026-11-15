@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'wouter';
-import flow from '../../../content/flow.json';
-import ui from '../../../content/ui.json';
+import { flow } from '../../app/i18n';
+import { te, ui } from '../../app/i18n';
 import type { ProtocolStep } from '../../domain/types';
 import { watchEngine } from '../../app/engine';
 import { useApp, type AlertRecord, type CaseRecord } from '../../app/store';
@@ -37,7 +37,7 @@ export function RespondScreen() {
         <div className={`${CARD} flex flex-col gap-4`}>
           <div className="flex flex-wrap items-center gap-3">
             <StatusBadge status="red" label={flow.level[record.alert.level]} size="sm" />
-            <span className="font-bold">{record.alert.title}</span>
+            <span className="font-bold">{te(record.alert.title)}</span>
             <span className="tabular ml-auto text-ink-2">{clock(record.alert.detectedTs)}</span>
           </div>
           {record.state === 'responding' && <Steps record={record} />}
@@ -65,10 +65,10 @@ function Thinks({ record }: { record: AlertRecord }) {
   return (
     <div className={`${CARD} flex flex-col gap-2 !p-4`}>
       <h2 className="font-bold text-ink-2">{flow.respond.thinks}</h2>
-      <p className="text-[20px] font-bold">{view.headline}</p>
+      <p className="text-[20px] font-bold">{te(view.headline)}</p>
       <ul className="flex flex-col gap-2">
         {view.reasons.map((r) => (
-          <li key={r.text} className="flex items-start gap-2"><span className="flex-1">{r.text}</span><SourceTag official={r.source.official} /></li>
+          <li key={r.text} className="flex items-start gap-2"><span className="flex-1">{te(r.text)}</span><SourceTag official={r.source.official} /></li>
         ))}
       </ul>
       {record.alert.signal === 'heartRate' && <p className="text-[15px] text-ink-2">{flow.respond.notRuledOut}</p>}
@@ -99,8 +99,8 @@ function Steps({ record }: { record: AlertRecord }) {
   return (
     <>
       <p className="text-[15px] text-ink-2">{fill(flow.respond.step, { n: index + 1, total: steps.length })}</p>
-      <h1 className="text-[34px] font-bold leading-tight">{step.title}</h1>
-      <p className="text-[20px] text-ink-2">{step.detail}</p>
+      <h1 className="text-[34px] font-bold leading-tight">{te(step.title)}</h1>
+      <p className="text-[20px] text-ink-2">{te(step.detail)}</p>
       {step.kind === 'question' && <Question key={step.id} record={record} step={step} last={last} />}
       {step.kind === 'measure' && <Measure key={step.id} step={step} onDone={advance} />}
       {step.kind === 'timer' && <Timer key={step.id} step={step} onDone={advance} />}
@@ -122,7 +122,7 @@ function Question({ record, step, last }: { record: AlertRecord; step: ProtocolS
           return (
             <button key={o.id} type="button" role="checkbox" aria-checked={on} onClick={() => toggle(o.id)}
               className={`flex min-h-16 items-center rounded-card border-2 px-5 text-left text-[20px] ${on ? 'border-brand bg-brand-bg font-bold' : 'border-line'}`}>
-              {o.label}
+              {te(o.label)}
             </button>
           );
         })}
@@ -151,7 +151,7 @@ function Measure({ step, onDone }: { step: ProtocolStep; onDone: () => void }) {
       <div className="flex flex-wrap items-baseline gap-3">
         {ids.map((id, i) => (
           <label key={id} className="flex items-baseline gap-2 text-[24px]">
-            <span className="sr-only">{id === 'bp_systolic' ? 'Top number' : id === 'bp_diastolic' ? 'Bottom number' : id}</span>
+            <span className="sr-only">{id === 'bp_systolic' ? te('Top number') : id === 'bp_diastolic' ? te('Bottom number') : id}</span>
             <input inputMode="numeric" value={values[i]} placeholder="–"
               onChange={(e) => setValues((cur) => cur.map((v, j) => (j === i ? e.target.value.replace(/[^0-9.]/g, '').slice(0, 5) : v)))}
               className="tabular w-36 rounded-card border-2 border-line bg-surface-2 px-4 py-3 text-center text-[44px]" />
@@ -211,10 +211,10 @@ function Compared({ record }: { record: CaseRecord }) {
     <div className="grid gap-4 sm:grid-cols-2">
       {record.compared.map((c) => (
         <div key={c.label} className={PANEL}>
-          <p className="font-bold">{c.label}</p>
+          <p className="font-bold">{te(c.label)}</p>
           <p className="tabular mt-1 flex items-baseline gap-3 text-[44px]">
             <span className="text-ink-2">{c.before}</span>
-            <span className="text-[24px] text-ink-2" aria-label="to">→</span>
+            <span className="text-[24px] text-ink-2" aria-label={te('to')}>→</span>
             <span className={improved ? 'text-ok' : 'text-act'}>{c.after}</span>
             <span className="font-sans text-[15px] text-ink-2">{c.unit}</span>
           </p>

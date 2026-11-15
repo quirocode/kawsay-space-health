@@ -1,4 +1,5 @@
 import { useId } from 'react';
+import { ui, useLang } from '../../app/i18n';
 
 /**
  * The woven timeline (signature element, design/PEN_PROMPT.md §4): one thread per mission day.
@@ -22,6 +23,7 @@ export function WovenTimeline({
   targetMin?: number;
 }) {
   const id = useId();
+  const lang = useLang();
   const W = 1000;
   const H = 64;
   const step = W / (arrival + 1);
@@ -48,12 +50,12 @@ export function WovenTimeline({
   return (
     <div className="relative select-none">
       <div className="mb-1 flex justify-between text-[15px] text-ink-2">
-        <span>Launch</span>
+        <span>{lang === 'es' ? 'Lanzamiento' : 'Launch'}</span>
         <span>
-          Today · <span className="tabular">Sol {today}</span>
+          {ui.future.today} · <span className="tabular">Sol {today}</span>
         </span>
         <span>
-          Arrival · <span className="tabular">Sol {arrival}</span>
+          {ui.future.arrival} · <span className="tabular">Sol {arrival}</span>
         </span>
       </div>
       <div className="relative h-16">
@@ -62,7 +64,7 @@ export function WovenTimeline({
         </svg>
         <div aria-hidden className="absolute top-0 bottom-0 w-[3px] bg-ink" style={{ left: x(today) }} />
         <label htmlFor={id} className="sr-only">
-          Day to preview
+          {lang === 'es' ? 'Día a previsualizar' : 'Day to preview'}
         </label>
         <input
           id={id}

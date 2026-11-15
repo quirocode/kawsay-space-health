@@ -1,0 +1,156 @@
+{
+  "app": {
+    "name": "KAWSAY",
+    "tagline": "¿Con qué cuerpo vas a aterrizar?",
+    "disclaimer": "Prototipo para una hackathon. No es un dispositivo médico.",
+    "disclaimerOk": "Entendido",
+    "offline": "Sin conexión · todos los datos en esta tablet",
+    "demo": "Demo"
+  },
+  "nav": {
+    "home": "Yo futuro",
+    "check": "Chequeo diario",
+    "loop": "Hallazgos",
+    "brief": "Informe",
+    "environment": "Entorno"
+  },
+  "status": {
+    "green": "OK",
+    "yellow": "Vigilar",
+    "red": "Actuar",
+    "stale": "Datos viejos"
+  },
+  "source": {
+    "official": "NASA",
+    "prototype": "Prototipo",
+    "why": "¿Por qué?"
+  },
+  "home": {
+    "readiness": "Aptitud para el aterrizaje",
+    "withPlan": "con tu plan",
+    "today": "Hoy",
+    "arrival": "Llegada",
+    "startCheck": "Empezar el chequeo de hoy (2 min)",
+    "adjustPlan": "Ajustar mi plan"
+  },
+  "placeholder": "Esta pantalla está en construcción.",
+  "future": {
+    "today": "Hoy",
+    "arrival": "Llegada",
+    "dayLabel": "Sol {day}",
+    "ifLanding": "Si aterrizaras el Sol {day}",
+    "readiness": "Aptitud para el aterrizaje",
+    "withPlan": "con tu plan",
+    "currentHabits": "Hábitos actuales",
+    "followPlan": "Con mi plan",
+    "tasksTitle": "El día de la llegada, ¿puedes…",
+    "insight": "{days} días de ejercicio incompleto movieron tu cuerpo de llegada. {min} minutos más al día lo traen de vuelta.",
+    "insightOk": "Tus hábitos van bien para el día de la llegada.",
+    "adjustPlan": "Ajustar mi plan",
+    "hidePlan": "Listo",
+    "planExercise": "Ejercicio por día",
+    "planWater": "Agua por día",
+    "planSleep": "Sueño por noche",
+    "nasaTarget": "meta 1,5 h/día",
+    "now": "Ahora",
+    "sliderHint": "Arrastra para ver tu cuerpo en cualquier día hasta la llegada",
+    "vsPreflight": "de antes del vuelo",
+    "noProjection": "Sin proyección — solo se mide a diario",
+    "why": "¿Por qué?",
+    "model": "Cómo lo proyectamos",
+    "source": "Fuente",
+    "nasa": "NASA",
+    "prototype": "Prototipo",
+    "close": "Cerrar",
+    "arrivalDay": "Llegada · Sol {day}"
+  },
+  "check": {
+    "title": "Chequeo diario",
+    "progress": "{n} de {total}",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "skip": "Omitir",
+    "done": "Listo",
+    "summaryOk": "Todo OK hoy",
+    "summaryAttention": "Algo necesita tu atención",
+    "howToMeasure": "Cómo medirlo",
+    "empty": "Aún no hay mediciones — empieza tu primer chequeo (2 min)"
+  },
+  "zone": {
+    "names": {
+      "eyes": "Ojos",
+      "brain": "Cerebro",
+      "inner_ear": "Equilibrio",
+      "heart": "Corazón",
+      "lungs": "Pulmones",
+      "bones": "Huesos y columna",
+      "muscles": "Músculos",
+      "kidneys": "Riñones",
+      "skin_immune": "Piel e inmunidad",
+      "gut": "Digestión"
+    },
+    "measureNow": "Medir ahora",
+    "updatedAgo": "Actualizado hace {age}",
+    "relatedRisks": "Riesgos relacionados"
+  },
+  "finding": {
+    "because": "Porque",
+    "doNow": "Haz esto ahora",
+    "recheck": "Volvemos a revisar en {min} min",
+    "startTimer": "Listo, iniciar el temporizador",
+    "hazards": "Riesgos involucrados"
+  },
+  "verify": {
+    "title": "¿Funcionó?",
+    "improved": "Mejoró — buen trabajo.",
+    "unchanged": "Sin cambios todavía. Sigue y revisa de nuevo.",
+    "worse": "Está empeorando. Avísale a tu médico de vuelo.",
+    "close": "Cerrar",
+    "sendToSurgeon": "Enviar al médico de vuelo"
+  },
+  "brief": {
+    "title": "Informe al médico de vuelo",
+    "arrives": "Llega a la Tierra en {min} min ({time})",
+    "replyEarliest": "Respuesta más temprana {time}",
+    "whatChanged": "Qué cambió",
+    "whatCrewDid": "Qué hizo el tripulante",
+    "decision": "Decisión solicitada",
+    "queue": "En cola para descarga",
+    "conjunction": "Sin contacto con la Tierra hasta el Sol {day} · Informe guardado",
+    "footer": "Atendido a bordo. Una pregunta a la Tierra habría tardado {roundTrip} min solo en tener respuesta."
+  },
+  "environment": {
+    "title": "¿Dónde estás?",
+    "iss": {
+      "name": "ISS",
+      "description": "Órbita baja de la Tierra. La Tierra está a una llamada de distancia."
+    },
+    "orion": {
+      "name": "Orion",
+      "description": "Cápsula de espacio profundo. Espacio reducido y un breve retraso hacia la Tierra."
+    },
+    "moon": {
+      "name": "Superficie lunar (1/6 g)",
+      "description": "Gravedad baja, con solo un breve retraso hacia la Tierra."
+    },
+    "marsTransit": {
+      "name": "Tránsito a Marte",
+      "description": "Meses en ausencia de gravedad, con minutos entre tú y la Tierra."
+    },
+    "marsSurface": {
+      "name": "Superficie de Marte (3/8 g)",
+      "description": "Gravedad parcial y una larga espera para cualquier respuesta de la Tierra."
+    },
+    "oneWayDelay": "Retraso de ida",
+    "gravity": "Gravedad",
+    "conjunction": "Conjunción solar — sin contacto",
+    "use": "Usar este entorno"
+  },
+  "why": {
+    "title": "¿Por qué?",
+    "source": "Fuente",
+    "nasaFigure": "Cifra de NASA",
+    "prototypeValue": "Valor de prototipo — no es una cifra de NASA",
+    "openSource": "Abrir página de la fuente"
+  }
+}
