@@ -12,7 +12,7 @@
     "check": "Chequeo diario",
     "loop": "Hallazgos",
     "brief": "Informe",
-    "environment": "Entorno"
+    "environment": "Misión"
   },
   "status": {
     "green": "OK",
@@ -45,7 +45,19 @@
     "landing": "Aterrizas el día {total}, dentro de {days} días. Yo futuro muestra tu cuerpo ese día.",
     "why": "El aterrizaje es el día más exigente de la misión: la gravedad vuelve cuando tu cuerpo está más débil. Cada día hasta entonces cuenta.",
     "sol": "En Marte, un día se llama sol y dura 24 h 39 min. Mientras viajas, KAWSAY cuenta días normales.",
-    "close": "Entendido"
+    "close": "Entendido",
+    "edit": "Editar misión y días",
+    "editTitle": "Tu misión",
+    "editHint": "El día 1 es el día del lanzamiento. Si cambias el día de hoy o el del aterrizaje, Yo futuro recalcula con los días que quedan.",
+    "name": "Nombre de la misión",
+    "crew": "Tripulante",
+    "dayField": "Hoy es el día de misión",
+    "landingField": "Día del aterrizaje",
+    "save": "Guardar misión",
+    "saved": "Misión guardada: {name}, día {day} de {total}.",
+    "invalidOrder": "El aterrizaje no puede ser antes de hoy.",
+    "invalidRange": "Usa días enteros del 1 al {max}.",
+    "headerLabel": "Misión {name}, tripulante {crew}"
   },
   "future": {
     "today": "Hoy",

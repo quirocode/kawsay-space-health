@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { engine } from './engine';
 import { memoryDatabase, type Database } from './db';
-import { briefInput, demandingAlert, reconcileAlerts, seedSnapshot, useApp, CREW_ALERT_AFTER_MS } from './store';
+import { briefInput, demandingAlert, normalizeMission, reconcileAlerts, seedSnapshot, useApp, CREW_ALERT_AFTER_MS, MAX_MISSION_DAYS } from './store';
 import { tsOf } from '../data/sol142';
 import type { WatchAlert } from '../domain/types';
 
@@ -158,5 +158,17 @@ describe('reconcileAlerts', () => {
     expect(log[0].state).toBe('resolved');
     expect(reconcileAlerts(log, [alert('caution', 120_000)], 120_000)).toHaveLength(1);
     expect(reconcileAlerts(log, [alert('caution', 3_600_000)], 3_600_000)).toHaveLength(2);
+  });
+});
+
+describe('normalizeMission', () => {
+  const cur = { name: 'Inti-1', crew: 'A. Quispe' };
+  it('keeps the old names when a field is left blank', () => {
+    expect(normalizeMission({ name: '  ', crew: '', missionDay: 10, arrivalDay: 20 }, cur)).toMatchObject(cur);
+  });
+  it('rounds days, starts at day 1 and never lands before today', () => {
+    expect(normalizeMission({ ...cur, missionDay: 0, arrivalDay: 12.6 }, cur)).toMatchObject({ missionDay: 1, arrivalDay: 13 });
+    expect(normalizeMission({ ...cur, missionDay: 50, arrivalDay: 40 }, cur)).toMatchObject({ missionDay: 40, arrivalDay: 40 });
+    expect(normalizeMission({ ...cur, missionDay: 5, arrivalDay: 99999 }, cur).arrivalDay).toBe(MAX_MISSION_DAYS);
   });
 });

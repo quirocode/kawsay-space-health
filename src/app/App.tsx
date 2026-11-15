@@ -49,6 +49,7 @@ function TopBar() {
   return (
     <header className="flex flex-wrap items-center gap-3 border-b border-line bg-surface px-6 py-3">
       <a href="/" className="text-xl font-bold tracking-wide text-brand-ink" aria-label={`${ui.app.name}: ${lang === 'es' ? 'sobre el proyecto' : 'about the project'}`}>{ui.app.name}</a>
+      <MissionName />
       <Link
         href="/environment"
         aria-label={`${ui.nav.environment}: ${env}`}
@@ -87,6 +88,19 @@ function TopBar() {
         {theme === 'day' ? (lang === 'es' ? 'Noche' : 'Night') : (lang === 'es' ? 'Día' : 'Day')}
       </button>
     </header>
+  );
+}
+
+/** "Inti-1 · A. Quispe": the mission and the crew member using this device. Opens the Mission screen. */
+function MissionName() {
+  const mission = useApp((s) => s.mission);
+  const { ui } = useCopy();
+  return (
+    <Link href="/environment" aria-label={fill(ui.mission.headerLabel, { name: mission.name, crew: mission.crew })}
+      className="flex min-h-11 flex-col justify-center rounded-card px-2 leading-tight hover:bg-surface-2">
+      <span className="text-[16px] font-bold">{mission.name}</span>
+      <span className="text-[14px] text-ink-2">{mission.crew}</span>
+    </Link>
   );
 }
 
@@ -130,7 +144,10 @@ function MissionDays() {
           <p>{fill(m.landing, { total: ctx.arrivalDay, days: daysToLanding(ctx) })}</p>
           <p className="text-ink-2">{m.why}</p>
           <p className="text-ink-2">{m.sol}</p>
-          <button type="button" onClick={() => setOpen(false)} className="mt-1 min-h-12 self-end rounded-full px-4 font-bold text-brand-ink">{m.close}</button>
+          <div className="mt-1 flex items-center justify-between gap-2">
+            <Link href="/environment" onClick={() => setOpen(false)} className="flex min-h-12 items-center font-bold text-brand-ink underline">{m.edit}</Link>
+            <button type="button" onClick={() => setOpen(false)} className="min-h-12 rounded-full px-4 font-bold text-brand-ink">{m.close}</button>
+          </div>
         </div>
       )}
     </div>

@@ -12,7 +12,7 @@
     "check": "Daily check",
     "loop": "Findings",
     "brief": "Brief",
-    "environment": "Environment"
+    "environment": "Mission"
   },
   "status": {
     "green": "OK",
@@ -45,7 +45,19 @@
     "landing": "Landing is on day {total}, in {days} days. Future Self shows your body on that day.",
     "why": "Landing is the hardest day of the mission: gravity returns when your body is weakest. Every day until then still counts.",
     "sol": "On Mars, a day is called a sol and lasts 24 h 39 min. While you travel, KAWSAY counts ordinary days.",
-    "close": "Got it"
+    "close": "Got it",
+    "edit": "Edit mission and days",
+    "editTitle": "Your mission",
+    "editHint": "Day 1 is launch day. Change today's day or landing day and Future Self recalculates for the days left.",
+    "name": "Mission name",
+    "crew": "Crew member",
+    "dayField": "Today is mission day",
+    "landingField": "Landing day",
+    "save": "Save mission",
+    "saved": "Mission saved: {name}, day {day} of {total}.",
+    "invalidOrder": "Landing day can't be before today.",
+    "invalidRange": "Use whole days from 1 to {max}.",
+    "headerLabel": "Mission {name}, crew member {crew}"
   },
   "future": {
     "today": "Today",
