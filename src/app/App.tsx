@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, Route, Router, Switch, useLocation } from 'wouter';
 import { useHashLocation } from 'wouter/use-hash-location';
-import ui from '../../content/ui.json';
-import flow from '../../content/flow.json';
 import { PALETTES, useApp, type Scene } from './store';
 import { clock, missionLabel, delayLabel } from './format';
+import { LANGS, syncLang, useCopy, useLang } from './i18n';
 import { FutureSelfScreen } from '../features/future-self/FutureSelfScreen';
 import { CheckInScreen } from '../features/check-in';
 import { LoopScreen } from '../features/finding';
@@ -15,13 +14,13 @@ import { RespondScreen } from '../features/watch/RespondScreen';
 import { AlarmOverlay, AlertBanner } from '../features/watch/Alarm';
 
 const NAV = [
-  { href: '/', label: ui.nav.home },
-  { href: '/check', label: ui.nav.check },
-  { href: '/watch', label: flow.nav.watch },
-  { href: '/loop', label: ui.nav.loop },
-  { href: '/brief', label: ui.nav.brief },
-  { href: '/environment', label: ui.nav.environment },
-];
+  { href: '/', key: 'home' },
+  { href: '/check', key: 'check' },
+  { href: '/watch', key: 'watch' },
+  { href: '/loop', key: 'loop' },
+  { href: '/brief', key: 'brief' },
+  { href: '/environment', key: 'environment' },
+] as const;
 
 function useOnline() {
   const [online, setOnline] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine));
@@ -44,16 +43,19 @@ function TopBar() {
   const toggleTheme = useApp((s) => s.toggleTheme);
   const palette = useApp((s) => s.palette);
   const setPalette = useApp((s) => s.setPalette);
+  const setLang = useApp((s) => s.setLang);
+  const lang = useLang();
+  const { ui } = useCopy();
   const online = useOnline();
   return (
     <header className="flex flex-wrap items-center gap-3 border-b border-line bg-surface px-6 py-3">
       <span className="text-xl font-bold tracking-wide text-brand">{ui.app.name}</span>
-      <span className="text-ink-2">{missionLabel(ctx)}</span>
-      <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{delayLabel(ctx.commDelayMin)}</span>
+      <span className="text-ink-2">{missionLabel(ctx, lang)}</span>
+      <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{delayLabel(ctx.commDelayMin, lang)}</span>
       <DemoMenu />
       {!online && <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{ui.app.offline}</span>}
       {theme === 'night' && (
-        <div role="radiogroup" aria-label="Night palette" className="flex gap-1">
+        <div role="radiogroup" aria-label={lang === 'es' ? 'Paleta nocturna' : 'Night palette'} className="flex gap-1">
           {PALETTES.map((p) => (
             <button
               key={p}
@@ -68,23 +70,32 @@ function TopBar() {
           ))}
         </div>
       )}
+      <div role="radiogroup" aria-label={lang === 'es' ? 'Idioma' : 'Language'} className="flex gap-1">
+        {LANGS.map((l) => (
+          <button
+            key={l.id}
+            type="button"
+            role="radio"
+            aria-checked={lang === l.id}
+            title={l.title}
+            onClick={() => setLang(l.id)}
+            className={`min-h-14 rounded-full px-3 text-[15px] font-bold ${lang === l.id ? 'bg-brand text-on-brand' : 'text-ink-2'}`}
+          >
+            {l.label}
+          </button>
+        ))}
+      </div>
       <button
         type="button"
         onClick={toggleTheme}
         className="min-h-14 rounded-full border border-line px-4 text-[15px]"
-        aria-label={theme === 'day' ? 'Switch to night mode' : 'Switch to day mode'}
+        aria-label={theme === 'day' ? (lang === 'es' ? 'Cambiar a modo noche' : 'Switch to night mode') : (lang === 'es' ? 'Cambiar a modo día' : 'Switch to day mode')}
       >
-        {theme === 'day' ? 'Night' : 'Day'}
+        {theme === 'day' ? (lang === 'es' ? 'Noche' : 'Night') : (lang === 'es' ? 'Día' : 'Day')}
       </button>
     </header>
   );
 }
-
-const SCENES: { scene: Scene; label: string; hint: string; go: string }[] = [
-  { scene: 'morning', label: flow.demo.morning, hint: flow.demo.morningHint, go: '/' },
-  { scene: 'headache', label: flow.demo.headache, hint: flow.demo.headacheHint, go: '/loop' },
-  { scene: 'watch', label: flow.demo.watch, hint: flow.demo.watchHint, go: '/watch' },
-];
 
 /** Demo mode: jump to a beat of the seeded Sol 142 story. No data entry needed. */
 function DemoMenu() {
@@ -92,6 +103,12 @@ function DemoMenu() {
   const nowTs = useApp((s) => s.nowTs);
   const [, navigate] = useLocation();
   const [open, setOpen] = useState(false);
+  const { ui, flow } = useCopy();
+  const scenes: { scene: Scene; label: string; hint: string; go: string }[] = [
+    { scene: 'morning', label: flow.demo.morning, hint: flow.demo.morningHint, go: '/' },
+    { scene: 'headache', label: flow.demo.headache, hint: flow.demo.headacheHint, go: '/loop' },
+    { scene: 'watch', label: flow.demo.watch, hint: flow.demo.watchHint, go: '/watch' },
+  ];
   return (
     <div className="relative ml-auto">
       <button type="button" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen(!open)}
@@ -100,7 +117,7 @@ function DemoMenu() {
       </button>
       {open && (
         <ul role="menu" aria-label={flow.demo.menu} className="absolute right-0 top-full z-40 mt-2 flex w-[340px] flex-col gap-1 rounded-card border border-line bg-surface p-2 shadow-lg">
-          {SCENES.map((s) => (
+          {scenes.map((s) => (
             <li key={s.scene} role="none">
               <button type="button" role="menuitem" className="flex min-h-14 w-full flex-col rounded-chip px-3 py-2 text-left hover:bg-surface-2"
                 onClick={() => { playScene(s.scene); navigate(s.go); setOpen(false); }}>
@@ -126,8 +143,11 @@ function useShipClock() {
 
 function NavBar() {
   const [loc] = useLocation();
+  const { ui, flow } = useCopy();
+  const lang = useLang();
+  const navLabel = (key: (typeof NAV)[number]['key']) => (key === 'watch' ? flow.nav.watch : ui.nav[key]);
   return (
-    <nav aria-label="Main" className="flex gap-2 border-t border-line bg-surface px-4 py-2">
+    <nav aria-label={lang === 'es' ? 'Principal' : 'Main'} className="flex gap-2 border-t border-line bg-surface px-4 py-2">
       {NAV.map((n) => {
         const active = n.href === '/' ? loc === '/' : loc.startsWith(n.href);
         return (
@@ -139,7 +159,7 @@ function NavBar() {
               active ? 'bg-brand font-bold text-on-brand' : 'text-ink-2'
             }`}
           >
-            {n.label}
+            {navLabel(n.key)}
           </Link>
         );
       })}
@@ -150,6 +170,7 @@ function NavBar() {
 function Disclaimer() {
   const seen = useApp((s) => s.disclaimerSeen);
   const dismiss = useApp((s) => s.dismissDisclaimer);
+  const { ui } = useCopy();
   if (seen) return null;
   return (
     <div role="note" className="flex items-center gap-4 border-b border-line bg-surface-2 px-6 py-2 text-[15px]">
@@ -164,15 +185,19 @@ function Disclaimer() {
 export function App() {
   const theme = useApp((s) => s.theme);
   const palette = useApp((s) => s.palette);
+  const lang = syncLang(useLang());
   useShipClock();
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     document.documentElement.dataset.palette = palette;
   }, [theme, palette]);
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   return (
     <Router hook={useHashLocation}>
-      <div className="flex h-full flex-col">
+      <div key={lang} className="flex h-full flex-col">
         <TopBar />
         <Disclaimer />
         <AlertBanner />
@@ -186,7 +211,7 @@ export function App() {
             <Route path="/brief" component={BriefScreen} />
             <Route path="/environment" component={EnvironmentScreen} />
             <Route>
-              <p className="p-8">Not found.</p>
+              <p className="p-8">{lang === 'es' ? 'Pantalla no encontrada.' : 'Not found.'}</p>
             </Route>
           </Switch>
         </main>

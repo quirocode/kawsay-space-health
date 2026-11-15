@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { Link } from 'wouter';
-import flow from '../../../content/flow.json';
+import { flow, te, useLang } from '../../app/i18n';
 import type { ActivityState, Reading, Status, WatchSample } from '../../domain/types';
 import { engine } from '../../app/engine';
 import { isOpen, useApp } from '../../app/store';
-import { ago, clock, fill } from '../../app/format';
+import { ago, clock, dec, fill } from '../../app/format';
 import { sampleAt, windowOf } from '../../data/watchSeries';
 import { tsOf } from '../../data/sol142';
 import { StatusBadge } from '../../components/StatusBadge';
@@ -33,6 +33,7 @@ export function WatchScreen() {
   const readings = useApp((s) => s.readings);
   const alerts = useApp((s) => s.alerts);
   const recoveryStartTs = useApp((s) => s.recoveryStartTs);
+  const lang = useLang();
   const scenario = useMemo(() => ({ recoveryStartTs }), [recoveryStartTs]);
 
   // Re-read the series every 5 s (the watch's own rate), not on every clock tick.
@@ -57,7 +58,7 @@ export function WatchScreen() {
     { key: 'hr', name: flow.watch.signals.heartRate, value: String(now.heartRate), unit: flow.watch.units.heartRate, status: level(openHeart), series: hour.map((s) => s.heartRate), min: 40, max: 150, band: now.activity === 'rest' ? RESTING_BAND : undefined, note: now.activity === 'rest' ? fill(flow.watch.usual, { low: RESTING_BAND[0], high: RESTING_BAND[1] }) : context },
     { key: 'spo2', name: flow.watch.signals.spo2, value: String(now.spo2), unit: flow.watch.units.spo2, status: level(openSpo2), series: hour.map((s) => s.spo2), min: 85, max: 100, band: [95, 100], note: context },
     { key: 'resp', name: flow.watch.signals.respRate, value: String(now.respRate), unit: flow.watch.units.respRate, status: 'green', series: hour.map((s) => s.respRate), min: 8, max: 32, note: context },
-    { key: 'skin', name: flow.watch.signals.skinTemp, value: `${now.skinTempDelta >= 0 ? '+' : ''}${now.skinTempDelta.toFixed(1)}`, unit: flow.watch.units.skinTemp, status: 'green', series: hour.map((s) => s.skinTempDelta), min: -1, max: 2, band: [-0.5, 0.5], note: flow.watch.vsUsual },
+    { key: 'skin', name: flow.watch.signals.skinTemp, value: `${now.skinTempDelta >= 0 ? '+' : ''}${dec(now.skinTempDelta.toFixed(1), lang)}`, unit: flow.watch.units.skinTemp, status: 'green', series: hour.map((s) => s.skinTempDelta), min: -1, max: 2, band: [-0.5, 0.5], note: flow.watch.vsUsual },
     { key: 'hrv', name: flow.watch.signals.hrv, value: String(now.hrv), unit: flow.watch.units.hrv, status: 'green', series: hour.map((s) => s.hrv), min: 0, max: 70, note: context },
   ];
 
@@ -85,7 +86,7 @@ export function WatchScreen() {
     { label: flow.check.steps.bp, ids: ['bp_systolic', 'bp_diastolic'], unit: 'mmHg' },
     { label: flow.check.steps.glucose, ids: ['glucose'], unit: 'mg/dL' },
     { label: flow.check.steps.temp, ids: ['body_temp'], unit: '°C' },
-    { label: flow.check.steps.mood, ids: ['mood'], unit: 'of 5' },
+    { label: flow.check.steps.mood, ids: ['mood'], unit: te('of 5') },
   ];
 
   return (
@@ -156,7 +157,7 @@ export function WatchScreen() {
                   <li key={m.label} className={`${PANEL} ${status === 'stale' ? 'hatch' : ''}`}>
                     <p className="flex items-center justify-between gap-2 font-bold">{m.label}<StatusBadge status={status} size="sm" /></p>
                     <p className="text-[15px] text-ink-2">
-                      {first ? <><span className="tabular text-[18px] text-ink">{rs.map((r) => r?.value ?? '–').join('/')}</span> {m.unit} · {fill(flow.check.ageAgo, { age: ago(nowTs - first.ts) })}</> : flow.check.empty}
+                      {first ? <><span className="tabular text-[18px] text-ink">{rs.map((r) => dec(r?.value ?? '–', lang)).join('/')}</span> {m.unit} · {fill(flow.check.ageAgo, { age: ago(nowTs - first.ts) })}</> : flow.check.empty}
                     </p>
                   </li>
                 );
@@ -172,7 +173,7 @@ export function WatchScreen() {
                 {[...alerts].reverse().map((a) => (
                   <li key={a.id} className={PANEL}>
                     <p className="flex items-center gap-2"><span className="tabular text-ink-2">{clock(a.alert.detectedTs)}</span><StatusBadge status={a.alert.level === 'caution' ? 'yellow' : 'red'} label={flow.level[a.alert.level]} size="sm" /></p>
-                    <p className="font-bold">{a.alert.title}</p>
+                    <p className="font-bold">{te(a.alert.title)}</p>
                     {isOpen(a) && a.alert.level !== 'caution' && <Link href="/respond" className="font-bold text-brand underline">{flow.findings.continue}</Link>}
                   </li>
                 ))}

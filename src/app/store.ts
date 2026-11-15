@@ -29,10 +29,13 @@ const COOLDOWN_MS = 45 * 60_000;
 
 export type Scene = 'morning' | 'headache' | 'watch';
 
+export type Lang = 'en' | 'es';
+
 interface Prefs {
   disclaimerSeen: boolean;
   theme: 'day' | 'night';
   palette: Palette;
+  lang: Lang;
 }
 
 export interface AppState extends Prefs {
@@ -82,21 +85,29 @@ export interface AppState extends Prefs {
   dismissDisclaimer(): void;
   toggleTheme(): void;
   setPalette(p: Palette): void;
+  setLang(lang: Lang): void;
 }
 
 // ── Preferences: small, per device, not part of the health record ─────────────
 const PREFS_KEY = 'kawsay:prefs';
+/** `?lang=es` opens the demo in Spanish without touching the saved preference. */
+function langFromUrl(): Lang | null {
+  if (typeof window === 'undefined') return null;
+  const v = new URLSearchParams(window.location.search).get('lang');
+  return v === 'es' || v === 'en' ? v : null;
+}
 function loadPrefs(): Prefs {
-  const fallback: Prefs = { disclaimerSeen: false, theme: 'day', palette: 'mars' };
+  const fallback: Prefs = { disclaimerSeen: false, theme: 'day', palette: 'mars', lang: 'en' };
   try {
-    return { ...fallback, ...(JSON.parse(localStorage.getItem(PREFS_KEY) ?? '{}') as Partial<Prefs>) };
+    const saved = { ...fallback, ...(JSON.parse(localStorage.getItem(PREFS_KEY) ?? '{}') as Partial<Prefs>) };
+    return { ...saved, lang: langFromUrl() ?? saved.lang };
   } catch {
-    return fallback;
+    return { ...fallback, lang: langFromUrl() ?? fallback.lang };
   }
 }
 function savePrefs(p: Prefs) {
   try {
-    localStorage.setItem(PREFS_KEY, JSON.stringify({ disclaimerSeen: p.disclaimerSeen, theme: p.theme, palette: p.palette }));
+    localStorage.setItem(PREFS_KEY, JSON.stringify({ disclaimerSeen: p.disclaimerSeen, theme: p.theme, palette: p.palette, lang: p.lang }));
   } catch {
     /* private mode: preferences last for this session only */
   }
@@ -429,6 +440,7 @@ export const useApp = create<AppState>()((set, get) => {
     dismissDisclaimer: () => { set({ disclaimerSeen: true }); savePrefs(get()); },
     toggleTheme: () => { set({ theme: get().theme === 'day' ? 'night' : 'day' }); savePrefs(get()); },
     setPalette: (palette) => { set({ palette, theme: 'night' }); savePrefs(get()); },
+    setLang: (lang) => { set({ lang }); savePrefs(get()); },
   };
 });
 
