@@ -33,7 +33,7 @@ export function PlanPanel({
                 {r.note && (
                   <>
                     {' · '}
-                    <span className="rounded-full bg-surface px-2 py-0.5 text-[13px] font-bold text-brand">NASA</span> {r.note}
+                    <span className="rounded-full bg-surface px-2 py-0.5 text-[13px] font-bold text-brand-ink">NASA</span> {r.note}
                   </>
                 )}
               </p>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import ui from '../../../content/ui.json';
 import flow from '../../../content/flow.json';
@@ -35,6 +35,20 @@ const STEPS: Step[] = [
 
 const MAX_DIGITS = 5;
 
+/** Keep what a number field accepts: digits, one decimal point when allowed, at most MAX_DIGITS digits. */
+export function cleanNumber(text: string, decimal: boolean): string {
+  let out = '';
+  let digits = 0;
+  for (const ch of text.replace(',', '.')) {
+    if (ch >= '0' && ch <= '9' && digits < MAX_DIGITS) { out += ch; digits += 1; }
+    else if (ch === '.' && decimal && !out.includes('.')) out += out === '' ? '0.' : '.';
+  }
+  return out;
+}
+
+/** A keyboard and mouse are present (desktop, the .exe): put the cursor in the first field. */
+const hasFinePointer = () => typeof window !== 'undefined' && (window.matchMedia?.('(pointer: fine)').matches ?? false);
+
 /** Today's latest value per indicator, as the text the pad edits. */
 function todaysValues(readings: Reading[], missionDay: number): Record<string, string> {
   const latest = new Map<string, Reading>();
@@ -60,6 +74,7 @@ export function CheckInScreen() {
   const [values, setValues] = useState<Record<string, string>>(() => todaysValues(readings, ctx.missionDay));
   const [skipped, setSkipped] = useState<Set<string>>(new Set());
   const defs = useMemo(() => new Map(engine.indicators().map((d) => [d.id, d])), []);
+  const inputs = useRef<(HTMLInputElement | null)[]>([]);
 
   if (!editing) return <Summary onAgain={() => { setValues(todaysValues(readings, ctx.missionDay)); setSkipped(new Set()); setIndex(0); setField(0); setFresh(true); setEditing(true); }} />;
 
@@ -121,31 +136,51 @@ export function CheckInScreen() {
             <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
               {step.fields.map((id, i) => {
                 const def = defs.get(id)!;
+                const text = values[id] ?? '';
+                const toNext = () => {
+                  if (i < step.fields.length - 1) inputs.current[i + 1]?.focus();
+                  else next(false);
+                };
                 return (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => { setField(i); setFresh(true); }}
-                    aria-pressed={field === i}
-                    aria-label={`${def.name}: ${values[id] || flow.check.empty}`}
-                    className={`flex items-baseline gap-2 rounded-card border-2 px-3 py-1 ${field === i ? 'border-brand' : 'border-transparent'}`}
+                  <label
+                    key={`${step.key}-${id}`}
+                    className={`flex cursor-text items-baseline gap-2 rounded-card border-2 px-3 py-1 ${field === i ? 'border-brand-ink' : 'border-transparent'}`}
                   >
                     {step.key === 'habits' && <span className="text-[18px] text-ink-2">{i === 0 ? flow.check.exercise : flow.check.water}</span>}
-                    <span className={`tabular text-[64px] leading-none ${values[id] ? '' : 'text-ink-2'}`}>{values[id] || '–'}</span>
+                    <input
+                      ref={(el) => { inputs.current[i] = el; }}
+                      type="text"
+                      inputMode={step.decimal ? 'decimal' : 'numeric'}
+                      autoComplete="off"
+                      enterKeyHint={i < step.fields.length - 1 ? 'next' : 'done'}
+                      autoFocus={i === 0 && hasFinePointer()}
+                      aria-label={`${def.name}${def.unit ? ` (${def.unit})` : ''}`}
+                      placeholder="–"
+                      value={text}
+                      style={{ width: `${Math.max(2, text.length)}ch` }}
+                      onFocus={(e) => { setField(i); setFresh(true); e.currentTarget.select(); }}
+                      onChange={(e) => { set(id, cleanNumber(e.target.value, step.decimal)); setFresh(false); }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || (e.key === '/' && i < step.fields.length - 1)) { e.preventDefault(); toNext(); }
+                      }}
+                      className="tabular min-w-0 bg-transparent text-[64px] leading-none outline-none placeholder:text-ink-2"
+                    />
                     <span className="text-[20px] text-ink-2">{step.key === 'bp' && i === 0 ? '/' : def.unit}</span>
-                  </button>
+                  </label>
                 );
               })}
             </div>
           )}
+          {step.kind === 'pad' && <p className="text-[15px] text-ink-2">{flow.check.typeHint}</p>}
+          {step.kind !== 'pad' && <p className="text-[15px] text-ink-2">{flow.check.scaleHint}</p>}
           {prefilled && <p className="text-[15px] text-ink-2">{flow.check.prefilled}</p>}
 
           <div className={PANEL}>
-            <h2 className="font-bold text-brand">{ui.check.howToMeasure}</h2>
+            <h2 className="font-bold text-brand-ink">{ui.check.howToMeasure}</h2>
             <ol className="mt-1 list-decimal pl-6 text-[18px]">
               {copy.howToMeasure.map((line) => <li key={line}>{line}</li>)}
             </ol>
-            <h2 className="mt-3 font-bold text-brand">{flow.check.whyItMatters}</h2>
+            <h2 className="mt-3 font-bold text-brand-ink">{flow.check.whyItMatters}</h2>
             <p className="text-[18px]">{copy.whyItMatters}</p>
             <div className="mt-1"><SourceList sources={defs.get(copyId)!.sources} /></div>
           </div>
@@ -188,6 +223,16 @@ export function CheckInScreen() {
 }
 
 function Scale({ labels, value, onChange, name, compact = false }: { labels: string[]; value: number; onChange: (v: number) => void; name: string; compact?: boolean }) {
+  // Typing works too: the number keys pick an answer, unless the cursor is in a text field.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey || e.altKey || (e.target instanceof HTMLElement && e.target.closest('input, textarea'))) return;
+      const n = Number(e.key);
+      if (Number.isInteger(n) && n >= 1 && n <= labels.length) onChange(n);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [labels.length, onChange]);
   return (
     <div role="radiogroup" aria-label={name} className={compact ? 'grid grid-cols-5 gap-2' : 'grid flex-1 gap-3'}>
       {labels.map((label, i) => {
@@ -195,7 +240,7 @@ function Scale({ labels, value, onChange, name, compact = false }: { labels: str
         const on = value === v;
         return (
           <button key={label} type="button" role="radio" aria-checked={on} onClick={() => onChange(v)}
-            className={`flex items-center rounded-card border-2 ${compact ? 'min-h-[72px] flex-col justify-center px-1 text-[15px]' : 'min-h-[72px] gap-4 px-5 text-[20px]'} ${on ? 'border-brand bg-brand-bg font-bold' : 'border-line'}`}>
+            className={`flex items-center rounded-card border-2 ${compact ? 'min-h-[72px] flex-col justify-center px-1 text-[15px]' : 'min-h-[72px] gap-4 px-5 text-[20px]'} ${on ? 'border-brand-ink bg-brand-bg font-bold' : 'border-line'}`}>
             <span className="tabular text-[24px]">{v}</span>
             <span>{label}</span>
           </button>

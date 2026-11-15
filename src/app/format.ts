@@ -10,7 +10,7 @@ export const ENV_LABEL: Record<Environment, string> = {
 };
 
 export function missionLabel(ctx: MissionContext): string {
-  return `Sol ${ctx.missionDay} of ${ctx.arrivalDay} · ${ENV_LABEL[ctx.environment]}`;
+  return `Sol ${ctx.missionDay} of ${ctx.arrivalDay}`;
 }
 
 export function delayLabel(min: number): string {

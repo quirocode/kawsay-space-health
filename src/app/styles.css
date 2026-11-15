@@ -6,7 +6,7 @@
 
 /*
  * Design tokens come from P4's pen.dev file (design/kawsay.pen → design/exports/tokens.json),
- * generated into ./tokens.css by scripts/tokens-to-css.mjs. Light theme + 5 night palettes.
+ * generated into ./tokens.css by scripts/tokens-to-css.mjs. Light theme + one night theme; NASA blue (#0B3D91) is the action colour.
  * Components never hard-code colours: use these variables or the Tailwind names below.
  */
 @import './tokens.css';
@@ -25,6 +25,7 @@
   --color-ink-2: var(--ink-2);
   --color-line: var(--line);
   --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
   --color-on-brand: var(--on-brand);
   --color-future: var(--future);
   --color-ok: var(--status-ok);
@@ -56,7 +57,7 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid var(--brand);
+  outline: 3px solid var(--brand-ink);
   outline-offset: 2px;
 }
 
@@ -121,7 +122,7 @@ body {
   outline: none;
 }
 .woven-range:focus-visible::-webkit-slider-thumb {
-  outline: 3px solid var(--brand);
+  outline: 3px solid var(--brand-ink);
   outline-offset: 2px;
 }
 

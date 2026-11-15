@@ -4,7 +4,7 @@ import type { Source } from '../domain/types';
 
 /** Shared building blocks (P2). Colours come from the design tokens, never hard-coded. */
 export const BTN_PRIMARY = 'flex min-h-[72px] items-center justify-center rounded-card bg-brand px-6 text-[20px] font-bold text-on-brand disabled:opacity-40';
-export const BTN_SECONDARY = 'flex min-h-[72px] items-center justify-center rounded-card border-2 border-brand px-6 text-[18px] font-bold text-brand disabled:opacity-40';
+export const BTN_SECONDARY = 'flex min-h-[72px] items-center justify-center rounded-card border-2 border-brand-ink px-6 text-[18px] font-bold text-brand-ink disabled:opacity-40';
 export const CARD = 'rounded-sheet bg-surface p-6 shadow-sm';
 export const PANEL = 'rounded-card bg-surface-2 p-4';
 
@@ -23,7 +23,7 @@ export function SourceList({ sources }: { sources: Source[] }) {
   const unique = sources.filter((s) => (seen.has(s.url) ? false : (seen.add(s.url), true)));
   return (
     <details className="text-[15px] text-ink-2">
-      <summary className="inline-flex min-h-12 cursor-pointer items-center font-bold text-brand">{ui.why.title}</summary>
+      <summary className="inline-flex min-h-12 cursor-pointer items-center font-bold text-brand-ink">{ui.why.title}</summary>
       <ul className="mt-1 flex flex-col gap-2">
         {unique.map((s) => (
           <li key={s.url} className="flex items-start gap-2">

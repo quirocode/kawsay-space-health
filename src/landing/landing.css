@@ -1,0 +1,157 @@
+@import 'tailwindcss';
+
+/*
+ * Landing page (P1). Its own small token set, mapped to CSS variables once.
+ * Accent is NASA blue (#0B3D91, Pantone 286 C); a lighter tint of it is used for
+ * text and glows on the dark background, where the pure blue would not be readable.
+ */
+:root {
+  --l-bg: #090b11;
+  --l-bg-2: #0f131a;
+  --l-card: rgb(15 19 26 / 0.6);
+  --l-line: rgb(41 48 61 / 0.6);
+  --l-line-strong: #29303d;
+  --l-ink: #f9fafb;
+  --l-muted: #8f99a3;
+  --l-nasa: #0b3d91;
+  --l-nasa-hover: #104db5;
+  --l-accent: #6f9bff;
+  --l-accent-soft: rgb(111 155 255 / 0.12);
+  --l-glow: rgb(53 110 230 / 0.45);
+  --l-danger: #f0705e;
+  --l-danger-soft: rgb(240 112 94 / 0.12);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-l-bg: var(--l-bg);
+  --color-l-bg-2: var(--l-bg-2);
+  --color-l-card: var(--l-card);
+  --color-l-line: var(--l-line);
+  --color-l-ink: var(--l-ink);
+  --color-l-muted: var(--l-muted);
+  --color-l-nasa: var(--l-nasa);
+  --color-l-nasa-hover: var(--l-nasa-hover);
+  --color-l-accent: var(--l-accent);
+  --color-l-accent-soft: var(--l-accent-soft);
+  --color-l-danger: var(--l-danger);
+  --color-l-danger-soft: var(--l-danger-soft);
+  --font-landing: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+}
+
+body {
+  margin: 0;
+  background: var(--l-bg);
+  color: var(--l-ink);
+  font-family: var(--font-landing);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 3px solid var(--l-accent);
+  outline-offset: 3px;
+}
+
+/* Starfield: three layers of tiny dots, no image files. */
+.stars,
+.stars::before,
+.stars::after {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  content: '';
+}
+.stars {
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #fff9, transparent),
+    radial-gradient(1px 1px at 120px 80px, #fff6, transparent),
+    radial-gradient(1px 1px at 200px 160px, #fff8, transparent),
+    radial-gradient(1px 1px at 280px 40px, #fff5, transparent);
+  background-size: 320px 220px;
+}
+.stars::before {
+  background-image:
+    radial-gradient(1.5px 1.5px at 60px 120px, #fffa, transparent),
+    radial-gradient(1px 1px at 240px 200px, #fff7, transparent),
+    radial-gradient(1.5px 1.5px at 400px 60px, #cfe0ff, transparent);
+  background-size: 480px 300px;
+  animation: twinkle 6s ease-in-out infinite alternate;
+}
+.stars::after {
+  background-image:
+    radial-gradient(1px 1px at 90px 260px, #fff8, transparent),
+    radial-gradient(2px 2px at 520px 140px, #dbe7ff, transparent);
+  background-size: 640px 380px;
+  animation: twinkle 9s ease-in-out infinite alternate-reverse;
+}
+@keyframes twinkle {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+/* The planet on the horizon: a lit limb in NASA blue, drawn with gradients. */
+.planet {
+  position: absolute;
+  left: 50%;
+  top: 66%;
+  width: 160vw;
+  height: 160vw;
+  max-width: none;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 0%, rgb(111 155 255 / 0.35), transparent 22%),
+    radial-gradient(circle at 50% 50%, #0d1a33 55%, #091224 70%, #070b14 100%);
+  box-shadow:
+    0 -2px 0 0 rgb(150 185 255 / 0.55),
+    0 -18px 60px 0 var(--l-glow),
+    0 -60px 160px 20px rgb(11 61 145 / 0.45);
+}
+
+.hero-fade {
+  background: linear-gradient(to bottom, transparent 60%, var(--l-bg));
+}
+
+.btn-glow {
+  box-shadow: 0 0 40px 0 var(--l-glow);
+}
+
+.grid-glow {
+  background-image:
+    linear-gradient(var(--l-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--l-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, #000 20%, transparent 70%);
+  opacity: 0.35;
+}
+
+/* Sections fade up as they enter the viewport. */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.scroll-dot {
+  animation: scroll-dot 1.8s ease-in-out infinite;
+}
+@keyframes scroll-dot {
+  0% { transform: translateY(0); opacity: 1; }
+  70% { transform: translateY(12px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .stars::before, .stars::after, .scroll-dot { animation: none; }
+}

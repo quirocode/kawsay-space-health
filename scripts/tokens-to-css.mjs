@@ -3,7 +3,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const t = JSON.parse(readFileSync(new URL('../design/exports/tokens.json', import.meta.url), 'utf8'));
-const PALETTES = ['mars', 'jwst', 'lunar', 'aurora', 'earthrise'];
 
 // App variable ← design token. Components only use the app names.
 const MAP = {
@@ -17,7 +16,8 @@ const MAP = {
   '--brand': 'inti',
   '--on-brand': 'on-inti',
   '--brand-bg': 'inti-bg',
-  '--future': 'inti', // decision: the arrival-day self is drawn in Inti (sun); the design has no separate "future" token and its violet is reserved for stale data
+  '--brand-ink': 'inti-ink', // NASA blue for text and outlines; a lighter tint at night, where #0B3D91 is unreadable
+  '--future': 'inti-ink', // decision: the arrival-day self is drawn in the brand colour; violet stays reserved for stale data
   '--status-ok': 'green',
   '--status-watch': 'yellow',
   '--status-act': 'red',
@@ -40,11 +40,11 @@ ${block('light')}
   --radius-sm: ${t.radius.sm}px;
   color-scheme: light;
 }
-${PALETTES.map((p) => `
-:root[data-theme='night'][data-palette='${p}'] {
-${block(p)}
+
+:root[data-theme='night'] {
+${block('night')}
   color-scheme: dark;
-}`).join('\n')}
+}
 `;
 writeFileSync(new URL('../src/app/tokens.css', import.meta.url), css);
 console.log('wrote src/app/tokens.css');

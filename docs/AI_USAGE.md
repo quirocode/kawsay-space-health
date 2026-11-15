@@ -15,3 +15,4 @@ Log every use as you go. One line each.
 | Sat 12:40 | P1 | Claude Code (Claude Opus 5.5) | Aligned P3's catalog to the contract, wired it into the engine | `src/domain/indicators.ts`, `src/app/engine/` |
 | Sat 13:00 | P1 | Claude Code (Claude Opus 5.5) | Exported P4's pen.dev variables to tokens and themed the app (5 night palettes) | `design/exports/tokens.json`, `src/app/tokens.css` |
 | Sat 13:15 | P1 | Claude Code (Claude Opus 5.5) via pen.dev MCP | Designed components and 8 screens in kawsay.pen using P4's design system; exported PNGs and body.svg | `design/kawsay.pen`, `design/exports/` |
+| Sun 12:10 | P1 | Claude Code (Claude Opus 5.5) | Landing page (layout modelled on quenaris.vercel.app, our own copy), NASA-blue single theme, environment chip in the header, typed input in Daily check, rebuilt the .exe | `index.html`, `src/landing/`, `content/landing.json`, `design/exports/tokens.json`, `src/app/`, `src/features/check-in/`, `src/features/environment/` |

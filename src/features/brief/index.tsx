@@ -44,10 +44,10 @@ export function BriefScreen() {
             {shown.arrivesAtTs === null ? (
               <p className="text-[24px] font-bold text-stale">{fill(ui.brief.conjunction, { day: shown.missionDay + 16 })}</p>
             ) : delay < 1 ? (
-              <p className="text-[24px] font-bold text-brand">{flow.brief.arrivesSeconds}</p>
+              <p className="text-[24px] font-bold text-brand-ink">{flow.brief.arrivesSeconds}</p>
             ) : (
               <>
-                <p className="text-[24px] font-bold text-brand">{fill(ui.brief.arrives, { min: delay, time: clock(shown.arrivesAtTs) })}</p>
+                <p className="text-[24px] font-bold text-brand-ink">{fill(ui.brief.arrives, { min: delay, time: clock(shown.arrivesAtTs) })}</p>
                 <p className="text-[15px] text-ink-2">{fill(ui.brief.replyEarliest, { time: clock(shown.arrivesAtTs + delay * 60_000) })}</p>
               </>
             )}

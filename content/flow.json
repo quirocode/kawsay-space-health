@@ -37,6 +37,8 @@
     "water": "Water",
     "whyItMatters": "Why it matters",
     "prefilled": "Showing your last value. Change it if today is different.",
+    "typeHint": "Type the number or use the keypad. Enter goes to the next one.",
+    "scaleHint": "Tap an answer, or press a number from 1 to 5.",
     "empty": "Not measured yet",
     "save": "Save check",
     "summaryTitle": "Today's check",

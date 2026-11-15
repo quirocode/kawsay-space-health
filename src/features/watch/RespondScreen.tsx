@@ -121,7 +121,7 @@ function Question({ record, step, last }: { record: AlertRecord; step: ProtocolS
           const on = picked.includes(o.id);
           return (
             <button key={o.id} type="button" role="checkbox" aria-checked={on} onClick={() => toggle(o.id)}
-              className={`flex min-h-16 items-center rounded-card border-2 px-5 text-left text-[20px] ${on ? 'border-brand bg-brand-bg font-bold' : 'border-line'}`}>
+              className={`flex min-h-16 items-center rounded-card border-2 px-5 text-left text-[20px] ${on ? 'border-brand-ink bg-brand-bg font-bold' : 'border-line'}`}>
               {o.label}
             </button>
           );
@@ -175,7 +175,7 @@ function Timer({ step, onDone }: { step: ProtocolStep; onDone: () => void }) {
   return (
     <>
       <div className="flex flex-1 items-center justify-center" aria-hidden>
-        <span className={`flex h-44 w-44 items-center justify-center rounded-full border-4 border-brand bg-brand-bg ${running ? 'breathe' : ''}`} />
+        <span className={`flex h-44 w-44 items-center justify-center rounded-full border-4 border-brand-ink bg-brand-bg ${running ? 'breathe' : ''}`} />
       </div>
       <p className="tabular text-center text-[34px]" role="timer">{countdown(left)}</p>
       {startTs === null

@@ -1,0 +1,101 @@
+{
+  "nav": {
+    "challenge": "Challenge",
+    "advantages": "Why KAWSAY",
+    "technology": "Technology",
+    "demo": "Try the demo"
+  },
+  "hero": {
+    "badge": "NASA Space Apps Challenge 2026",
+    "title": "KAWSAY",
+    "subtitle": "A health copilot for astronauts on long missions. It answers the one question no dashboard does: what body will you land with?",
+    "primary": "Try the demo",
+    "secondary": "Watch the video",
+    "scroll": "Scroll to learn more"
+  },
+  "video": {
+    "title": "KAWSAY in",
+    "titleAccent": "30 seconds",
+    "subtitle": "A crew member skips exercise for a week, sees their landing-day self decline, and brings it back.",
+    "soon": "Video coming soon",
+    "soonHint": "Meanwhile, the demo plays the full Sol 142 story with no data entry."
+  },
+  "challenge": {
+    "title": "The Challenge We're",
+    "titleAccent": "Solving",
+    "subtitle": "In deep space, the astronaut is their own first doctor",
+    "problemsTitle": "Current challenges",
+    "solutionsTitle": "Our app",
+    "problems": [
+      { "icon": "slope", "title": "Damage is slow and silent", "text": "Bone and fitness decline a little every day. No single day feels different, so nobody notices the slope." },
+      { "icon": "link", "title": "Hazards compound", "text": "A headache can mean poor sleep, high CO₂, low oxygen or eye pressure. One indicator at a time misses it." },
+      { "icon": "signal", "title": "Earth is up to 20 minutes away", "text": "From Mars, every answer takes up to 40 minutes round trip, or never comes during conjunction." },
+      { "icon": "landing", "title": "Landing hits the weakest body", "text": "The most demanding day of the mission arrives when the body is at its worst after months without gravity." }
+    ],
+    "solutions": [
+      { "icon": "mirror", "title": "Future Self", "text": "Shows you today next to your projected self on arrival day. Every workout, glass of water and hour of sleep bends the line." },
+      { "icon": "rules", "title": "Compound risk engine", "text": "Explainable rules read several indicators together. Each one cites the NASA page behind it." },
+      { "icon": "loop", "title": "Earth-independent loop", "text": "Measure, understand, act, verify, escalate. KAWSAY checks that the fix worked before it asks Earth." },
+      { "icon": "watch", "title": "An alarm on your wrist", "text": "The smart band watches six signals around the clock and raises the alarm, even with the app in the background." }
+    ]
+  },
+  "advantages": {
+    "title": "Built for the",
+    "titleAccent": "crew",
+    "subtitle": "Designed around the person who uses it, not the chart",
+    "stats": [
+      { "icon": "clock", "value": 3, "prefix": "<", "suffix": " min", "label": "Daily check", "hint": "the watch measures the rest" },
+      { "icon": "watch", "value": 6, "prefix": "", "suffix": "", "label": "Continuous signals", "hint": "from the smart band, every second" },
+      { "icon": "offline", "value": 0, "prefix": "", "suffix": "", "label": "Servers needed", "hint": "works with the network off" },
+      { "icon": "book", "value": 100, "prefix": "", "suffix": "%", "label": "Rules with a source", "hint": "NASA figure or labelled prototype" }
+    ]
+  },
+  "technology": {
+    "title": "Powered by",
+    "titleAccent": "NASA Science and Open Tech",
+    "subtitle": "Official NASA research, a deterministic engine and a wearable, in an app that never needs a server",
+    "items": [
+      { "icon": "nasa", "title": "NASA Human Research Program", "text": "The 5 hazards of spaceflight and NASA's risk pages set our rules: bone loss of 1–1.5% a month, fitness, SANS, sleep and hypoxia." },
+      { "icon": "standard", "title": "NASA-STD-3001 limits", "text": "Cabin CO₂ at or under 3 mmHg (1-hour average) drives the headache rule. Every figure is tagged NASA or Prototype." },
+      { "icon": "watch", "title": "Smart band integration", "text": "Heart rate, HRV, blood oxygen, breathing rate, skin temperature and motion. Activity context tells exercise from a real alarm." },
+      { "icon": "rules", "title": "Deterministic rules engine", "text": "Pure TypeScript with unit tests for every function. No AI decides a health status; rules do, and they explain why." },
+      { "icon": "code", "title": "TypeScript and React 19", "text": "Built with Vite and Tailwind CSS, with Zustand for state, Motion for animation and design tokens from our own design system." },
+      { "icon": "offline", "title": "Offline-first by design", "text": "A Progressive Web App with a local IndexedDB database. Nothing leaves the device, and it keeps working with no signal." },
+      { "icon": "desktop", "title": "Windows desktop app", "text": "An Electron build that loads only from disk and blocks every network request. One .exe, ready for the station laptop." },
+      { "icon": "delay", "title": "Communication-delay model", "text": "Knows the one-way delay for the ISS, Orion, the Moon and Mars, and shows when Earth's answer will arrive." },
+      { "icon": "cloud", "title": "Vercel and GitHub Actions", "text": "Every change is type-checked, tested and built in CI, then deployed to the public demo." }
+    ],
+    "stack": ["TypeScript", "React 19", "Vite", "Tailwind CSS", "Zustand", "Motion", "Vitest", "IndexedDB", "PWA", "Electron", "Vercel", "GitHub Actions"]
+  },
+  "cta": {
+    "title": "Meet your landing-day self",
+    "text": "Open the web app in your browser, or download the Windows app and run it with no internet.",
+    "web": "Open the web app",
+    "download": "Download for Windows (.exe)"
+  },
+  "footer": {
+    "tagline": "What body will you land with? A health copilot for long-duration missions.",
+    "appTitle": "App",
+    "app": [
+      { "label": "Future Self", "href": "/app/#/" },
+      { "label": "Daily check", "href": "/app/#/check" },
+      { "label": "Watch", "href": "/app/#/watch" },
+      { "label": "Flight surgeon brief", "href": "/app/#/brief" }
+    ],
+    "resourcesTitle": "Resources",
+    "resources": [
+      { "label": "Source code", "href": "https://github.com/quirocode/kawsay-space-health" },
+      { "label": "NASA Human Research Program", "href": "https://www.nasa.gov/hrp/hazards/" },
+      { "label": "NASA Space Apps Challenge", "href": "https://www.spaceappschallenge.org/" }
+    ],
+    "connectTitle": "Connect",
+    "repoLabel": "GitHub repository",
+    "copyright": "© 2026 KAWSAY. NASA Space Apps Challenge 2026 submission.",
+    "disclaimer": "Prototype for a hackathon. Not a medical device."
+  },
+  "links": {
+    "app": "/app/",
+    "download": "https://github.com/quirocode/kawsay-space-health/releases/latest",
+    "repo": "https://github.com/quirocode/kawsay-space-health"
+  }
+}

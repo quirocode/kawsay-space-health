@@ -14,10 +14,6 @@ import { tsOf } from '../data/sol142';
 
 export type { AlertRecord, CaseRecord, PendingRecheck } from './db';
 
-/** Night palettes from P4's design file (design/exports/tokens.json). */
-export const PALETTES = ['mars', 'jwst', 'lunar', 'aurora', 'earthrise'] as const;
-export type Palette = (typeof PALETTES)[number];
-
 /** Bump when the demo data or the stored shape changes, so returning devices reload the seeded mission. */
 export const DEMO_VERSION = 3;
 /** Seconds of watch history the rules look at. */
@@ -32,7 +28,6 @@ export type Scene = 'morning' | 'headache' | 'watch';
 interface Prefs {
   disclaimerSeen: boolean;
   theme: 'day' | 'night';
-  palette: Palette;
 }
 
 export interface AppState extends Prefs {
@@ -81,22 +76,22 @@ export interface AppState extends Prefs {
   resetDemo(): void;
   dismissDisclaimer(): void;
   toggleTheme(): void;
-  setPalette(p: Palette): void;
 }
 
 // ── Preferences: small, per device, not part of the health record ─────────────
 const PREFS_KEY = 'kawsay:prefs';
 function loadPrefs(): Prefs {
-  const fallback: Prefs = { disclaimerSeen: false, theme: 'day', palette: 'mars' };
+  const fallback: Prefs = { disclaimerSeen: false, theme: 'night' };
   try {
-    return { ...fallback, ...(JSON.parse(localStorage.getItem(PREFS_KEY) ?? '{}') as Partial<Prefs>) };
+    const saved = JSON.parse(localStorage.getItem(PREFS_KEY) ?? '{}') as Partial<Prefs>;
+    return { disclaimerSeen: saved.disclaimerSeen ?? fallback.disclaimerSeen, theme: saved.theme ?? fallback.theme };
   } catch {
     return fallback;
   }
 }
 function savePrefs(p: Prefs) {
   try {
-    localStorage.setItem(PREFS_KEY, JSON.stringify({ disclaimerSeen: p.disclaimerSeen, theme: p.theme, palette: p.palette }));
+    localStorage.setItem(PREFS_KEY, JSON.stringify({ disclaimerSeen: p.disclaimerSeen, theme: p.theme }));
   } catch {
     /* private mode: preferences last for this session only */
   }
@@ -428,7 +423,6 @@ export const useApp = create<AppState>()((set, get) => {
 
     dismissDisclaimer: () => { set({ disclaimerSeen: true }); savePrefs(get()); },
     toggleTheme: () => { set({ theme: get().theme === 'day' ? 'night' : 'day' }); savePrefs(get()); },
-    setPalette: (palette) => { set({ palette, theme: 'night' }); savePrefs(get()); },
   };
 });
 

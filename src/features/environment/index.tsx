@@ -4,7 +4,7 @@ import flow from '../../../content/flow.json';
 import type { Environment } from '../../domain/types';
 import { useApp } from '../../app/store';
 import { fill } from '../../app/format';
-import { BTN_PRIMARY, CARD, Screen } from '../../components/ui';
+import { CARD, Screen } from '../../components/ui';
 
 /**
  * One-way delay per environment, in minutes. Mars values sit inside NASA's "up to 20 min";
@@ -22,15 +22,14 @@ const OPTIONS: { env: Environment; name: string; description: string; gravity: s
 export function EnvironmentScreen() {
   const ctx = useApp((s) => s.context);
   const setEnvironment = useApp((s) => s.setEnvironment);
-  const [env, setEnv] = useState<Environment>(ctx.environment);
-  const [conjunction, setConjunction] = useState(!Number.isFinite(ctx.commDelayMin));
   const [applied, setApplied] = useState<string | null>(null);
 
-  const choice = OPTIONS.find((o) => o.env === env)!;
-  const inUse = ctx.environment === env && !Number.isFinite(ctx.commDelayMin) === conjunction;
-  const apply = () => {
-    setEnvironment(env, conjunction ? Infinity : choice.delayMin);
-    setApplied(choice.name);
+  // Choosing applies at once, so the header always shows where the crew is.
+  const env = ctx.environment;
+  const conjunction = !Number.isFinite(ctx.commDelayMin);
+  const choose = (o: (typeof OPTIONS)[number], conj: boolean) => {
+    setEnvironment(o.env, conj ? Infinity : o.delayMin);
+    setApplied(conj ? ui.environment.conjunction : o.name);
   };
 
   return (
@@ -43,11 +42,11 @@ export function EnvironmentScreen() {
           {OPTIONS.map((o) => {
             const on = o.env === env;
             return (
-              <button key={o.env} type="button" role="radio" aria-checked={on} onClick={() => { setEnv(o.env); setApplied(null); }}
-                className={`flex min-h-[150px] flex-col gap-1 rounded-card border-2 p-5 text-left ${on ? 'border-brand bg-brand-bg' : 'border-line bg-surface-2'}`}>
+              <button key={o.env} type="button" role="radio" aria-checked={on} onClick={() => choose(o, conjunction)}
+                className={`flex min-h-[150px] flex-col gap-1 rounded-card border-2 p-5 text-left ${on ? 'border-brand-ink bg-brand-bg' : 'border-line bg-surface-2'}`}>
                 <span className="flex items-center justify-between text-[22px] font-bold">
                   {o.name}
-                  {ctx.environment === o.env && <span className="rounded-full border border-brand px-2 text-[15px] text-brand">{flow.environment.current}</span>}
+                  {on && <span className="rounded-full border border-brand-ink px-2 text-[15px] text-brand-ink">{flow.environment.current}</span>}
                 </span>
                 <span className="text-[15px] text-ink-2">{o.description}</span>
                 <span className="mt-auto text-[15px] text-ink-2">{ui.environment.gravity} · {o.gravity}</span>
@@ -55,7 +54,7 @@ export function EnvironmentScreen() {
               </button>
             );
           })}
-          <button type="button" role="switch" aria-checked={conjunction} onClick={() => { setConjunction(!conjunction); setApplied(null); }}
+          <button type="button" role="switch" aria-checked={conjunction} onClick={() => choose(OPTIONS.find((o) => o.env === env)!, !conjunction)}
             className={`flex min-h-[150px] flex-col justify-center gap-3 rounded-card border-2 p-5 text-left ${conjunction ? 'border-stale bg-stale-bg' : 'border-line'}`}>
             <span className={`flex h-9 w-16 items-center rounded-full p-1 ${conjunction ? 'justify-end bg-stale' : 'justify-start bg-surface-3'}`} aria-hidden>
               <span className="h-7 w-7 rounded-full bg-surface" />
@@ -65,7 +64,6 @@ export function EnvironmentScreen() {
         </div>
 
         <p className="min-h-6 text-ink-2" role="status">{applied ? fill(flow.environment.applied, { name: applied }) : ''}</p>
-        <button type="button" className={BTN_PRIMARY} disabled={inUse} onClick={apply}>{ui.environment.use}</button>
       </div>
     </Screen>
   );

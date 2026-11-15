@@ -56,7 +56,7 @@ export function LoopScreen() {
             <button key={f.ruleId} type="button" onClick={() => setPicked(f.ruleId)} className={`${CARD} flex min-h-[72px] items-center gap-3 !p-4 text-left`}>
               <StatusBadge status={f.status} size="sm" />
               <span className="text-[18px] font-bold">{f.title}</span>
-              <span className="ml-auto font-bold text-brand">{flow.findings.open}</span>
+              <span className="ml-auto font-bold text-brand-ink">{flow.findings.open}</span>
             </button>
           ))}
         </div>
@@ -109,12 +109,12 @@ function FindingDetail({ finding }: { finding: Finding }) {
         <Because finding={finding} />
       </div>
 
-      <div className="flex flex-col gap-4 rounded-sheet border-2 border-brand bg-brand-bg p-6">
-        <h2 className="font-bold text-brand">{ui.finding.doNow}</h2>
+      <div className="flex flex-col gap-4 rounded-sheet border-2 border-brand-ink bg-brand-bg p-6">
+        <h2 className="font-bold text-brand-ink">{ui.finding.doNow}</h2>
         <p className="text-[24px] font-bold leading-snug">{action.text}</p>
         {!nextDay && (
           <div className="flex items-center gap-3 rounded-card bg-surface p-4">
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" strokeWidth="2.4" strokeLinecap="round" aria-hidden><path d="M12 3a9 9 0 1 0 9 9" /></svg>
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--brand-ink)" strokeWidth="2.4" strokeLinecap="round" aria-hidden><path d="M12 3a9 9 0 1 0 9 9" /></svg>
             <div>
               <p className="font-bold">{fill(ui.finding.recheck, { min: action.recheckInMin ?? 30 })}</p>
               <p className="text-[15px] text-ink-2">{fill(flow.findings.remeasure, { name: recheckName })}</p>
@@ -143,7 +143,7 @@ function Waiting({ finding }: { finding: Finding }) {
           <Because finding={finding} />
         </div>
         <div className={`${CARD} flex flex-col gap-4`}>
-          <h2 className="font-bold text-brand">{ui.finding.doNow}</h2>
+          <h2 className="font-bold text-brand-ink">{ui.finding.doNow}</h2>
           <p className="text-[20px]">{finding.actions[0].text}</p>
           <p className="text-[26px] font-bold" role="timer" aria-live="off">
             {fill(flow.findings.timer, { time: '' })}<span className="tabular">{countdown(pending.dueTs - nowTs)}</span>
@@ -176,7 +176,7 @@ function Remeasure({ finding }: { finding: Finding }) {
           <div role="radiogroup" aria-label={def.name} className="grid gap-3" style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}>
             {options.map((o) => (
               <button key={o.v} type="button" role="radio" aria-checked={value === o.v} onClick={() => setValue(o.v)}
-                className={`flex min-h-[120px] flex-col items-center justify-center gap-1 rounded-card border-2 ${value === o.v ? 'border-brand bg-brand-bg font-bold' : 'border-line'}`}>
+                className={`flex min-h-[120px] flex-col items-center justify-center gap-1 rounded-card border-2 ${value === o.v ? 'border-brand-ink bg-brand-bg font-bold' : 'border-line'}`}>
                 {def.input === 'scale_1_5' && <span className="tabular text-[34px]">{o.v}</span>}
                 <span>{o.label}</span>
               </button>
@@ -249,7 +249,7 @@ function Verification({ record }: { record: CaseRecord }) {
             <h2 className="font-bold text-ink-2">{flow.findings.ifNot}</h2>
             <StatusBadge status="yellow" label={flow.findings.noBetter} size="sm" />
             <p className="text-[18px]">{flow.findings.ifNotText}</p>
-            <p className="mt-auto rounded-card border-2 border-brand p-4 text-center font-bold text-brand">{flow.findings.notImproved}</p>
+            <p className="mt-auto rounded-card border-2 border-brand-ink p-4 text-center font-bold text-brand-ink">{flow.findings.notImproved}</p>
           </div>
         )}
       </div>
@@ -284,7 +284,7 @@ function History({ cases, alerts, noted, acknowledged }: { cases: CaseRecord[]; 
             <StatusBadge status={r.status} size="sm" />
             <span className="font-bold">{r.title}</span>
             <span className="ml-auto text-ink-2">{r.outcome}</span>
-            {r.href && <Link href={r.href} className="font-bold text-brand underline">{flow.findings.continue}</Link>}
+            {r.href && <Link href={r.href} className="font-bold text-brand-ink underline">{flow.findings.continue}</Link>}
           </li>
         ))}
       </ul>
