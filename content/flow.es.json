@@ -333,10 +333,11 @@
     "keySaved": "Clave guardada en esta computadora.",
     "keyHelpTitle": "Cómo obtener la clave",
     "keyHelp": [
-      "Xiaomi guarda la clave de cada banda en sus servidores, así que necesitas internet una sola vez.",
-      "Usa huami-token (github.com/argrento/huami-token) con la cuenta a la que está vinculada la banda, o sigue la guía de Gadgetbridge (gadgetbridge.org › Pairing › Huami/Xiaomi server).",
-      "Después no desvincules ni reinicies la banda: eso cambia la clave.",
-      "Desde entonces KAWSAY solo necesita Bluetooth."
+      "La banda nunca envía su clave por Bluetooth, así que hay que obtenerla una vez desde tu cuenta (se necesita internet una sola vez).",
+      "Lo más fácil: ejecuta  node tools/get-band-key.mjs  e inicia sesión con la cuenta a la que está vinculada la banda; imprime una clave 0x… para pegar aquí.",
+      "¿La banda está en una cuenta Xiaomi de teléfono? Usa el método del navegador en tools/README-band-key.md.",
+      "No reinicies ni vuelvas a vincular la banda después: eso cambia la clave. Desde entonces KAWSAY solo necesita Bluetooth.",
+      "Sin clave: una banda de pecho Bluetooth estándar (Polar, CooSpo, Wahoo…) funciona aquí sin cuenta."
     ],
     "saveAndConnect": "Guardar clave y conectar",
     "stages": {
