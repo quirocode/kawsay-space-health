@@ -42,7 +42,7 @@ export function WorkspaceNav() {
   return <aside className="workspace-sidebar" data-open={open}>
     <div className="workspace-logo-row">
       <Link className="workspace-logo" href="/" onClick={() => setOpen(false)}>
-        <span className="workspace-mark"><Glyph name="logo" size={23} /></span>
+        <span className="workspace-mark"><img src="/llama-astronaut.svg" alt="" aria-hidden="true" style={{ width: 40, height: 40, objectFit: "contain" }} /></span>
         <span>KAWSAY<small>{es ? 'Salud en misión' : 'Mission health'}</small></span>
       </Link>
       <button type="button" className="workspace-menu" aria-expanded={open} aria-controls="workspace-navigation" onClick={() => setOpen(!open)}>

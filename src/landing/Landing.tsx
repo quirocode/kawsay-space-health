@@ -136,7 +136,7 @@ function Nav({ copy, language, theme, onLanguageChange, onThemeChange }: {
   return (
     <header className={`fixed inset-x-0 top-0 z-50 border-b backdrop-blur-md transition-colors ${scrolled ? 'border-l-line bg-l-bg/80' : 'border-transparent bg-transparent'}`}>
       <nav aria-label={copy.nav.label} className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-2 px-3 py-2 sm:px-4 lg:gap-6 lg:px-8">
-        <a href="#top" className="text-lg font-bold tracking-tight text-l-accent sm:text-2xl">{copy.hero.title}</a>
+        <a href="#top" className="inline-flex items-center gap-2 text-lg font-bold tracking-tight text-l-accent sm:text-2xl"><img src="/llama-astronaut.svg" alt="" aria-hidden="true" className="h-10 w-10 shrink-0 object-contain" />{copy.hero.title}</a>
         <ul className="ml-auto hidden items-center gap-4 text-sm md:flex lg:gap-6">
           {links.map((l) => (
             <li key={l.href}><a href={l.href} className="text-l-muted transition-colors hover:text-l-ink">{l.label}</a></li>
@@ -189,7 +189,8 @@ function Hero({ copy, language }: { copy: Copy; language: Language }) {
           <Icon name="nasa" className="h-4 w-4" />
           {copy.hero.badge}
         </p>
-        <h1 className="mt-6 text-6xl font-bold tracking-tight text-l-accent sm:text-7xl md:text-8xl">{copy.hero.title}</h1>
+        <img src="/llama-astronaut.svg" alt="KAWSAY astronaut llama" className="mt-5 h-28 w-28 shrink-0 object-contain drop-shadow-[0_0_12px_rgba(111,155,255,0.2)] sm:h-36 sm:w-36" />
+        <h1 className="mt-4 text-6xl font-bold tracking-tight text-l-accent sm:text-7xl md:text-8xl">{copy.hero.title}</h1>
         <p className="mt-6 max-w-2xl text-lg text-pretty text-l-ink/85 md:text-2xl">{copy.hero.subtitle}</p>
         <div className="mt-10 grid w-full max-w-[17rem] gap-4 sm:w-[29rem] sm:max-w-none sm:grid-cols-2">
           <a href={demoLink(L.app, language)} lang="en" className={BTN_FILLED}>
