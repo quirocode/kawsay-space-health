@@ -15,19 +15,7 @@ import { RespondScreen } from '../features/watch/RespondScreen';
 import { AlarmOverlay, AlertBanner } from '../features/watch/Alarm';
 import { SuitScreen } from '../features/suit';
 import { HowScreen } from '../features/how';
-import suitCopy from '../../content/suit.json';
-import howCopy from '../../content/how.json';
-
-const NAV = [
-  { href: '/', key: 'home' },
-  { href: '/check', key: 'check' },
-  { href: '/connect', key: 'connect' },
-  { href: '/watch', key: 'watch' },
-  { href: '/suit', key: 'suit' },
-  { href: '/loop', key: 'loop' },
-  { href: '/brief', key: 'brief' },
-  { href: '/environment', key: 'environment' },
-] as const;
+import { Glyph, WorkspaceNav } from './WorkspaceNav';
 
 function useOnline() {
   const [online, setOnline] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine));
@@ -51,25 +39,21 @@ function TopBar() {
   const lang = useLang();
   const env = envLabel(ctx.environment, lang);
   return (
-    <header className="flex flex-wrap items-center gap-3 border-b border-line bg-surface px-6 py-3">
-      <a href="/" className="text-xl font-bold tracking-wide text-brand-ink" aria-label={`${ui.app.name}: ${lang === 'es' ? 'sobre el proyecto' : 'about the project'}`}>{ui.app.name}</a>
-      <MissionName />
-      <Link
-        href="/environment"
-        aria-label={`${ui.nav.environment}: ${env}`}
-        className="flex min-h-11 items-center gap-2 rounded-full bg-brand px-4 text-[16px] font-bold text-on-brand"
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-          <circle cx="12" cy="12" r="5" /><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-25 12 12)" />
-        </svg>
-        {env}
-      </Link>
-      <MissionDays />
-      <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{delayLabel(ctx.commDelayMin, lang)}</span>
-      <DemoMenu />
-      <Link href="/how" className="flex min-h-14 items-center rounded-full border border-line px-4 text-[15px] font-bold">? {howCopy[lang].button}</Link>
-      {!online && <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{ui.app.offline}</span>}
-      <DisplayPreferences />
+    <header className="mission-header">
+      <div className="mission-context">
+        <MissionName />
+        <span className="mission-divider" aria-hidden="true" />
+        <Link href="/environment" aria-label={`${ui.nav.environment}: ${env}`} className="mission-environment">
+          <Glyph name="environment" size={16} />{env}
+        </Link>
+        <MissionDays />
+        <span className="mission-delay">{delayLabel(ctx.commDelayMin, lang)}</span>
+      </div>
+      <div className="mission-actions">
+        {!online && <span className="mission-delay">{ui.app.offline}</span>}
+        <DemoMenu />
+        <DisplayPreferences />
+      </div>
     </header>
   );
 }
@@ -93,7 +77,7 @@ function DisplayPreferences() {
   }
 
   return (
-    <div className="flex shrink-0 items-center gap-2">
+    <div className="workspace-preferences">
       <button
         type="button"
         role="switch"
@@ -101,7 +85,7 @@ function DisplayPreferences() {
         aria-label={preferences.nightMode}
         title={night ? preferences.switchToDay : preferences.switchToNight}
         onClick={toggleTheme}
-        className="inline-flex min-h-14 items-center gap-1 rounded-full border border-line px-2 hover:bg-surface-2"
+        className="workspace-theme"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden
           className={`size-8 rounded-full p-1.5 ${night ? 'text-ink-2' : 'bg-brand-bg text-brand-ink'}`}>
@@ -118,7 +102,7 @@ function DisplayPreferences() {
         aria-label={preferences.switchLanguage}
         title={preferences.switchLanguage}
         onClick={switchLanguage}
-        className="min-h-14 w-14 rounded-full border border-line text-[15px] font-bold text-brand-ink hover:bg-surface-2"
+        className="workspace-control"
       >
         <span lang={nextLang}>{nextLang.toUpperCase()}</span>
       </button>
@@ -202,13 +186,13 @@ function DemoMenu() {
     { scene: 'watch', label: flow.demo.watch, hint: flow.demo.watchHint, go: '/watch' },
   ];
   return (
-    <div className="relative ml-auto">
+    <div className="relative">
       <button type="button" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen(!open)}
-        className="min-h-14 rounded-full border border-future px-4 text-[15px] text-future">
-        {ui.app.demo} · <span className="tabular">{clock(nowTs)}</span>
+        className="workspace-scenarios">
+        <span aria-hidden="true" className="scenario-dot" />{ui.app.demo}<span className="tabular text-xs">{clock(nowTs)}</span><span aria-hidden="true">⌄</span>
       </button>
       {open && (
-        <ul role="menu" aria-label={flow.demo.menu} className="absolute right-0 top-full z-40 mt-2 flex w-[340px] flex-col gap-1 rounded-card border border-line bg-surface p-2 shadow-lg">
+        <ul role="menu" aria-label={flow.demo.menu} className="workspace-scenario-menu absolute right-0 top-full z-40 mt-2 flex w-[340px] flex-col gap-1 rounded-card border border-line bg-surface p-2 shadow-lg">
           {scenes.map((s) => (
             <li key={s.scene} role="none">
               <button type="button" role="menuitem" className="flex min-h-14 w-full flex-col rounded-chip px-3 py-2 text-left hover:bg-surface-2"
@@ -233,45 +217,25 @@ function useShipClock() {
   }, [tick]);
 }
 
-function NavBar() {
-  const [loc] = useLocation();
-  const { ui, flow } = useCopy();
-  const lang = useLang();
-  const navLabel = (key: (typeof NAV)[number]['key']) => (key === 'watch' || key === 'connect' ? flow.nav[key] : key === 'suit' ? suitCopy[lang].nav : ui.nav[key]);
-  return (
-    <nav aria-label={lang === 'es' ? 'Principal' : 'Main'} className="flex gap-2 border-t border-line bg-surface px-4 py-2">
-      {NAV.map((n) => {
-        const active = n.href === '/' ? loc === '/' : loc.startsWith(n.href);
-        return (
-          <Link
-            key={n.href}
-            href={n.href}
-            aria-current={active ? 'page' : undefined}
-            className={`flex min-h-14 flex-1 items-center justify-center rounded-card px-3 text-center text-[17px] ${
-              active ? 'bg-brand font-bold text-on-brand' : 'text-ink-2'
-            }`}
-          >
-            {navLabel(n.key)}
-          </Link>
-        );
-      })}
-    </nav>
-  );
-}
-
 function Disclaimer() {
   const seen = useApp((s) => s.disclaimerSeen);
   const dismiss = useApp((s) => s.dismissDisclaimer);
   const { ui } = useCopy();
   if (seen) return null;
   return (
-    <div role="note" className="flex items-center gap-4 border-b border-line bg-surface-2 px-6 py-2 text-[15px]">
+    <div role="note" className="workspace-disclaimer">
       <span>{ui.app.disclaimer}</span>
-      <button type="button" onClick={dismiss} className="ml-auto min-h-14 rounded-full px-4 font-bold text-brand-ink">
+      <button type="button" onClick={dismiss} className="workspace-control ml-auto px-3">
         {ui.app.disclaimerOk}
       </button>
     </div>
   );
+}
+
+function ScrollOnNavigation() {
+  const [loc] = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [loc]);
+  return null;
 }
 
 export function App() {
@@ -287,31 +251,34 @@ export function App() {
 
   return (
     <Router hook={useHashLocation}>
-      <div className="flex h-full flex-col">
-        <TopBar />
-        <Fragment key={lang}>
-          <Disclaimer />
-          <AlertBanner />
-          <main className="flex-1 overflow-auto">
-            <Switch>
-              <Route path="/" component={FutureSelfScreen} />
-              <Route path="/check" component={CheckInScreen} />
-              <Route path="/connect" component={ConnectScreen} />
-              <Route path="/watch" component={WatchScreen} />
-              <Route path="/respond" component={RespondScreen} />
-              <Route path="/loop" component={LoopScreen} />
-              <Route path="/brief" component={BriefScreen} />
-              <Route path="/environment" component={EnvironmentScreen} />
-              <Route path="/suit" component={SuitScreen} />
-              <Route path="/how" component={HowScreen} />
-              <Route>
-                <p className="p-8">{lang === 'es' ? 'Pantalla no encontrada.' : 'Not found.'}</p>
-              </Route>
-            </Switch>
-          </main>
-          <NavBar />
-          <AlarmOverlay />
-        </Fragment>
+      <ScrollOnNavigation />
+      <div className="workspace-shell">
+        <WorkspaceNav />
+        <div className="workspace-body">
+          <TopBar />
+          <Fragment key={lang}>
+            <Disclaimer />
+            <AlertBanner />
+            <main className="workspace-main">
+              <Switch>
+                <Route path="/" component={FutureSelfScreen} />
+                <Route path="/check" component={CheckInScreen} />
+                <Route path="/connect" component={ConnectScreen} />
+                <Route path="/watch" component={WatchScreen} />
+                <Route path="/respond" component={RespondScreen} />
+                <Route path="/loop" component={LoopScreen} />
+                <Route path="/brief" component={BriefScreen} />
+                <Route path="/environment" component={EnvironmentScreen} />
+                <Route path="/suit" component={SuitScreen} />
+                <Route path="/how" component={HowScreen} />
+                <Route>
+                  <p className="p-8">{lang === 'es' ? 'Pantalla no encontrada.' : 'Not found.'}</p>
+                </Route>
+              </Switch>
+            </main>
+            <AlarmOverlay />
+          </Fragment>
+        </div>
       </div>
     </Router>
   );

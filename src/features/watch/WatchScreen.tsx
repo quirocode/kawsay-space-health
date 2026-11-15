@@ -124,7 +124,7 @@ export function WatchScreen() {
 
           <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-label={flow.watch.title}>
             {tiles.map((t) => (
-              <li key={t.key} className={`${CARD} flex flex-col gap-1 !p-4`}>
+              <li key={t.key} className={`${CARD} watch-reading flex flex-col gap-1 !p-4`} data-signal={t.key}>
                 <div className="flex items-center justify-between gap-2">
                   <h2 className="font-bold">{t.name}</h2>
                   {t.badge ?? <StatusBadge status={t.status} size="sm" />}

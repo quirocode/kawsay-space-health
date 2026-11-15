@@ -93,7 +93,7 @@ export function DemoTour({ copy, language, linkTo }: {
                     aria-haspopup="dialog"
                     onClick={() => dialog.current?.showModal()}
                   >
-                    <img src={screenshot} alt={details.imageAlt} width={1440} height={stop.id === 'future' ? 1100 : 920} decoding="async" className="block h-auto w-full" />
+                    <img src={screenshot} alt={details.imageAlt} width={1440} height={1100} decoding="async" className="block h-auto w-full" />
                     <span className="flex min-h-11 items-center justify-between gap-2 border-t border-l-line px-3 text-sm font-semibold text-l-accent">
                       {copy.enlarge}
                       <span aria-hidden>↗︎</span>
@@ -112,7 +112,7 @@ export function DemoTour({ copy, language, linkTo }: {
             <button className="min-h-11 cursor-pointer rounded-lg border border-l-line px-3 text-sm font-semibold hover:bg-l-accent-soft">{copy.close}</button>
           </form>
         </div>
-        <img src={screenshot} alt="" width={1440} height={stop.id === 'future' ? 1100 : 920} className="mx-auto block h-auto w-auto object-contain" />
+        <img src={screenshot} alt="" width={1440} height={1100} className="mx-auto block h-auto w-auto object-contain" />
       </dialog>
     </section>
   );

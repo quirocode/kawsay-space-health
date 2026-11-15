@@ -21,21 +21,32 @@ export const ZONE_LABEL: Record<BodyZone, string> = {
 };
 
 
-const useAnatomy = create<{ mode: AnatomyMode; toggle: () => void }>((set) => ({
+const useAnatomy = create<{ mode: AnatomyMode; setMode: (mode: AnatomyMode) => void }>((set) => ({
   mode: 'muscles',
-  toggle: () => set((s) => ({ mode: s.mode === 'muscles' ? 'organs' : 'muscles' })),
+  setMode: (mode) => set({ mode }),
 }));
 
-export function BodyFigure({ zones, variant, title, selected, onSelect }: {
+export function AnatomyModeSwitch() {
+  const t = copy[useLang()];
+  const { mode, setMode } = useAnatomy();
+  return <div className="workspace-segmented" role="group" aria-label={t.select}>
+    <button type="button" aria-pressed={mode === 'muscles'} onClick={() => setMode('muscles')}>{t.muscles}</button>
+    <button type="button" aria-pressed={mode === 'organs'} onClick={() => setMode('organs')}>{t.organs}</button>
+  </div>;
+}
+
+export function BodyFigure({ zones, variant, title, selected, onSelect, sharedControls = false, onShowDetails }: {
   zones: Partial<Record<BodyZone, ZoneFill>>;
   variant: 'today' | 'future';
   title: string;
   selected?: BodyZone | null;
   onSelect?: (zone: BodyZone) => void;
+  sharedControls?: boolean;
+  onShowDetails?: () => void;
 }) {
   const lang = useLang();
   const t = copy[lang];
-  const { mode, toggle } = useAnatomy();
+  const { mode, setMode } = useAnatomy();
   const [region, setRegion] = useState<AnatomyRegion | null>(null);
   const [hover, setHover] = useState<AnatomyRegion | null>(null);
   const [isolate, setIsolate] = useState(false);
@@ -56,12 +67,12 @@ export function BodyFigure({ zones, variant, title, selected, onSelect }: {
   return (
     <div className="flex h-full w-full flex-col gap-2" data-anatomy={variant}>
       <div className="flex flex-wrap justify-center gap-2">
-        <button type="button" onClick={() => { setRegion(null); setHover(null); setIsolate(false); toggle(); }} className="min-h-10 rounded-full border border-line bg-surface-2 px-3 text-sm font-bold">
+        {!sharedControls && <button type="button" onClick={() => { setRegion(null); setHover(null); setIsolate(false); setMode(mode === 'muscles' ? 'organs' : 'muscles'); }} className="min-h-10 rounded-full border border-line bg-surface-2 px-3 text-sm font-bold">
           {mode === 'muscles' ? t.toOrgans : t.toMuscles}
-        </button>
-        <button type="button" onClick={() => { setIsolate(false); setReset((n) => n + 1); }} className="min-h-10 rounded-full border border-line px-3 text-sm">{t.reset}</button>
+        </button>}
+        <button type="button" onClick={() => { setIsolate(false); setReset((n) => n + 1); }} className="min-h-9 rounded-lg border border-line px-3 text-xs text-ink-2 hover:text-ink">{t.reset}</button>
       </div>
-      <p className="text-center text-xs text-ink-2">{mode === 'muscles' ? t.muscles : t.organs} · {t.gesture}</p>
+      {!sharedControls && <p className="text-center text-xs text-ink-2">{t.gesture}</p>}
       <div className="relative min-h-[300px] flex-1 overflow-hidden rounded-card bg-surface-2">
         <Suspense fallback={<p className="p-4 text-sm">{t.loading}</p>}>
           <AnatomyCanvas key={retry} mode={mode} zones={zones} selected={selected}
@@ -93,6 +104,10 @@ export function BodyFigure({ zones, variant, title, selected, onSelect }: {
       {active && <div className="flex flex-wrap items-center justify-between gap-x-2 text-sm" aria-live="polite">
         <p className="font-bold">{t.regions[active]} · {word(regionZone(mode, active))}</p>
         <button type="button" aria-pressed={isolate} onClick={() => setIsolate((v) => !v)} className="min-h-10 text-brand-ink underline">{isolate ? t.showAll : t.isolate}</button>
+        {onShowDetails && <button type="button" onClick={onShowDetails}
+          className="dashboard-mobile-details min-h-10 font-semibold text-brand-ink underline">
+          {lang === 'es' ? 'Ver evaluación' : 'View assessment'}
+        </button>}
         {mode === 'muscles' && <p className="basis-full text-xs text-ink-2">{t.assessment}</p>}
       </div>}
       <details className="text-xs text-ink-2">

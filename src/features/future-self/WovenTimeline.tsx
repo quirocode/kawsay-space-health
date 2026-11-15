@@ -46,40 +46,25 @@ export function WovenTimeline({
       />,
     );
   }
-  const x = (d: number) => `${(d / (arrival + 1)) * 100}%`;
+  const dayLabel = (day: number) => fill(ui.future.dayLabel, { day });
+  const selectedDay = dayLabel(value);
 
   return (
-    <div className="relative select-none">
-      <div className="mb-1 flex justify-between text-[15px] text-ink-2">
-        <span>{lang === 'es' ? 'Lanzamiento' : 'Launch'}</span>
-        <span>
-          {ui.future.today} · <span className="tabular">{fill(ui.future.dayLabel, { day: today })}</span>
-        </span>
-        <span>
-          {ui.future.arrival} · <span className="tabular">{fill(ui.future.dayLabel, { day: arrival })}</span>
-        </span>
+    <div className="projection-slider">
+      <label className="sr-only" htmlFor={id}>{lang === 'es' ? 'Día a previsualizar' : 'Day to preview'}</label>
+      <input id={id} type="range" min={today} max={arrival} step={1} value={value}
+        disabled={today === arrival} onChange={(e) => onChange(Number(e.target.value))} aria-valuetext={selectedDay} />
+      <div className="projection-slider-labels">
+        <span>{ui.future.today} · {dayLabel(today)}</span>
+        <output htmlFor={id}>{selectedDay}</output>
+        <span>{ui.future.arrival} · {dayLabel(arrival)}</span>
       </div>
-      <div className="relative h-16">
-        <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="absolute inset-0 h-full w-full" aria-hidden>
+      <details>
+        <summary>{lang === 'es' ? 'Ver historial de actividad' : 'View activity history'}</summary>
+        <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-12 w-full" aria-hidden>
           {threads}
         </svg>
-        <div aria-hidden className="absolute top-0 bottom-0 w-[3px] bg-ink" style={{ left: x(today) }} />
-        <label htmlFor={id} className="sr-only">
-          {lang === 'es' ? 'Día a previsualizar' : 'Day to preview'}
-        </label>
-        <input
-          id={id}
-          type="range"
-          min={today}
-          max={arrival}
-          step={1}
-          value={value}
-          onChange={(e) => onChange(Number(e.target.value))}
-          aria-valuetext={fill(ui.future.dayLabel, { day: value })}
-          className="woven-range absolute inset-y-0 h-full"
-          style={{ left: x(today), right: 0, width: 'auto' }}
-        />
-      </div>
+      </details>
     </div>
   );
 }

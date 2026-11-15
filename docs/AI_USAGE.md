@@ -26,3 +26,4 @@ Log every use as you go. One line each.
 | Sun 14:01 | Landing | Codex (OpenAI) | Built the bilingual interactive demo tour and captured the running demo in Chromium | `src/landing/`, `content/landing*.json`, `public/demo-tour/` |
 | Sun 14:25 | Anatomy | Codex (OpenAI) | Integrated selectable 3D anatomy with Three.js, adapted open-licensed Z-Anatomy meshes and verified rotation, picking, isolation and language controls in Chromium | `src/features/future-self/`, `public/anatomy/`, `content/anatomy.json` |
 | Sun 14:43 | Anatomy | Codex (OpenAI) | Added a translucent body surface, interactive region outlines, and bilingual anatomy region controls | `src/features/future-self/`, `public/anatomy/`, `content/anatomy.json` |
+| Sun 15:17 | Demo | Codex (OpenAI) | Integrated the reviewed demo redesign and refreshed the bilingual tour captures | `src/app/`, `src/features/`, `public/demo-tour/` |
