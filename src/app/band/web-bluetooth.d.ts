@@ -61,6 +61,21 @@ interface KawsayBluetoothBridge {
   cancel(): void;
 }
 
+/** One band key, as the Zepp sign-in returns it. */
+interface KawsayBandKeyResult {
+  mac: string;
+  name?: string;
+  active?: boolean;
+  key: string;
+}
+
+/** Desktop app only (desktop/preload.cjs): one-time Zepp sign-in that fetches the band key. */
+interface KawsayBandKeyBridge {
+  fetch(creds: { email: string; password: string }):
+    Promise<{ ok: true; keys: KawsayBandKeyResult[] } | { ok: false; error: string }>;
+}
+
 interface Window {
   readonly kawsayBluetooth?: KawsayBluetoothBridge;
+  readonly kawsayBandKey?: KawsayBandKeyBridge;
 }

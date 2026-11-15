@@ -15,6 +15,14 @@ that, KAWSAY ↔ band is pure Bluetooth — the Xiaomi app is never needed again
 You only do this once per band. Resetting or re-pairing the band in the Xiaomi app changes the
 key, so you would fetch it again.
 
+## Method 0 — sign in inside the KAWSAY desktop app (easiest)
+
+In the **.exe**, open **Connect → Connect band → Fetch your key automatically**, enter the
+**email and password of the Zepp Life / Mi Fitness account your band is on**, and press
+**Sign in and fetch my key**. KAWSAY signs in to Zepp in its own process, gets the key and
+fills it in for you — no terminal. (This runs only in the desktop app: a browser cannot call
+Zepp's API directly, so the web build shows the manual methods below instead.)
+
 ## Method 1 — the bundled tool (band on a Zepp / Zepp Life / Amazfit email account)
 
 Needs Node 20+ and internet, once:

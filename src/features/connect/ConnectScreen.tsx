@@ -88,6 +88,73 @@ function Notice({ title, hint, children }: { title: string; hint: string; childr
   );
 }
 
+/**
+ * Automatic key fetch: the crew signs in to Zepp once and KAWSAY gets the band key for them.
+ * The sign-in runs in the desktop app's own process (Zepp blocks a browser from calling it),
+ * so on the web build this shows a short note pointing at the manual methods instead.
+ */
+function ZeppSignIn({ onKey }: { onKey: (key: string) => void }) {
+  const bridge = typeof window === 'undefined' ? undefined : window.kawsayBandKey;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [state, setState] = useState<'idle' | 'working' | 'done' | 'error'>('idle');
+  const [error, setError] = useState('');
+
+  const submit = () => {
+    if (!bridge || !email || !password || state === 'working') return;
+    setState('working');
+    setError('');
+    void bridge.fetch({ email, password }).then((res) => {
+      setPassword(''); // never keep the password around after the request
+      if (res.ok) {
+        onKey(res.keys[0].key);
+        setState('done');
+      } else {
+        setError(res.error);
+        setState('error');
+      }
+    }).catch(() => {
+      setPassword('');
+      setError(flow.connect.zeppFailed);
+      setState('error');
+    });
+  };
+
+  return (
+    <div className="mt-1 flex flex-col gap-2 rounded-card border border-line bg-surface p-3">
+      <p className="font-bold text-brand-ink">{flow.connect.zeppTitle}</p>
+      <p className="text-[15px] text-ink-2">{flow.connect.zeppIntro}</p>
+      {!bridge ? (
+        <p className="text-[15px] text-ink-2">{flow.connect.zeppDesktopOnly}</p>
+      ) : (
+        <>
+          <label htmlFor="zepp-email" className="text-[15px] font-bold">{flow.connect.zeppEmail}</label>
+          <input
+            id="zepp-email" type="email" autoComplete="username" spellCheck={false}
+            value={email} onChange={(e) => { setEmail(e.target.value); setState('idle'); }}
+            className="min-h-14 rounded-card border border-line bg-surface-2 px-3 text-[17px]"
+          />
+          <label htmlFor="zepp-password" className="text-[15px] font-bold">{flow.connect.zeppPassword}</label>
+          <input
+            id="zepp-password" type="password" autoComplete="current-password"
+            value={password} onChange={(e) => { setPassword(e.target.value); setState('idle'); }}
+            onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
+            className="min-h-14 rounded-card border border-line bg-surface-2 px-3 text-[17px]"
+          />
+          <button type="button" onClick={submit} disabled={state === 'working' || !email || !password} className={`${BTN_PRIMARY} w-full`}>
+            {state === 'working' ? flow.connect.zeppWorking : flow.connect.zeppButton}
+          </button>
+          <p className="text-[15px]" role={state === 'done' || state === 'error' ? 'status' : undefined}>
+            {state === 'done' ? <span className="font-bold text-brand-ink">{flow.connect.zeppDone}</span>
+              : state === 'error' ? <span className="font-bold text-act">{error}</span>
+              : <span className="text-ink-2">{flow.connect.zeppPrivacy}</span>}
+          </p>
+        </>
+      )}
+    </div>
+  );
+}
+
 /** The band key: typed once, kept on this computer only. */
 function KeyField({ onSaved, actionLabel }: { onSaved?: () => void; actionLabel?: string }) {
   const stored = useBand((s) => s.authKeyText);
@@ -125,24 +192,30 @@ function KeyField({ onSaved, actionLabel }: { onSaved?: () => void; actionLabel?
         {note === 'invalid' ? flow.connect.keyInvalid : note === 'saved' ? flow.connect.keySaved : flow.connect.keyHint}
       </p>
 
-      <div className="mt-1 flex flex-col gap-2 rounded-card border border-line bg-surface p-3">
-        <p className="text-[15px] text-ink-2">{flow.connect.getKeyIntro}</p>
-        <button type="button" onClick={getKey} className={`${BTN_SECONDARY} w-full`}>
-          {flow.connect.getKeyButton}
-        </button>
-        {opened && (
-          <div role="status">
-            <p className="text-[15px] font-bold text-brand-ink">{flow.connect.getKeyOpened}</p>
-            <ol className="mt-1 list-decimal pl-5 text-[15px]">
-              {flow.connect.getKeySteps.map((line) => <li key={line}>{line}</li>)}
-            </ol>
-          </div>
-        )}
-      </div>
+      <ZeppSignIn onKey={(key) => {
+        setText(key);
+        const ok = setAuthKey(key);
+        setNote(ok ? 'saved' : 'invalid');
+        if (ok) onSaved?.();
+      }} />
 
       <details>
         <summary className="min-h-10 cursor-pointer font-bold text-brand-ink">{flow.connect.keyHelpTitle}</summary>
-        <ol className="mt-1 list-decimal pl-5 text-[15px]">{flow.connect.keyHelp.map((line) => <li key={line}>{line}</li>)}</ol>
+        <div className="mt-2 flex flex-col gap-2 rounded-card border border-line bg-surface p-3">
+          <p className="text-[15px] text-ink-2">{flow.connect.getKeyIntro}</p>
+          <button type="button" onClick={getKey} className={`${BTN_SECONDARY} w-full`}>
+            {flow.connect.getKeyButton}
+          </button>
+          {opened && (
+            <div role="status">
+              <p className="text-[15px] font-bold text-brand-ink">{flow.connect.getKeyOpened}</p>
+              <ol className="mt-1 list-decimal pl-5 text-[15px]">
+                {flow.connect.getKeySteps.map((line) => <li key={line}>{line}</li>)}
+              </ol>
+            </div>
+          )}
+        </div>
+        <ol className="mt-2 list-decimal pl-5 text-[15px]">{flow.connect.keyHelp.map((line) => <li key={line}>{line}</li>)}</ol>
       </details>
     </div>
   );

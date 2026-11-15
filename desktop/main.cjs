@@ -10,6 +10,7 @@
 const { app, BrowserWindow, dialog, ipcMain, protocol, session, shell } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
+const { fetchBandKey } = require('./bandKey.cjs');
 
 const SCHEME = 'kawsay';
 const ORIGIN = `${SCHEME}://app`;
@@ -78,6 +79,10 @@ ipcMain.on('bluetooth-choose', (_event, id) => {
   if (pick) pick.callback(typeof id === 'string' ? id : '');
 });
 
+// One-time Zepp sign-in to fetch the band key. Runs here (Node TLS), never in the page, and
+// only when the crew submits the form. The password is used for this request and then dropped.
+ipcMain.handle('band-key:fetch', (_event, creds) => fetchBandKey(creds?.email, creds?.password));
+
 /** Windows may ask to confirm pairing. Confirm plain requests; we cannot type a PIN for the user. */
 function onBluetoothPairing(details, respond) {
   if (details.pairingKind === 'confirm') return respond({ confirmed: true });
@@ -133,6 +138,7 @@ async function smokeTest(win, pngPath) {
     secureContext: window.isSecureContext,
     webBluetooth: 'bluetooth' in navigator,
     deviceListBridge: 'kawsayBluetooth' in window,
+    bandKeyBridge: 'kawsayBandKey' in window,
   })`);
   if (pngPath) fs.writeFileSync(pngPath, (await win.webContents.capturePage()).toPNG());
   console.log(JSON.stringify({ ...page, blockedRequests }));
