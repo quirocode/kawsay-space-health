@@ -30,9 +30,9 @@
       "future": {
         "tab": "Yo futuro",
         "title": "Mira cómo podrías llegar al aterrizaje",
-        "description": "Compara tu cuerpo de hoy con su estado previsto al aterrizar. Las dos siluetas muestran qué zonas podrían mejorar si sigues un plan.",
-        "action": "Mueve el control de días y toca una zona del cuerpo para ver qué influye en la proyección.",
-        "imageAlt": "Pantalla de Yo futuro con dos siluetas, una línea de tiempo y un indicador de aptitud para el aterrizaje."
+        "description": "Compara tu cuerpo de hoy con su estado previsto al aterrizar. Gira los dos modelos 3D, alterna entre músculos y órganos y selecciona una estructura para revisar su zona.",
+        "action": "Arrastra para girar, acerca con la rueda y selecciona un músculo u órgano. Mueve el control de días para comparar la proyección.",
+        "imageAlt": "Pantalla de Yo futuro con dos modelos anatómicos 3D, una línea de tiempo y un indicador de aptitud para el aterrizaje."
       },
       "check": {
         "tab": "Chequeo diario",
