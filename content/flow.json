@@ -1,5 +1,8 @@
 {
-  "nav": { "watch": "Watch" },
+  "nav": {
+    "connect": "Connect",
+    "watch": "Watch"
+  },
   "demo": {
     "menu": "Demo scenes",
     "morning": "07:45 · Start of day",
@@ -10,8 +13,18 @@
     "watchHint": "Jumps to 20 seconds before the watch raises the alarm.",
     "skip": "Demo: skip the wait"
   },
-  "level": { "emergency": "Act now", "warning": "Act", "caution": "Watch" },
-  "activity": { "sleep": "Sleeping", "rest": "Resting", "active": "Active", "exercise": "Exercising", "eva": "On EVA" },
+  "level": {
+    "emergency": "Act now",
+    "warning": "Act",
+    "caution": "Watch"
+  },
+  "activity": {
+    "sleep": "Sleeping",
+    "rest": "Resting",
+    "active": "Active",
+    "exercise": "Exercising",
+    "eva": "On EVA"
+  },
   "check": {
     "steps": {
       "bp": "Blood pressure",
@@ -24,7 +37,13 @@
     },
     "label": "Daily check · {n} of {total}",
     "headache": "Headache",
-    "headacheScale": ["None", "Slight", "Moderate", "Strong", "Severe"],
+    "headacheScale": [
+      "None",
+      "Slight",
+      "Moderate",
+      "Strong",
+      "Severe"
+    ],
     "anyOfThese": "Any of these today?",
     "symptomNames": {
       "symptom_dizziness": "Dizziness",
@@ -48,7 +67,11 @@
     "tapZone": "Tap a body zone to see what feeds it.",
     "feeds": "What feeds it",
     "noIndicators": "Nothing is measured for this zone yet.",
-    "from": { "manual": "check-in", "sensor_sim": "sensor", "camera": "camera" },
+    "from": {
+      "manual": "check-in",
+      "sensor_sim": "sensor",
+      "camera": "camera"
+    },
     "ageAgo": "{age} ago"
   },
   "findings": {
@@ -74,7 +97,15 @@
     "history": "Earlier today",
     "open": "Open",
     "continue": "Continue",
-    "outcome": { "improved": "Improved", "unchanged": "No change", "worse": "Worse", "open": "Open", "sent": "Sent to Earth", "escalated": "Crew and Earth told", "cleared": "Cleared by itself" },
+    "outcome": {
+      "improved": "Improved",
+      "unchanged": "No change",
+      "worse": "Worse",
+      "open": "Open",
+      "sent": "Sent to Earth",
+      "escalated": "Crew and Earth told",
+      "cleared": "Cleared by itself"
+    },
     "others": "Also active"
   },
   "brief": {
@@ -121,7 +152,13 @@
       "hrv": "Heart rate variability",
       "activity": "Activity"
     },
-    "units": { "heartRate": "bpm", "spo2": "%", "respRate": "/min", "skinTemp": "°C", "hrv": "ms" },
+    "units": {
+      "heartRate": "bpm",
+      "spo2": "%",
+      "respRate": "/min",
+      "skinTemp": "°C",
+      "hrv": "ms"
+    },
     "usual": "your usual {low}–{high}",
     "vsUsual": "vs your usual",
     "forMin": "for {min} min",
@@ -142,7 +179,10 @@
     ],
     "rulesNote": "These limits are prototype values, not NASA figures. A high heart rate during exercise is not an alert.",
     "alertsTitle": "Watch alerts today",
-    "noAlerts": "No alerts so far. Your watch is checking every 5 seconds."
+    "noAlerts": "No alerts so far. Your watch is checking every 5 seconds.",
+    "fromBand": "Heart rate from {name}",
+    "bandLive": "Heart rate from your band · other signals simulated",
+    "connectBand": "Connect band"
   },
   "alarm": {
     "stateNow": "Your state now",
@@ -188,9 +228,91 @@
     "dontWait": "Earth is {min} minutes away. Do not wait for the answer to act.",
     "noEarth": "No contact with Earth during conjunction. The crew medical officer decides.",
     "whileWait": "While you wait",
-    "waitList": ["Stay resting.", "Keep the watch on.", "No exercise or EVA prep.", "KAWSAY keeps checking every 5 seconds."],
+    "waitList": [
+      "Stay resting.",
+      "Keep the watch on.",
+      "No exercise or EVA prep.",
+      "KAWSAY keeps checking every 5 seconds."
+    ],
     "nothing": "No watch alert is open.",
     "backToWatch": "Back to watch data"
   },
-  "crew": { "name": "A. Quispe" }
+  "crew": {
+    "name": "A. Quispe"
+  },
+  "connect": {
+    "title": "Connect your band",
+    "intro": "Pair a heart-rate band so the Watch shows your real pulse. Bluetooth only: it works with no internet.",
+    "steps": [
+      "Start",
+      "Get ready",
+      "Choose",
+      "Live"
+    ],
+    "checking": "Checking Bluetooth…",
+    "none": "No band connected",
+    "noneHint": "Until you connect one, the Watch plays the demo mission.",
+    "connect": "Connect band",
+    "demo": "Use demo data",
+    "unsupported": {
+      "no-api": {
+        "title": "Bluetooth is not available here",
+        "hint": "Open KAWSAY in Chrome or Edge, or use the desktop app."
+      },
+      "insecure": {
+        "title": "Bluetooth needs a secure page",
+        "hint": "Open KAWSAY from its https address or from the desktop app."
+      },
+      "off": {
+        "title": "Bluetooth is off",
+        "hint": "Turn on Bluetooth on this computer, then try again."
+      }
+    },
+    "readyTitle": "Get your band ready",
+    "readyList": [
+      "Bluetooth is on on this computer.",
+      "The band is charged, on your wrist and within 1 m.",
+      "The band app on your phone is closed, or Bluetooth is off on the phone. A band talks to one device at a time.",
+      "Xiaomi Smart Band 7: turn on Heart rate sharing in the band settings. If no number appears, start a workout on the band."
+    ],
+    "readyNote": "Next, a list of nearby devices opens. Pick your band.",
+    "openList": "Open device list",
+    "back": "Back",
+    "connecting": "Connecting…",
+    "connectingHint": "Keep the band close.",
+    "live": "Live",
+    "waiting": "Connected · waiting for heart rate",
+    "waitingHint": "No reading yet. On a Xiaomi Smart Band 7, start a workout on the band: it shares heart rate only while it measures.",
+    "stale": "No new reading for {age}",
+    "staleHint": "Tighten the strap, one finger above the wrist bone.",
+    "reconnecting": "Connection lost · reconnecting ({n} of {max})",
+    "battery": "Battery {pct} %",
+    "batteryUnknown": "Battery not shared",
+    "connectedFor": "Connected for {age}",
+    "lastTwoMin": "Heart rate, last 2 minutes",
+    "onlyHr": "The band shares heart rate only. Blood oxygen, breathing, skin temperature and HRV on the Watch still come from the demo series.",
+    "openWatch": "Open Watch",
+    "disconnect": "Disconnect",
+    "tryAgain": "Try again",
+    "chooseAnother": "Choose another device",
+    "problems": {
+      "cancelled": {
+        "title": "No device chosen",
+        "hint": "Open the list again and pick your band."
+      },
+      "no-hr-service": {
+        "title": "This band does not share heart rate",
+        "hint": "It connected but offered no standard heart-rate service. A Xiaomi Smart Band 7 may need its pairing key for that. Use a chest strap or the demo data."
+      },
+      "failed": {
+        "title": "Could not connect",
+        "hint": "Move closer, check the band is not connected to your phone, and try again."
+      },
+      "lost": {
+        "title": "Band disconnected",
+        "hint": "It stopped answering. Bring it closer and try again."
+      }
+    },
+    "prototype": "Link limits are prototype values: old after 5 s without a reading, disconnected after 30 s."
+  }
 }

@@ -1,5 +1,6 @@
 {
   "nav": {
+    "connect": "Conectar",
     "watch": "Reloj"
   },
   "demo": {
@@ -178,7 +179,10 @@
     ],
     "rulesNote": "Estos límites son valores de prototipo, no cifras de NASA. Una frecuencia cardíaca alta durante el ejercicio no es una alerta.",
     "alertsTitle": "Alertas del reloj hoy",
-    "noAlerts": "Sin alertas hasta ahora. Tu reloj revisa cada 5 segundos."
+    "noAlerts": "Sin alertas hasta ahora. Tu reloj revisa cada 5 segundos.",
+    "fromBand": "Pulso de {name}",
+    "bandLive": "Pulso de tu banda · otras señales simuladas",
+    "connectBand": "Conectar banda"
   },
   "alarm": {
     "stateNow": "Tu estado ahora",
@@ -235,5 +239,80 @@
   },
   "crew": {
     "name": "A. Quispe"
+  },
+  "connect": {
+    "title": "Conecta tu banda",
+    "intro": "Vincula una banda de pulso para que el Reloj muestre tu pulso real. Solo Bluetooth: funciona sin internet.",
+    "steps": [
+      "Inicio",
+      "Prepárala",
+      "Elige",
+      "En vivo"
+    ],
+    "checking": "Revisando Bluetooth…",
+    "none": "Ninguna banda conectada",
+    "noneHint": "Hasta que conectes una, el Reloj reproduce la misión de demostración.",
+    "connect": "Conectar banda",
+    "demo": "Usar datos de demostración",
+    "unsupported": {
+      "no-api": {
+        "title": "Bluetooth no está disponible aquí",
+        "hint": "Abre KAWSAY en Chrome o Edge, o usa la app de escritorio."
+      },
+      "insecure": {
+        "title": "Bluetooth necesita una página segura",
+        "hint": "Abre KAWSAY desde su dirección https o desde la app de escritorio."
+      },
+      "off": {
+        "title": "Bluetooth está apagado",
+        "hint": "Enciende el Bluetooth de esta computadora y vuelve a intentarlo."
+      }
+    },
+    "readyTitle": "Prepara tu banda",
+    "readyList": [
+      "El Bluetooth de esta computadora está encendido.",
+      "La banda está cargada, en tu muñeca y a menos de 1 m.",
+      "La app de la banda en tu celular está cerrada, o el Bluetooth del celular está apagado. Una banda habla con un solo dispositivo a la vez.",
+      "Xiaomi Smart Band 7: activa «Compartir frecuencia cardíaca» en los ajustes de la banda. Si no aparece ningún número, inicia un entrenamiento en la banda."
+    ],
+    "readyNote": "Ahora se abre una lista de dispositivos cercanos. Elige tu banda.",
+    "openList": "Abrir lista de dispositivos",
+    "back": "Atrás",
+    "connecting": "Conectando…",
+    "connectingHint": "Mantén la banda cerca.",
+    "live": "En vivo",
+    "waiting": "Conectada · esperando el pulso",
+    "waitingHint": "Aún no hay lectura. En una Xiaomi Smart Band 7, inicia un entrenamiento en la banda: solo comparte el pulso mientras mide.",
+    "stale": "Sin lectura nueva hace {age}",
+    "staleHint": "Ajusta la correa, un dedo por encima del hueso de la muñeca.",
+    "reconnecting": "Conexión perdida · reconectando ({n} de {max})",
+    "battery": "Batería {pct} %",
+    "batteryUnknown": "La batería no se comparte",
+    "connectedFor": "Conectada desde hace {age}",
+    "lastTwoMin": "Pulso, últimos 2 minutos",
+    "onlyHr": "La banda solo comparte el pulso. El oxígeno, la respiración, la temperatura de la piel y la VFC del Reloj siguen viniendo de la serie de demostración.",
+    "openWatch": "Abrir Reloj",
+    "disconnect": "Desconectar",
+    "tryAgain": "Reintentar",
+    "chooseAnother": "Elegir otro dispositivo",
+    "problems": {
+      "cancelled": {
+        "title": "No elegiste ningún dispositivo",
+        "hint": "Abre la lista otra vez y elige tu banda."
+      },
+      "no-hr-service": {
+        "title": "Esta banda no comparte el pulso",
+        "hint": "Se conectó, pero no ofrece el servicio estándar de pulso. Una Xiaomi Smart Band 7 puede necesitar su clave de vinculación. Usa una banda de pecho o los datos de demostración."
+      },
+      "failed": {
+        "title": "No se pudo conectar",
+        "hint": "Acércate, revisa que la banda no esté conectada a tu celular y vuelve a intentarlo."
+      },
+      "lost": {
+        "title": "Banda desconectada",
+        "hint": "Dejó de responder. Acércala y vuelve a intentarlo."
+      }
+    },
+    "prototype": "Los límites del enlace son valores de prototipo: dato viejo a los 5 s sin lectura, desconectada a los 30 s."
   }
 }

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { Link } from 'wouter';
 import { flow, te, useLang } from '../../app/i18n';
 import type { ActivityState, Reading, Status, WatchSample } from '../../domain/types';
@@ -9,6 +9,9 @@ import { sampleAt, windowOf } from '../../data/watchSeries';
 import { tsOf } from '../../data/sol142';
 import { StatusBadge } from '../../components/StatusBadge';
 import { BTN_PRIMARY, CARD, PANEL, Screen, Thread } from '../../components/ui';
+import { bandInUse, useBand } from '../../app/band/store';
+import { freshness } from '../../app/band/heartRate';
+import { useWallClock } from '../connect/ConnectScreen';
 
 /** Personal resting range for the demo crew member (prototype; a real watch learns it in a week). */
 export const RESTING_BAND: [number, number] = [56, 68];
@@ -35,6 +38,12 @@ export function WatchScreen() {
   const recoveryStartTs = useApp((s) => s.recoveryStartTs);
   const lang = useLang();
   const scenario = useMemo(() => ({ recoveryStartTs }), [recoveryStartTs]);
+  const band = useBand();
+  const wallTs = useWallClock();
+  const bandFresh = freshness(band.lastTs, wallTs);
+  const bandLatest = band.samples[band.samples.length - 1];
+  // Once the band has sent a reading it owns the heart-rate tile, shown as old data when it goes quiet.
+  const fromBand = bandInUse(band.phase) && bandLatest !== undefined;
 
   // Re-read the series every 5 s (the watch's own rate), not on every clock tick.
   const slot = Math.floor(nowTs / 5000);
@@ -54,8 +63,20 @@ export function WatchScreen() {
   const mins = activityMinutes(nowTs, now.activity);
   const context = `${flow.activity[now.activity].toLowerCase()} · ${fill(flow.watch.forMin, { min: mins })}`;
 
-  const tiles: { key: string; name: string; value: string; unit: string; status: Status; series: number[]; min: number; max: number; band?: [number, number]; note: string }[] = [
-    { key: 'hr', name: flow.watch.signals.heartRate, value: String(now.heartRate), unit: flow.watch.units.heartRate, status: level(openHeart), series: hour.map((s) => s.heartRate), min: 40, max: 150, band: now.activity === 'rest' ? RESTING_BAND : undefined, note: now.activity === 'rest' ? fill(flow.watch.usual, { low: RESTING_BAND[0], high: RESTING_BAND[1] }) : context },
+  const simulatedHr = { key: 'hr', name: flow.watch.signals.heartRate, value: String(now.heartRate), unit: flow.watch.units.heartRate, status: level(openHeart), series: hour.map((s) => s.heartRate), min: 40, max: 150, band: now.activity === 'rest' ? RESTING_BAND : undefined, note: now.activity === 'rest' ? fill(flow.watch.usual, { low: RESTING_BAND[0], high: RESTING_BAND[1] }) : context };
+  // Real readings: the watch rules still run on the demo series, so no health badge is claimed for them.
+  const bandHr = fromBand ? {
+    ...simulatedHr,
+    value: String(bandLatest.bpm),
+    status: bandFresh === 'live' ? simulatedHr.status : ('stale' as Status),
+    badge: bandFresh === 'live' ? <span className="rounded-full bg-brand-bg px-2 py-0.5 text-[15px] font-bold text-brand-ink">● {flow.connect.live}</span> : undefined,
+    series: band.samples.map((s) => s.bpm),
+    band: undefined,
+    note: fill(flow.watch.fromBand, { name: band.deviceName ?? '' }),
+  } : null;
+
+  const tiles: { key: string; name: string; value: string; unit: string; status: Status; badge?: ReactNode; series: number[]; min: number; max: number; band?: [number, number]; note: string }[] = [
+    bandHr ?? simulatedHr,
     { key: 'spo2', name: flow.watch.signals.spo2, value: String(now.spo2), unit: flow.watch.units.spo2, status: level(openSpo2), series: hour.map((s) => s.spo2), min: 85, max: 100, band: [95, 100], note: context },
     { key: 'resp', name: flow.watch.signals.respRate, value: String(now.respRate), unit: flow.watch.units.respRate, status: 'green', series: hour.map((s) => s.respRate), min: 8, max: 32, note: context },
     { key: 'skin', name: flow.watch.signals.skinTemp, value: `${now.skinTempDelta >= 0 ? '+' : ''}${dec(now.skinTempDelta.toFixed(1), lang)}`, unit: flow.watch.units.skinTemp, status: 'green', series: hour.map((s) => s.skinTempDelta), min: -1, max: 2, band: [-0.5, 0.5], note: flow.watch.vsUsual },
@@ -94,10 +115,11 @@ export function WatchScreen() {
       <div className="grid flex-1 gap-5 lg:grid-cols-[minmax(0,2.4fr)_minmax(280px,1fr)]">
         <div className="flex flex-col gap-5">
           <div className={`${CARD} flex flex-wrap items-center gap-x-6 gap-y-1 !p-4`}>
-            <h1 className="text-[22px] font-bold">{flow.watch.device}</h1>
-            <span className="text-ink-2">{fill(flow.watch.lastReading, { age: ago(nowTs - now.ts) })}</span>
-            <span className="text-ink-2">{flow.watch.quality}</span>
-            <span className="ml-auto rounded-full border border-line px-3 py-1 text-[15px] text-ink-2">{flow.watch.simulated}</span>
+            <h1 className="text-[22px] font-bold">{fromBand ? fill(flow.watch.fromBand, { name: band.deviceName ?? '' }) : flow.watch.device}</h1>
+            <span className="text-ink-2">{fill(flow.watch.lastReading, { age: fromBand ? ago(wallTs - (band.lastTs ?? wallTs)) : ago(nowTs - now.ts) })}</span>
+            {!fromBand && <span className="text-ink-2">{flow.watch.quality}</span>}
+            <span className="ml-auto rounded-full border border-line px-3 py-1 text-[15px] text-ink-2">{fromBand ? flow.watch.bandLive : flow.watch.simulated}</span>
+            {!bandInUse(band.phase) && <Link href="/connect" className="font-bold text-brand-ink underline">{flow.watch.connectBand}</Link>}
           </div>
 
           <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-label={flow.watch.title}>
@@ -105,7 +127,7 @@ export function WatchScreen() {
               <li key={t.key} className={`${CARD} flex flex-col gap-1 !p-4`}>
                 <div className="flex items-center justify-between gap-2">
                   <h2 className="font-bold">{t.name}</h2>
-                  <StatusBadge status={t.status} size="sm" />
+                  {t.badge ?? <StatusBadge status={t.status} size="sm" />}
                 </div>
                 <p className="flex items-baseline gap-2">
                   <span className="tabular text-[44px] leading-none" data-testid={`watch-${t.key}`}>{t.value}</span>

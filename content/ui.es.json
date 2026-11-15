@@ -7,6 +7,12 @@
     "offline": "Sin conexión · todos los datos en esta tablet",
     "demo": "Demo"
   },
+  "preferences": {
+    "nightMode": "Modo noche",
+    "switchToDay": "Cambiar a modo día",
+    "switchToNight": "Cambiar a modo noche",
+    "switchLanguage": "Cambiar a inglés"
+  },
   "nav": {
     "home": "Yo futuro",
     "check": "Chequeo diario",
