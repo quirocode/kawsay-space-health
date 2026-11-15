@@ -16,6 +16,7 @@ const paths: Record<string, ReactNode> = {
   environment: <><circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="10" ry="5" transform="rotate(-35 12 12)"/></>,
   how: <><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 1 1 4 3c-1 .5-1 1-1 2m0 3h.01"/></>,
   project: <path d="M13 5h6v6m0-6-8 8M19 14v5H5V5h5"/>,
+  missionGuide: <><circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4Z"/></>,
   menu: <path d="M4 6h16M4 12h16M4 18h16"/>,
 };
 export function Glyph({ name, size = 19 }: { name: string; size?: number }) {
@@ -30,7 +31,7 @@ export function WorkspaceNav() {
   const [open, setOpen] = useState(false);
   const groups = [
     { label: es ? 'Salud' : 'Health', links: [
-      ['/', es ? 'Yo futuro' : 'Future Self', 'home'], ['/check', ui.nav.check, 'check'],
+      ['/', es ? 'Yo futuro' : 'Future Self', 'home'], ['/mission-guide', es ? 'Misión guiada' : 'Guided mission', 'missionGuide'], ['/check', ui.nav.check, 'check'],
       ['/watch', es ? 'Reloj y alertas' : 'Watch & alerts', 'watch'], ['/loop', ui.nav.loop, 'loop'],
     ] },
     { label: es ? 'Operaciones' : 'Operations', links: [

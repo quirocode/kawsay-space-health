@@ -3,13 +3,14 @@
  * indicator is not enough. Each rule crosses indicators and returns an explainable Finding.
  * Deterministic. Official facts come from SRC; every other cut-off is a prototype value.
  */
+import { cabinCo2, CABIN_CO2_LIMIT } from './cabinCo2';
 import { SRC } from './indicators';
 import { fmt } from './evaluate';
 import type { Action, Finding, MissionContext, Reading } from './types';
 
 export interface RuleDef {
   id: string;
-  check(readings: Reading[], ctx: MissionContext): Finding | null;
+  check(readings: Reading[], ctx: MissionContext, nowTs?: number): Finding | null;
 }
 
 export function latest(readings: Reading[], id: string): Reading | undefined {
@@ -45,25 +46,27 @@ const primary = (ruleId: string, text: string, recheckIndicatorId: string, reche
 export const RULES: RuleDef[] = [
   {
     id: 'co2_headache',
-    check(readings, ctx) {
+    check(readings, ctx, nowTs = latestTimestamp(readings)) {
       const headache = today(readings, 'headache_score', ctx) ?? 1;
       if (headache < 3) return null;
-      const co2 = latest(readings, 'cabin_co2')?.value;
+      const co2 = cabinCo2(readings, nowTs).value;
       const sleep3 = lastNDaysAvg(readings, 'sleep_hours', 3, ctx);
-      const highCo2 = co2 !== undefined && co2 >= 3;
+      const highCo2 = co2 !== null && co2 > CABIN_CO2_LIMIT;
       const shortSleep = sleep3 !== undefined && sleep3 < 6;
       if (!highCo2 && !shortSleep) return null;
       const confused = today(readings, 'symptom_confusion', ctx) === 1;
       const because = [`Headache reported (${fmt(headache)} of 5).`];
-      if (highCo2) because.push(`Cabin CO₂ ${fmt(co2)} mmHg — NASA limit is 3 mmHg.`);
+      if (highCo2) because.push(`Cabin CO₂ (1-hour average): ${fmt(co2)} mmHg. NASA habitat limit: 3 mmHg.`);
       if (shortSleep) because.push(`Sleep averaged ${fmt(sleep3)} h over 3 nights.`);
       if (confused) because.push('Confusion reported.');
       const parts = ['Headache', shortSleep && 'short sleep', highCo2 && 'high cabin CO₂'].filter(Boolean);
       return {
         ruleId: 'co2_headache', title: parts.join(' + '), status: confused ? 'red' : 'yellow', because,
         risks: ['hypoxia', 'sleep'], hazards: ['environment', 'isolation'], zones: ['brain', 'lungs'],
-        actions: [primary('co2_headache', 'Move to a well-ventilated module, drink 250 ml of water, and ask the crew to check the CO₂ scrubber.', 'headache_score', 30, confused)],
-        sources: [SRC.co2, SRC.hypoxia, SRC.sleep, P],
+        actions: [primary('co2_headache', highCo2
+          ? 'Move to a well-ventilated module, drink 250 ml of water, and ask the crew to check the CO₂ scrubber.'
+          : 'Log the symptoms and tell the crew so they can review the situation.', 'headache_score', 30, confused)],
+        sources: [...(highCo2 ? [SRC.co2] : []), ...(shortSleep ? [SRC.sleep] : []), P],
       };
     },
   },
@@ -158,7 +161,12 @@ export const RULES: RuleDef[] = [
 ];
 
 /** Runs every rule, drops nulls, sorts red before yellow, then by rule order. */
-export function findCompound(readings: Reading[], ctx: MissionContext): Finding[] {
-  const found = RULES.map((r) => r.check(readings, ctx)).filter((f): f is Finding => f !== null);
+function latestTimestamp(readings: Reading[]) {
+  return readings.reduce((max, reading) => Math.max(max, reading.ts), 0);
+}
+
+export function findCompound(readings: Reading[], ctx: MissionContext, nowTs = latestTimestamp(readings)): Finding[] {
+  const available = readings.filter((reading) => reading.ts <= nowTs);
+  const found = RULES.map((r) => r.check(available, ctx, nowTs)).filter((f): f is Finding => f !== null);
   return [...found.filter((f) => f.status === 'red'), ...found.filter((f) => f.status !== 'red')];
 }

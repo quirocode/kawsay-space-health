@@ -10,6 +10,8 @@ import { useApp } from '../../app/store';
 import { ago, clock, dec, fill } from '../../app/format';
 import { StatusBadge } from '../../components/StatusBadge';
 import { BTN_PRIMARY, BTN_SECONDARY, CARD, NumberPad, PANEL, Screen, SourceList } from '../../components/ui';
+import { cabinCo2 } from '../../domain/cabinCo2';
+import { readingOrigin } from '../../components/readingEvidence';
 import { BodyFigure } from '../future-self/BodyFigure';
 import { todayZones } from '../future-self/zones';
 
@@ -264,7 +266,7 @@ function Summary({ onAgain }: { onAgain: () => void }) {
 
   const defs = engine.indicators();
   const evals = useMemo(() => engine.evaluate(readings, [], ctx, nowTs), [readings, ctx, nowTs]);
-  const findings = useMemo(() => engine.findCompound(readings, ctx), [readings, ctx]);
+  const findings = useMemo(() => engine.findCompound(readings, ctx, nowTs), [readings, ctx, nowTs]);
   const zones = useMemo(() => todayZones(evals, defs), [evals, defs]);
   const attention = evals.some((e) => e.status === 'red' || e.status === 'yellow') || findings.length > 0;
   const savedCount = lastCheckTs === null ? 0 : readings.filter((r) => r.ts === lastCheckTs && r.origin === 'manual').length;
@@ -299,7 +301,7 @@ function Summary({ onAgain }: { onAgain: () => void }) {
 
           <ul className="flex flex-col gap-2">
             {rows.length === 0 && <li className={PANEL}>{zone ? flow.check.noIndicators : ui.check.summaryOk}</li>}
-            {rows.map(({ def, e }) => <IndicatorRow key={def.id} def={def} e={e} reading={latest.get(def.id)} nowTs={nowTs} />)}
+            {rows.map(({ def, e }) => <IndicatorRow key={def.id} def={def} e={e} reading={latest.get(def.id)} nowTs={nowTs} co2Average={def.id === 'cabin_co2' ? cabinCo2(readings, nowTs).value : undefined} />)}
           </ul>
 
           <div className="mt-auto grid grid-cols-2 gap-3">
@@ -314,9 +316,9 @@ function Summary({ onAgain }: { onAgain: () => void }) {
   );
 }
 
-function IndicatorRow({ def, e, reading, nowTs }: { def: IndicatorDef; e: Evaluation; reading: Reading | undefined; nowTs: number }) {
+function IndicatorRow({ def, e, reading, nowTs, co2Average }: { def: IndicatorDef; e: Evaluation; reading: Reading | undefined; nowTs: number; co2Average?: number | null }) {
   const lang = useLang();
-  const value = !reading ? '–' : def.input === 'boolean' ? (reading.value ? (lang === 'es' ? 'Sí' : 'Yes') : 'No') : dec(String(reading.value), lang);
+  const value = co2Average !== undefined ? (co2Average === null ? '–' : dec(Number(co2Average.toFixed(2)), lang)) : !reading ? '–' : def.input === 'boolean' ? (reading.value ? (lang === 'es' ? 'Sí' : 'Yes') : 'No') : dec(String(reading.value), lang);
   return (
     <li className={`${PANEL} flex flex-col gap-1`}>
       <div className="flex flex-wrap items-center gap-3">
@@ -326,7 +328,7 @@ function IndicatorRow({ def, e, reading, nowTs }: { def: IndicatorDef; e: Evalua
       </div>
       <p className="text-[15px] text-ink-2">
         {te(e.reason)}
-        {reading && ` · ${flow.check.from[reading.origin]} · ${fill(flow.check.ageAgo, { age: ago(nowTs - reading.ts) })}`}
+        {reading && ` · ${readingOrigin(reading, lang)} · ${fill(flow.check.ageAgo, { age: ago(nowTs - reading.ts, lang) })}`}
       </p>
       <SourceList sources={e.sources} />
     </li>

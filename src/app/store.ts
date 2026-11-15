@@ -1,3 +1,4 @@
+import { cabinCo2 } from '../domain/cabinCo2';
 /**
  * App state (P1). The store is the in-memory copy; every change is also written to the
  * local database (src/app/db.ts), so nothing is lost when the window closes.
@@ -10,7 +11,7 @@ import type {
 import { engine, loadDemoMission, watchEngine } from './engine';
 import { indexedDatabase, memoryDatabase, type AlertRecord, type CaseRecord, type Database, type LoggedVerification, type MissionInfo, type PendingRecheck, type Session, type Snapshot } from './db';
 import { sampleAt, windowOf } from '../data/watchSeries';
-import { tsOf } from '../data/sol142';
+import { cabinSamples, tsOf } from '../data/sol142';
 
 export type { AlertRecord, CaseRecord, MissionInfo, PendingRecheck } from './db';
 
@@ -227,12 +228,12 @@ const latestOf = (readings: Reading[], id: string, untilTs = Infinity): Reading 
 const mergeReadings = (cur: Reading[], add: Reading[]) => [...cur, ...add].sort((a, b) => a.ts - b.ts);
 
 /** What goes into the next brief: every case since the last one, plus what is active now. */
-export function briefInput(s: Pick<AppState, 'cases' | 'briefs' | 'readings' | 'context' | 'alerts'>) {
+export function briefInput(s: Pick<AppState, 'cases' | 'briefs' | 'readings' | 'context' | 'alerts' | 'nowTs'>) {
   const since = s.briefs.length ? s.briefs[s.briefs.length - 1].generatedTs : -Infinity;
   const recent = s.cases.filter((c) => c.startedTs > since || (c.closedTs ?? Infinity) > since);
   // Already acted on, or already told to Earth in the last brief: not news.
   const handled = new Set([...recent.map((c) => c.finding.ruleId), ...(s.briefs[s.briefs.length - 1]?.findings.map((f) => f.ruleId) ?? [])]);
-  const active = engine.findCompound(s.readings, s.context).filter((f) => !handled.has(f.ruleId));
+  const active = engine.findCompound(s.readings, s.context, s.nowTs).filter((f) => !handled.has(f.ruleId));
   const openAlerts = s.alerts.filter((a) => isOpen(a) && !a.caseId).map((a) => watchEngine.toFinding(a.alert)).filter((f) => !handled.has(f.ruleId));
   return {
     findings: [...recent.map((c) => c.finding), ...openAlerts, ...active],
@@ -352,8 +353,12 @@ export const useApp = create<AppState>()((set, get) => {
       const s = get();
       if (!s.pending || s.nowTs >= s.pending.dueTs) return;
       // Demo: the scrubber check brings the cabin sensor back down while the timer runs.
-      const beat = s.pending.ruleId === 'co2_headache' ? loadDemoMission().beats.verification.filter((r) => r.origin === 'sensor_sim') : [];
-      const sensor = beat.map((r) => ({ ...r, ts: s.pending!.dueTs, missionDay: s.context.missionDay }));
+      const { pending } = s;
+      const template = loadDemoMission().beats.verification.find((r) => r.indicatorId === 'cabin_co2');
+      const started = s.cases.find((record) => record.id === pending.caseId)?.startedTs ?? s.nowTs;
+      const sensor = pending.ruleId === 'co2_headache' && template
+        ? cabinSamples({ ...template, missionDay: s.context.missionDay, phase: s.context.phase }, Math.min(started + 5 * 60_000, pending.dueTs), pending.dueTs)
+        : [];
       commit({ nowTs: s.pending.dueTs, readings: mergeReadings(s.readings, sensor) }, (db) => db.putReadings(sensor));
     },
     completeRecheck: (afterValue) => {
@@ -368,9 +373,11 @@ export const useApp = create<AppState>()((set, get) => {
       const compared: CaseRecord['compared'] = [{ label: name(p.indicatorId), unit: defs.get(p.indicatorId)?.input === 'scale_1_5' ? 'of 5' : defs.get(p.indicatorId)?.unit ?? '', before: p.before.value, after: afterValue }];
       const started = s.cases.find((c) => c.id === p.caseId)?.startedTs ?? s.nowTs;
       if (p.ruleId === 'co2_headache') {
-        const b = latestOf(s.readings, 'cabin_co2', started);
-        const a = latestOf(readings, 'cabin_co2');
-        if (a && b && a.ts > b.ts) compared.push({ label: name('cabin_co2'), unit: 'mmHg', before: b.value, after: a.value });
+        const before = cabinCo2(s.readings, started);
+        const after = cabinCo2(readings, s.nowTs);
+        if (before.value !== null && after.value !== null && after.latest && after.latest.ts > started) {
+          compared.push({ label: 'Cabin CO₂ (1-hour average)', unit: 'mmHg', before: before.value, after: after.value });
+        }
       }
       const cases = s.cases.map((c) => (c.id === p.caseId ? { ...c, verification, compared } : c));
       const updated = cases.find((c) => c.id === p.caseId)!;
@@ -452,11 +459,12 @@ export const useApp = create<AppState>()((set, get) => {
       const demo = loadDemoMission();
       const s = get();
       const at = (hh: number, mm: number, ss = 0) => tsOf(demo.context.missionDay, hh, mm) + ss * 1000;
-      const stamp = (rs: Reading[], ts: number) => rs.map((r) => ({ ...r, ts }));
       if (scene === 'morning') return get().resetDemo();
       if (scene === 'headache') {
         const ts = Math.max(s.nowTs, at(13, 10));
-        const added = stamp(demo.beats.headache, ts);
+        const added = demo.beats.headache.map((reading) => ({
+          ...reading, ts: ts + reading.ts - at(13, 10), missionDay: s.context.missionDay, phase: s.context.phase,
+        }));
         commit({ nowTs: ts + 2 * 60_000, readings: mergeReadings(s.readings, added) }, (db) => db.putReadings(added));
         return;
       }

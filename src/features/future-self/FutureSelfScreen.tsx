@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'wouter';
 import { te, ui, useLang } from '../../app/i18n';
-import type { BodyZone, Projection } from '../../domain/types';
+import type { BodyZone, Projection, Reading } from '../../domain/types';
 import { engine } from '../../app/engine';
 import { useApp } from '../../app/store';
 import { StatusBadge } from '../../components/StatusBadge';
@@ -11,7 +11,9 @@ import { WovenTimeline } from './WovenTimeline';
 import { arrivalZones, biggestDrops, currentHabits, exerciseByDay, exerciseGap, fill, todayZones } from './zones';
 import { Glyph } from '../../app/WorkspaceNav';
 import anatomyCopy from '../../../content/anatomy.json';
-import { dec } from '../../app/format';
+import { readingOrigin } from '../../components/readingEvidence';
+import { cabinCo2 } from '../../domain/cabinCo2';
+import { ago, dec } from '../../app/format';
 
 const METRIC_LABEL: Record<string, string> = {
   bone_density_pct: 'Bone density',
@@ -19,6 +21,14 @@ const METRIC_LABEL: Record<string, string> = {
   orthostatic_tolerance_pct: 'Standing tolerance',
   vision_pct: 'Vision',
   alertness_pct: 'Alertness',
+};
+
+const PROJECTION_INPUTS: Record<string, string[]> = {
+  bone_density_pct: ['exercise_min'],
+  leg_strength_pct: ['exercise_min'],
+  orthostatic_tolerance_pct: ['exercise_min', 'water_ml'],
+  vision_pct: ['symptom_vision'],
+  alertness_pct: ['sleep_hours'],
 };
 
 /**
@@ -66,7 +76,10 @@ export function FutureSelfScreen() {
           <h1>{es ? 'Tu salud al aterrizar' : 'Your health at landing'}</h1>
           <p>{es ? 'Compara tu estado actual con la proyección para el día de llegada.' : 'Compare your health today with the projection for landing day.'}</p>
         </div>
-        <Link className="dashboard-primary" href="/check"><Glyph name="check"/>{ui.home.startCheck}<span aria-hidden="true">→</span></Link>
+        <div className="flex flex-wrap gap-2">
+          <Link className="dashboard-secondary !w-auto" href="/check"><Glyph name="check"/>{ui.home.startCheck}</Link>
+          <Link className="dashboard-primary" href="/mission-guide"><Glyph name="missionGuide"/>{es ? 'Iniciar misión' : 'Start mission'}</Link>
+        </div>
       </div>
       <div className="dashboard-grid">
       <div className="dashboard-anatomy dashboard-card">
@@ -120,7 +133,7 @@ export function FutureSelfScreen() {
       </div>
         <div className="dashboard-readiness dashboard-card">
           <div className="dashboard-card-heading">
-            <div><h2>{ui.future.readiness}</h2><p>{futureTitle}</p></div>
+            <div><h2>{ui.future.readiness}</h2><p>{futureTitle}</p><p className="mt-1 font-semibold text-brand-ink">{es ? 'Estimación del prototipo' : 'Prototype estimate'}</p></div>
             <span className="dashboard-score-mark"><Glyph name="watch" /></span>
           </div>
           <div className="dashboard-score-row">
@@ -170,7 +183,7 @@ export function FutureSelfScreen() {
 
         <div className="dashboard-details" id="dashboard-details" tabIndex={-1}>
         {selected ? (
-          <ZoneWhy zone={selected} projection={selProjection} onClose={() => setSelected(null)} withPlan={withPlan} />
+          <ZoneWhy zone={selected} projection={selProjection} readings={readings} nowTs={nowTs} onClose={() => setSelected(null)} withPlan={withPlan} />
         ) : (
           <div className="dashboard-card">
             <h2 className="mb-3 text-[19px] font-bold">{ui.future.tasksTitle}</h2>
@@ -190,8 +203,21 @@ export function FutureSelfScreen() {
   );
 }
 
-function ZoneWhy({ zone, projection, onClose, withPlan }: { zone: BodyZone; projection?: Projection; onClose: () => void; withPlan: boolean }) {
+function ZoneWhy({ zone, projection, readings, nowTs, onClose, withPlan }: {
+  zone: BodyZone; projection?: Projection; readings: Reading[]; nowTs: number; onClose: () => void; withPlan: boolean;
+}) {
   const lang = useLang();
+  const es = lang === 'es';
+  const ids = projection ? PROJECTION_INPUTS[projection.metric] ?? [] : [];
+  const evidence = engine.indicators()
+    .filter((def) => ids.length ? ids.includes(def.id) : def.zone === zone)
+    .map((def) => {
+      const latest = readings.reduce<Reading | undefined>((best, reading) => reading.indicatorId === def.id &&
+        reading.ts <= nowTs && (!best || reading.ts >= best.ts) ? reading : best, undefined);
+      return { def, latest };
+    }).filter((entry): entry is { def: typeof entry.def; latest: Reading } => Boolean(entry.latest))
+    .sort((a, b) => b.latest.ts - a.latest.ts).slice(0, 3);
+  const co2 = zone === 'lungs' ? cabinCo2(readings, nowTs).value : null;
   return (
     <div className="dashboard-card" role="region" aria-label={lang === 'es' ? `Detalles de ${te(ZONE_LABEL[zone])}` : `${ZONE_LABEL[zone]} details`}>
       <div className="flex items-center justify-between gap-3">
@@ -202,12 +228,22 @@ function ZoneWhy({ zone, projection, onClose, withPlan }: { zone: BodyZone; proj
       </div>
       {projection ? (
         <>
-          <p className="mt-2 text-[18px]">
-            {te(METRIC_LABEL[projection.metric] ?? projection.metric)}{': '}
-            <span className="tabular font-semibold">{dec(projection.today, lang)} %</span> →{' '}
-            <span className="tabular font-semibold text-future">{dec(withPlan ? projection.atArrivalIfPlanFollowed : projection.atArrival, lang)} %</span>{' '}
-            <span className="text-ink-2">{ui.future.vsPreflight}</span>
-          </p>
+          <p className="mt-2 font-semibold">{te(METRIC_LABEL[projection.metric] ?? projection.metric)}</p>
+          <p className="text-xs text-ink-2">{ui.future.vsPreflight}</p>
+          <dl className="mt-3 grid grid-cols-3 gap-2">
+            {([
+              [ui.future.today, projection.today, false],
+              [ui.future.currentHabits, projection.atArrival, !withPlan],
+              [ui.future.followPlan, projection.atArrivalIfPlanFollowed, withPlan],
+            ] as const).map(([label, value, selected]) => <div key={label} className={`rounded-lg border p-2 ${selected ? 'border-future bg-brand-bg' : 'border-line bg-surface-2'}`}>
+              <dt className="text-xs text-ink-2">{label}</dt>
+              <dd className="mt-1 tabular text-sm font-bold">{dec(value, lang)} %</dd>
+            </div>)}
+          </dl>
+          <p className="mt-2 text-sm text-brand-ink">{es ? 'Diferencia con el plan' : 'Difference with the plan'} · <strong>
+            {projection.atArrivalIfPlanFollowed >= projection.atArrival ? '+' : ''}
+            {dec(Number((projection.atArrivalIfPlanFollowed - projection.atArrival).toFixed(1)), lang)} {es ? 'puntos porcentuales' : 'percentage points'}
+          </strong></p>
           <h3 className="mt-3 font-bold">{ui.future.model}</h3>
           <p className="text-[17px] text-ink-2">{te(projection.model)}</p>
           <h3 className="mt-3 font-bold">{ui.future.source}</h3>
@@ -226,6 +262,23 @@ function ZoneWhy({ zone, projection, onClose, withPlan }: { zone: BodyZone; proj
         </>
       ) : (
         <p className="mt-2 text-ink-2">{ui.future.noProjection}</p>
+      )}
+      {evidence.length > 0 && (
+        <div className="mt-4 border-t border-line pt-3">
+          <h3 className="font-bold">{projection ? (es ? 'Datos recientes relacionados con el modelo' : 'Recent model-related inputs') : (es ? 'Lecturas de esta zona' : 'Readings for this zone')}</h3>
+          <ul className="mt-2 grid gap-2">
+            {evidence.map(({ def, latest }) => <li key={def.id} className="rounded-lg bg-surface-2 p-2 text-sm">
+              <p className="font-semibold">{te(def.name)} · {def.input === 'boolean'
+                ? (latest.value ? (es ? 'Sí' : 'Yes') : 'No')
+                : <>{dec(latest.value, lang)} {def.unit}</>}</p>
+              <p className="text-xs text-ink-2">{def.id === 'cabin_co2' ? (es ? 'Última muestra · ' : 'Latest sample · ') : ''}
+                {readingOrigin(latest, lang)} · {ago(nowTs - latest.ts, lang)}</p>
+              {def.id === 'cabin_co2' && <p className="mt-1 text-xs">{es ? 'Promedio de 1 h' : '1-hour average'} · {
+                co2 === null ? (es ? 'Datos insuficientes' : 'Insufficient data') : `${dec(Number(co2.toFixed(2)), lang)} mmHg`
+              }</p>}
+            </li>)}
+          </ul>
+        </div>
       )}
     </div>
   );

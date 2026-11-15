@@ -41,10 +41,18 @@ export interface DemoMission {
   defaultPlan: Required<CountermeasurePlan>;
 }
 
+/** Simulated telemetry, sampled every five minutes including both endpoints. */
+export function cabinSamples(template: Reading, start: number, end: number): Reading[] {
+  const samples: Reading[] = [];
+  for (let ts = start; ts < end; ts += 5 * 60_000) samples.push({ ...template, ts });
+  samples.push({ ...template, ts: end });
+  return samples;
+}
+
 export function generateSol142(): DemoMission {
   const history: Reading[] = [];
   const push = (indicatorId: string, value: number, day: number, hh: number, mm: number, origin: Reading['origin'] = 'manual') =>
-    history.push({ indicatorId, value, ts: tsOf(day, hh, mm), missionDay: day, phase: 'cruise', origin });
+    history.push({ indicatorId, value, ts: tsOf(day, hh, mm), missionDay: day, phase: 'cruise', origin, simulated: true });
 
   for (let d = 1; d <= 142; d++) {
     const today = d === 142;
@@ -70,19 +78,25 @@ export function generateSol142(): DemoMission {
     }
     if (d % 7 === 0) push('strength_self_pct', r1(99 - (8 * d) / 140), d, 8, 0);
   }
-  history.sort((a, b) => a.ts - b.ts);
+
 
   const beat = (indicatorId: string, value: number, hh: number, mm: number, origin: Reading['origin'] = 'manual'): Reading => ({
-    indicatorId, value, ts: tsOf(142, hh, mm), missionDay: 142, phase: 'cruise', origin,
+    indicatorId, value, ts: tsOf(142, hh, mm), missionDay: 142, phase: 'cruise', origin, simulated: true,
   });
+
+  const normal = beat('cabin_co2', 2.4, 7, 45, 'sensor_sim');
+  history.push(...cabinSamples(normal, tsOf(142, 6, 45), normal.ts).filter((sample) => sample.ts !== tsOf(142, 7, 40)));
+  history.sort((a, b) => a.ts - b.ts);
+  const elevated = beat('cabin_co2', 4.1, 13, 10, 'sensor_sim');
+  const recovered = beat('cabin_co2', 2.6, 14, 15, 'sensor_sim');
 
   return {
     context: SOL142_CONTEXT,
     nowTs: tsOf(142, 7, 45),
     history,
     beats: {
-      headache: [beat('headache_score', 4, 13, 10), beat('cabin_co2', 4.1, 13, 10, 'sensor_sim')],
-      verification: [beat('headache_score', 2, 13, 45), beat('cabin_co2', 2.6, 13, 45, 'sensor_sim')],
+      headache: [...cabinSamples(elevated, tsOf(142, 12, 10), elevated.ts), beat('headache_score', 4, 13, 10)],
+      verification: [...cabinSamples(recovered, tsOf(142, 13, 15), recovered.ts), beat('headache_score', 2, 14, 15)],
       // What the crew member had logged by early afternoon: behind on water.
       afternoon: [beat('water_ml', 1100, 14, 0)],
     },

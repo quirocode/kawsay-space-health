@@ -56,7 +56,7 @@ describe('Sol 142: headache scene, end to end', () => {
     const caseId = app().completeRecheck(2)!;
     const record = app().cases.find((c) => c.id === caseId)!;
     expect(record.verification?.outcome).toBe('improved');
-    expect(record.compared.map((c) => [c.label, c.before, c.after])).toEqual([['Headache', 4, 2], ['Cabin CO₂', 4.1, 2.6]]);
+    expect(record.compared.map((c) => [c.label, c.before, c.after])).toEqual([['Headache', 4, 2], ['Cabin CO₂ (1-hour average)', 4.1, 3.475]]);
     expect(engine.findCompound(app().readings, app().context).map((f) => f.ruleId)).not.toContain('co2_headache');
 
     app().closeCase(caseId);

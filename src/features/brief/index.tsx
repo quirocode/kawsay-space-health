@@ -20,7 +20,7 @@ export function BriefScreen() {
   const briefs = useApp((s) => s.briefs);
   const queueBrief = useApp((s) => s.queueBrief);
 
-  const input = useMemo(() => briefInput({ cases, briefs, readings, context: ctx, alerts }), [cases, briefs, readings, ctx, alerts]);
+  const input = useMemo(() => briefInput({ cases, briefs, readings, context: ctx, alerts, nowTs }), [cases, briefs, readings, ctx, alerts, nowTs]);
   const readiness = useMemo(() => engine.project(readings, ctx, plan), [readings, ctx, plan]);
   const draft = useMemo(() => engine.brief({ ...input, readiness, ctx, nowTs }), [input, readiness, ctx, nowTs]);
 
