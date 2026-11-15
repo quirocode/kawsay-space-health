@@ -42,7 +42,7 @@
     "explain": "¿Qué significan estos días?",
     "title": "Días de misión",
     "today": "Hoy es el día {day} desde el lanzamiento.",
-    "landing": "Aterrizas en Marte el día {total}, dentro de {days} días. Yo futuro muestra tu cuerpo ese día.",
+    "landing": "Aterrizas el día {total}, dentro de {days} días. Yo futuro muestra tu cuerpo ese día.",
     "why": "El aterrizaje es el día más exigente de la misión: la gravedad vuelve cuando tu cuerpo está más débil. Cada día hasta entonces cuenta.",
     "sol": "En Marte, un día se llama sol y dura 24 h 39 min. Mientras viajas, KAWSAY cuenta días normales.",
     "close": "Entendido"

@@ -30,7 +30,7 @@ describe('App shell', () => {
     fireEvent.click(screen.getByRole('button', { name: /What do these days mean/ }));
     const dialog = screen.getByRole('dialog', { name: 'Mission days' });
     expect(dialog).toHaveTextContent('Today is day 142 since launch.');
-    expect(dialog).toHaveTextContent('You land on Mars on day 180, in 38 days.');
+    expect(dialog).toHaveTextContent('Landing is on day 180, in 38 days.');
     expect(dialog).toHaveTextContent(/sol/);
   });
 });

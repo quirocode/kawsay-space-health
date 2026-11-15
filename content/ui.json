@@ -42,7 +42,7 @@
     "explain": "What do these days mean?",
     "title": "Mission days",
     "today": "Today is day {day} since launch.",
-    "landing": "You land on Mars on day {total}, in {days} days. Future Self shows your body on that day.",
+    "landing": "Landing is on day {total}, in {days} days. Future Self shows your body on that day.",
     "why": "Landing is the hardest day of the mission: gravity returns when your body is weakest. Every day until then still counts.",
     "sol": "On Mars, a day is called a sol and lasts 24 h 39 min. While you travel, KAWSAY counts ordinary days.",
     "close": "Got it"
@@ -59,7 +59,7 @@
     "currentHabits": "Current habits",
     "followPlan": "With my plan",
     "tasksTitle": "On landing day, can you…",
-    "insight": "{days} days of incomplete exercise moved your arrival body. {min} more minutes a day brings it back.",
+    "insight": "{days} days of incomplete exercise moved your landing-day body. {min} more minutes a day brings it back.",
     "insightOk": "Your habits are on track for landing day.",
     "adjustPlan": "Adjust my plan",
     "hidePlan": "Done",
