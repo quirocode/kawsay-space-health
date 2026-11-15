@@ -53,3 +53,14 @@ interface Bluetooth extends EventTarget {
 interface Navigator {
   readonly bluetooth?: Bluetooth;
 }
+
+/** Desktop app only (desktop/preload.cjs): the device list Electron does not draw itself. */
+interface KawsayBluetoothBridge {
+  onDevices(callback: (devices: { id: string; name: string }[]) => void): () => void;
+  choose(id: string): void;
+  cancel(): void;
+}
+
+interface Window {
+  readonly kawsayBluetooth?: KawsayBluetoothBridge;
+}

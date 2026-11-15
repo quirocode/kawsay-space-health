@@ -345,6 +345,10 @@
       "starting": "Starting heart rate…"
     },
     "detail": "Technical detail: {text}",
-    "keySave": "Save"
+    "keySave": "Save",
+    "pickTitle": "Choose your band",
+    "searching": "Searching nearby devices…",
+    "unnamed": "Unnamed device",
+    "pickHint": "Not in the list? Turn off Bluetooth on your phone and tap the band screen to wake it."
   }
 }

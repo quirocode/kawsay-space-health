@@ -171,18 +171,39 @@ function LivePanel() {
  * fitness apps add a device: start → get ready → choose from the system list → live.
  */
 export function ConnectScreen() {
-  const { support, phase, problem, problemDetail, stage } = useBand();
-  const { checkSupport, prepare, back, connect, retry } = useBand.getState();
+  const { support, phase, problem, problemDetail, stage, scan } = useBand();
+  const { checkSupport, prepare, back, connect, retry, chooseDevice, cancelPick } = useBand.getState();
 
   useEffect(() => {
     void checkSupport();
   }, [checkSupport]);
 
-  const step = phase === 'idle' ? 0 : phase === 'ready' ? 1 : phase === 'connecting' ? 2 : phase === 'failed' ? 2 : 3;
+  const step = phase === 'idle' ? 0 : phase === 'ready' ? 1 : phase === 'connecting' || phase === 'picking' ? 2 : phase === 'failed' ? 2 : 3;
 
   let body: ReactNode;
   if (phase === 'connected' || phase === 'reconnecting') {
     body = <LivePanel />;
+  } else if (phase === 'picking') {
+    const found = [...scan].sort((a, b) => Number(!a.name) - Number(!b.name));
+    body = (
+      <div className={`${CARD} flex flex-col gap-4`}>
+        <h2 className="text-[24px] font-bold">{flow.connect.pickTitle}</h2>
+        <p role="status" className="flex items-center gap-2 text-ink-2"><span className="motion-safe:animate-pulse"><BluetoothIcon /></span>{flow.connect.searching}</p>
+        <ul className="flex flex-col gap-2" aria-label={flow.connect.pickTitle}>
+          {found.map((d) => (
+            <li key={d.id}>
+              <button type="button" onClick={() => chooseDevice(d.id)}
+                className={`${PANEL} flex min-h-16 w-full items-center gap-3 text-left hover:bg-surface-3`}>
+                <span className="text-brand-ink"><BandGlyph size={36} /></span>
+                <span className="text-[18px] font-bold">{d.name || flow.connect.unnamed}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <p className="text-[15px] text-ink-2">{flow.connect.pickHint}</p>
+        <button type="button" className={BTN_SECONDARY} onClick={cancelPick}>{flow.connect.back}</button>
+      </div>
+    );
   } else if (phase === 'connecting') {
     body = (
       <div className={`${CARD} flex flex-col items-center gap-4 py-12 text-center`} role="status">

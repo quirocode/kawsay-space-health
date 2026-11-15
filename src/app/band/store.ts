@@ -8,7 +8,7 @@ import { BandError, bluetoothSupport, openBand, pickBand, type BandErrorCode, ty
 import { parseAuthKey } from './huami';
 import { BAND_LINK, isUsable, keepWindow, parseHeartRateMeasurement, reconnectDelayMs, type BandSample } from './heartRate';
 
-export type BandPhase = 'idle' | 'ready' | 'connecting' | 'connected' | 'reconnecting' | 'failed';
+export type BandPhase = 'idle' | 'ready' | 'picking' | 'connecting' | 'connected' | 'reconnecting' | 'failed';
 export type BandProblem = BandErrorCode | 'lost';
 export type BandStage = 'connecting' | 'authenticating' | 'starting';
 
@@ -49,6 +49,8 @@ interface BandState {
   lastTs: number | null;
   samples: BandSample[];
   attempt: number;
+  /** Desktop app: devices found so far while the in-app list is open. */
+  scan: { id: string; name: string }[];
 
   checkSupport(): Promise<void>;
   /** Save the band key. Returns false when it is not 32 hex characters. */
@@ -61,6 +63,9 @@ interface BandState {
   /** Reconnect to the band chosen before, without the device list. */
   retry(): Promise<void>;
   disconnect(): void;
+  /** Desktop app: pick a device from the in-app list. */
+  chooseDevice(id: string): void;
+  cancelPick(): void;
 }
 
 let device: BluetoothDevice | null = null;
@@ -118,6 +123,7 @@ export const useBand = create<BandState>()((set, get) => {
     lastTs: null,
     samples: [],
     attempt: 0,
+    scan: [],
 
     async checkSupport() {
       set({ support: await bluetoothSupport() });
@@ -136,9 +142,17 @@ export const useBand = create<BandState>()((set, get) => {
       set({ phase: 'idle', problem: null });
     },
     async connect() {
-      set({ phase: 'connecting', problem: null, problemDetail: null, stage: 'connecting' });
+      const bridge = typeof window !== 'undefined' ? window.kawsayBluetooth : undefined;
+      // In the .exe the app draws the device list itself; in a browser Chrome/Edge show theirs.
+      const stopListening = bridge?.onDevices((scan) => set({ scan }));
+      set({ phase: bridge ? 'picking' : 'connecting', scan: [], problem: null, problemDetail: null, stage: 'connecting' });
       try {
-        device = await pickBand();
+        try {
+          device = await pickBand();
+        } finally {
+          stopListening?.();
+        }
+        set({ phase: 'connecting', scan: [] });
         set({ deviceName: device.name ?? null, samples: [], lastTs: null });
         await attach(device);
       } catch (e) {
@@ -155,6 +169,12 @@ export const useBand = create<BandState>()((set, get) => {
       } catch (e) {
         set({ phase: 'failed', problem: e instanceof BandError ? e.code : 'failed', problemDetail: e instanceof Error ? e.message : String(e) });
       }
+    },
+    chooseDevice(id) {
+      window.kawsayBluetooth?.choose(id);
+    },
+    cancelPick() {
+      window.kawsayBluetooth?.cancel();
     },
     disconnect() {
       clearRetry();

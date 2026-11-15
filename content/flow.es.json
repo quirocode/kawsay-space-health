@@ -345,6 +345,10 @@
       "starting": "Iniciando el pulso…"
     },
     "detail": "Detalle técnico: {text}",
-    "keySave": "Guardar"
+    "keySave": "Guardar",
+    "pickTitle": "Elige tu banda",
+    "searching": "Buscando dispositivos cercanos…",
+    "unnamed": "Dispositivo sin nombre",
+    "pickHint": "¿No aparece? Apaga el Bluetooth de tu celular y toca la pantalla de la banda para despertarla."
   }
 }

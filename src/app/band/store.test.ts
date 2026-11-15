@@ -174,3 +174,24 @@ describe('Xiaomi Mi Band 6 key check', () => {
     expect(useBand.getState().setAuthKey('hello')).toBe(false);
   });
 });
+
+describe('desktop device list', () => {
+  it('shows what the scan finds and connects to the chosen device', async () => {
+    const band = fakeBand();
+    let push: (d: { id: string; name: string }[]) => void = () => {};
+    let resolvePick: (d: unknown) => void = () => {};
+    const bridge = { onDevices: vi.fn((cb) => { push = cb; return () => {}; }), choose: vi.fn(() => resolvePick(band.device)), cancel: vi.fn() };
+    Object.defineProperty(window, 'kawsayBluetooth', { configurable: true, value: bridge });
+    install(() => new Promise((r) => { resolvePick = r; }));
+
+    const done = useBand.getState().connect();
+    expect(useBand.getState().phase).toBe('picking');
+    push([{ id: 'a', name: 'Mi Smart Band 6' }]);
+    expect(useBand.getState().scan).toEqual([{ id: 'a', name: 'Mi Smart Band 6' }]);
+    useBand.getState().chooseDevice('a');
+    await done;
+    expect(bridge.choose).toHaveBeenCalledWith('a');
+    expect(useBand.getState().phase).toBe('connected');
+    Reflect.deleteProperty(window, 'kawsayBluetooth');
+  });
+});
