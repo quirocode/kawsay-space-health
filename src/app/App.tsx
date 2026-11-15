@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, Route, Router, Switch, useLocation } from 'wouter';
 import { useHashLocation } from 'wouter/use-hash-location';
 import { useApp, type Scene } from './store';
-import { clock, missionLabel, delayLabel, envLabel } from './format';
+import { clock, missionLabel, landingLabel, delayLabel, envLabel, daysToLanding, fill } from './format';
 import { LANGS, syncLang, useCopy, useLang } from './i18n';
 import { FutureSelfScreen } from '../features/future-self/FutureSelfScreen';
 import { CheckInScreen } from '../features/check-in';
@@ -59,7 +59,7 @@ function TopBar() {
         </svg>
         {env}
       </Link>
-      <span className="text-ink-2">{missionLabel(ctx, lang)}</span>
+      <MissionDays />
       <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{delayLabel(ctx.commDelayMin, lang)}</span>
       <DemoMenu />
       {!online && <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{ui.app.offline}</span>}
@@ -90,7 +90,54 @@ function TopBar() {
   );
 }
 
-/** Demo mode: jump to a beat of the seeded Sol 142 story. No data entry needed. */
+/**
+ * "Day 142 of 180 · 38 days to landing", with a short explanation one tap away.
+ * Mission days count from launch; the last one is landing day, the day Future Self projects to.
+ */
+function MissionDays() {
+  const ctx = useApp((s) => s.context);
+  const lang = useLang();
+  const { ui } = useCopy();
+  const [open, setOpen] = useState(false);
+  const m = ui.mission;
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-haspopup="dialog"
+        onClick={() => setOpen(!open)}
+        title={m.explain}
+        className="flex min-h-11 items-center gap-2 rounded-full px-2 text-left text-ink-2 hover:bg-surface-2"
+      >
+        <span>
+          <span className="font-bold text-ink">{missionLabel(ctx, lang)}</span>
+          <span> · {landingLabel(ctx, lang)}</span>
+        </span>
+        <span aria-hidden className="flex h-6 w-6 items-center justify-center rounded-full border border-brand-ink text-[14px] font-bold text-brand-ink">i</span>
+        <span className="sr-only">{m.explain}</span>
+      </button>
+      {open && (
+        <div role="dialog" aria-label={m.title} className="absolute left-0 top-full z-40 mt-2 flex w-[380px] max-w-[90vw] flex-col gap-2 rounded-card border border-line bg-surface p-4 text-[16px] shadow-lg">
+          <h2 className="text-[18px] font-bold">{m.title}</h2>
+          <p>{fill(m.today, { day: ctx.missionDay })}</p>
+          <p>{fill(m.landing, { total: ctx.arrivalDay, days: daysToLanding(ctx) })}</p>
+          <p className="text-ink-2">{m.why}</p>
+          <p className="text-ink-2">{m.sol}</p>
+          <button type="button" onClick={() => setOpen(false)} className="mt-1 min-h-12 self-end rounded-full px-4 font-bold text-brand-ink">{m.close}</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Demo mode: jump to a beat of the seeded mission-day-142 story. No data entry needed. */
 function DemoMenu() {
   const playScene = useApp((s) => s.playScene);
   const nowTs = useApp((s) => s.nowTs);

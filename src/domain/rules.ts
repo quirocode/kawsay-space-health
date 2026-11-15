@@ -110,7 +110,7 @@ export const RULES: RuleDef[] = [
       if (water3 === undefined || water3 >= 2000) return null;
       return {
         ruleId: 'kidney_stone', title: 'Low water + bone loss: kidney stone risk', status: 'yellow',
-        because: [`Water averaged ${fmt(water3 / 1000)} L over 3 days.`, `Sol ${ctx.missionDay}: bone has been releasing calcium for weeks.`],
+        because: [`Water averaged ${fmt(water3 / 1000)} L over 3 days.`, `Mission day ${ctx.missionDay}: bone has been releasing calcium for weeks.`],
         risks: ['bone', 'nutrition'], hazards: ['gravity'], zones: ['kidneys', 'bones'],
         actions: [primary('kidney_stone', 'Drink to 2.5 L today — keep a bottle in sight.', 'water_ml', 1440, false)],
         sources: [SRC.gravity, SRC.bone, P],

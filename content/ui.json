@@ -29,16 +29,31 @@
     "readiness": "Landing readiness",
     "withPlan": "with your plan",
     "today": "Today",
-    "arrival": "Arrival",
+    "arrival": "Landing",
     "startCheck": "Start today's check (2 min)",
     "adjustPlan": "Adjust my plan"
   },
   "placeholder": "This screen is being built.",
+  "mission": {
+    "label": "Day {day} of {total}",
+    "toLanding": "{days} days to landing",
+    "landingTomorrow": "landing tomorrow",
+    "landingToday": "landing day",
+    "explain": "What do these days mean?",
+    "title": "Mission days",
+    "today": "Today is day {day} since launch.",
+    "landing": "You land on Mars on day {total}, in {days} days. Future Self shows your body on that day.",
+    "why": "Landing is the hardest day of the mission: gravity returns when your body is weakest. Every day until then still counts.",
+    "sol": "On Mars, a day is called a sol and lasts 24 h 39 min. While you travel, KAWSAY counts ordinary days.",
+    "close": "Got it"
+  },
   "future": {
     "today": "Today",
-    "arrival": "Arrival",
-    "dayLabel": "Sol {day}",
-    "ifLanding": "If you landed on Sol {day}",
+    "arrival": "Landing",
+    "dayLabel": "Day {day}",
+    "inDays": "in {days} days",
+    "inOneDay": "tomorrow",
+    "ifLanding": "If you landed on day {day}",
     "readiness": "Landing readiness",
     "withPlan": "with your plan",
     "currentHabits": "Current habits",
@@ -53,7 +68,7 @@
     "planSleep": "Sleep per night",
     "nasaTarget": "target 1.5 h/day",
     "now": "Now",
-    "sliderHint": "Drag to see your body on any day until arrival",
+    "sliderHint": "Drag to see your body on any day until landing",
     "vsPreflight": "of pre-flight",
     "noProjection": "Not projected — measured daily only",
     "why": "Why?",
@@ -62,7 +77,7 @@
     "nasa": "NASA",
     "prototype": "Prototype",
     "close": "Close",
-    "arrivalDay": "Arrival · Sol {day}"
+    "arrivalDay": "Landing · Day {day}"
   },
   "check": {
     "title": "Daily check",
@@ -116,7 +131,7 @@
     "whatCrewDid": "What the crew member did",
     "decision": "Decision requested",
     "queue": "Queue for downlink",
-    "conjunction": "No contact with Earth until Sol {day} · Brief stored",
+    "conjunction": "No contact with Earth until day {day} · Brief stored",
     "footer": "Handled on board. A question to Earth would have taken {roundTrip} min just to get an answer."
   },
   "environment": {
