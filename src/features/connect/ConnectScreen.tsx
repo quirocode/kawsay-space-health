@@ -62,6 +62,43 @@ function Notice({ title, hint, children }: { title: string; hint: string; childr
   );
 }
 
+/** The band key: typed once, kept on this computer only. */
+function KeyField({ onSaved, actionLabel }: { onSaved?: () => void; actionLabel?: string }) {
+  const stored = useBand((s) => s.authKeyText);
+  const setAuthKey = useBand((s) => s.setAuthKey);
+  const [text, setText] = useState(stored);
+  const [note, setNote] = useState<'saved' | 'invalid' | null>(null);
+  const save = () => {
+    const ok = setAuthKey(text);
+    setNote(ok ? 'saved' : 'invalid');
+    if (ok) onSaved?.();
+  };
+  return (
+    <div className={`${PANEL} flex flex-col gap-2`}>
+      <label htmlFor="band-key" className="font-bold">{flow.connect.keyLabel}</label>
+      <div className="flex flex-wrap gap-2">
+        <input
+          id="band-key" type="password" autoComplete="off" spellCheck={false}
+          value={text} placeholder={flow.connect.keyPlaceholder}
+          onChange={(e) => { setText(e.target.value); setNote(null); }}
+          onKeyDown={(e) => { if (e.key === 'Enter') save(); }}
+          className="tabular min-h-14 min-w-0 flex-1 rounded-card border border-line bg-surface px-3 text-[17px]"
+        />
+        <button type="button" onClick={save} className="min-h-14 rounded-card border-2 border-brand-ink px-4 font-bold text-brand-ink">
+          {actionLabel ?? flow.connect.keySave}
+        </button>
+      </div>
+      <p className="text-[15px] text-ink-2" role={note ? 'status' : undefined}>
+        {note === 'invalid' ? flow.connect.keyInvalid : note === 'saved' ? flow.connect.keySaved : flow.connect.keyHint}
+      </p>
+      <details>
+        <summary className="min-h-10 cursor-pointer font-bold text-brand-ink">{flow.connect.keyHelpTitle}</summary>
+        <ol className="mt-1 list-decimal pl-5 text-[15px]">{flow.connect.keyHelp.map((line) => <li key={line}>{line}</li>)}</ol>
+      </details>
+    </div>
+  );
+}
+
 /** Live link chip: icon + word. Connection state is not a health status. */
 function LinkChip({ fresh, nowTs, lastTs }: { fresh: Freshness; nowTs: number; lastTs: number | null }) {
   if (fresh === 'live') {
@@ -134,7 +171,7 @@ function LivePanel() {
  * fitness apps add a device: start → get ready → choose from the system list → live.
  */
 export function ConnectScreen() {
-  const { support, phase, problem } = useBand();
+  const { support, phase, problem, problemDetail, stage } = useBand();
   const { checkSupport, prepare, back, connect, retry } = useBand.getState();
 
   useEffect(() => {
@@ -150,7 +187,7 @@ export function ConnectScreen() {
     body = (
       <div className={`${CARD} flex flex-col items-center gap-4 py-12 text-center`} role="status">
         <span className="text-brand-ink motion-safe:animate-pulse"><BandGlyph /></span>
-        <p className="text-[24px] font-bold">{flow.connect.connecting}</p>
+        <p className="text-[24px] font-bold">{flow.connect.stages[stage]}</p>
         <p className="text-ink-2">{flow.connect.connectingHint}</p>
       </div>
     );
@@ -158,7 +195,10 @@ export function ConnectScreen() {
     const p = flow.connect.problems[problem];
     body = (
       <div className={`${CARD} flex flex-col gap-4`}>
-        <Notice title={p.title} hint={p.hint} />
+        <Notice title={p.title} hint={p.hint}>
+          {problemDetail && problem !== 'needs-key' && <p className="text-[15px] text-ink-2">{fill(flow.connect.detail, { text: problemDetail })}</p>}
+        </Notice>
+        {(problem === 'needs-key' || problem === 'wrong-key') && <KeyField actionLabel={flow.connect.saveAndConnect} onSaved={() => void retry()} />}
         <div className="grid gap-3 sm:grid-cols-3">
           <button type="button" className={BTN_PRIMARY} onClick={() => void retry()}>{flow.connect.tryAgain}</button>
           <button type="button" className={BTN_SECONDARY} onClick={() => void connect()}>{flow.connect.chooseAnother}</button>
@@ -178,6 +218,7 @@ export function ConnectScreen() {
             </li>
           ))}
         </ol>
+        <KeyField />
         {problem === 'cancelled' && <p role="status" className="font-bold">{flow.connect.problems.cancelled.title}. {flow.connect.problems.cancelled.hint}</p>}
         <p className="text-ink-2">{flow.connect.readyNote}</p>
         <div className="grid gap-3 sm:grid-cols-[2fr_1fr]">

@@ -272,8 +272,8 @@
     "readyList": [
       "El Bluetooth de esta computadora está encendido.",
       "La banda está cargada, en tu muñeca y a menos de 1 m.",
-      "La app de la banda en tu celular está cerrada, o el Bluetooth del celular está apagado. Una banda habla con un solo dispositivo a la vez.",
-      "Xiaomi Smart Band 7: activa «Compartir frecuencia cardíaca» en los ajustes de la banda. Si no aparece ningún número, inicia un entrenamiento en la banda."
+      "Apaga el Bluetooth de tu celular. La banda mantiene un solo enlace Bluetooth a la vez, y la app del celular lo ocupa.",
+      "Xiaomi Mi Band 4, 5 o 6: ten a mano la clave de la banda. La Xiaomi Smart Band 7 y posteriores usan otra verificación que KAWSAY aún no soporta."
     ],
     "readyNote": "Ahora se abre una lista de dispositivos cercanos. Elige tu banda.",
     "openList": "Abrir lista de dispositivos",
@@ -311,8 +311,40 @@
       "lost": {
         "title": "Banda desconectada",
         "hint": "Dejó de responder. Acércala y vuelve a intentarlo."
+      },
+      "needs-key": {
+        "title": "Esta banda Xiaomi necesita su clave",
+        "hint": "Las Mi Band 4, 5 y 6 solo comparten el pulso tras verificar una clave. Pega la clave de la banda abajo."
+      },
+      "wrong-key": {
+        "title": "La banda rechazó la clave",
+        "hint": "Revisa la clave. Cambia cuando la banda se reinicia o se vuelve a vincular en el celular."
+      },
+      "auth-refused": {
+        "title": "La banda rechazó la conexión",
+        "hint": "Apaga el Bluetooth de tu celular y vuelve a intentarlo."
       }
     },
-    "prototype": "Los límites del enlace son valores de prototipo: dato viejo a los 5 s sin lectura, desconectada a los 30 s."
+    "prototype": "Los límites del enlace son valores de prototipo: dato viejo a los 5 s sin lectura, desconectada a los 30 s.",
+    "keyLabel": "Clave de la banda (bandas Xiaomi)",
+    "keyPlaceholder": "0x + 32 caracteres",
+    "keyHint": "Se guarda solo en esta computadora. Las bandas de pecho y otras bandas no la necesitan.",
+    "keyInvalid": "Eso no es una clave de banda. Tiene 32 caracteres, 0–9 y a–f.",
+    "keySaved": "Clave guardada en esta computadora.",
+    "keyHelpTitle": "Cómo obtener la clave",
+    "keyHelp": [
+      "Xiaomi guarda la clave de cada banda en sus servidores, así que necesitas internet una sola vez.",
+      "Usa huami-token (github.com/argrento/huami-token) con la cuenta a la que está vinculada la banda, o sigue la guía de Gadgetbridge (gadgetbridge.org › Pairing › Huami/Xiaomi server).",
+      "Después no desvincules ni reinicies la banda: eso cambia la clave.",
+      "Desde entonces KAWSAY solo necesita Bluetooth."
+    ],
+    "saveAndConnect": "Guardar clave y conectar",
+    "stages": {
+      "connecting": "Conectando…",
+      "authenticating": "Verificando la clave de la banda…",
+      "starting": "Iniciando el pulso…"
+    },
+    "detail": "Detalle técnico: {text}",
+    "keySave": "Guardar"
   }
 }

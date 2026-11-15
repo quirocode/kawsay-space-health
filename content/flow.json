@@ -272,8 +272,8 @@
     "readyList": [
       "Bluetooth is on on this computer.",
       "The band is charged, on your wrist and within 1 m.",
-      "The band app on your phone is closed, or Bluetooth is off on the phone. A band talks to one device at a time.",
-      "Xiaomi Smart Band 7: turn on Heart rate sharing in the band settings. If no number appears, start a workout on the band."
+      "Turn off Bluetooth on your phone. The band keeps one Bluetooth link at a time, and the phone app takes it.",
+      "Xiaomi Mi Band 4, 5 or 6: have the band key ready. Xiaomi Smart Band 7 and newer use a different key check that KAWSAY does not support yet."
     ],
     "readyNote": "Next, a list of nearby devices opens. Pick your band.",
     "openList": "Open device list",
@@ -311,8 +311,40 @@
       "lost": {
         "title": "Band disconnected",
         "hint": "It stopped answering. Bring it closer and try again."
+      },
+      "needs-key": {
+        "title": "This Xiaomi band needs its key",
+        "hint": "Mi Band 4, 5 and 6 share heart rate only after a key check. Paste the band key below."
+      },
+      "wrong-key": {
+        "title": "The band rejected the key",
+        "hint": "Check the key. It changes when the band is reset or paired again on the phone."
+      },
+      "auth-refused": {
+        "title": "The band refused the connection",
+        "hint": "Turn off Bluetooth on your phone, then try again."
       }
     },
-    "prototype": "Link limits are prototype values: old after 5 s without a reading, disconnected after 30 s."
+    "prototype": "Link limits are prototype values: old after 5 s without a reading, disconnected after 30 s.",
+    "keyLabel": "Band key (Xiaomi bands)",
+    "keyPlaceholder": "0x + 32 characters",
+    "keyHint": "Saved only on this computer. Chest straps and other bands do not need it.",
+    "keyInvalid": "That is not a band key. It has 32 characters, 0–9 and a–f.",
+    "keySaved": "Key saved on this computer.",
+    "keyHelpTitle": "How to get the key",
+    "keyHelp": [
+      "Xiaomi keeps each band's key on its servers, so you need internet once.",
+      "Use huami-token (github.com/argrento/huami-token) with the account the band is paired to, or follow Gadgetbridge's guide (gadgetbridge.org › Pairing › Huami/Xiaomi server).",
+      "Do not unpair or reset the band afterwards: that changes the key.",
+      "From then on KAWSAY needs only Bluetooth."
+    ],
+    "saveAndConnect": "Save key and connect",
+    "stages": {
+      "connecting": "Connecting…",
+      "authenticating": "Checking the band key…",
+      "starting": "Starting heart rate…"
+    },
+    "detail": "Technical detail: {text}",
+    "keySave": "Save"
   }
 }
