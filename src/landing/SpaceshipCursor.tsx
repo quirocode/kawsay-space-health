@@ -10,7 +10,7 @@ export function SpaceshipCursor() {
 
   useEffect(() => {
     const root = rootRef.current, ship = shipRef.current, layer = sparkRef.current;
-    if (!root || !ship || !layer) return;
+    if (!root || !ship || !layer || typeof matchMedia !== 'function') return;
     const fine = matchMedia('(hover: hover) and (pointer: fine)');
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     if (!fine.matches || reduced.matches) return;

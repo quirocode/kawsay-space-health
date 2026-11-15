@@ -2,8 +2,10 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { Link } from 'wouter';
 import { flow, useLang } from '../../app/i18n';
 import { ago, fill } from '../../app/format';
-import { useBand } from '../../app/band/store';
+import { useBand, type DeviceProfile } from '../../app/band/store';
 import { BAND_LINK, freshness, type Freshness } from '../../app/band/heartRate';
+import { useApp } from '../../app/store';
+import { sampleAt } from '../../data/watchSeries';
 import { StatusBadge, StatusIcon } from '../../components/StatusBadge';
 import { BTN_PRIMARY, BTN_SECONDARY, CARD, PANEL, Screen, Thread } from '../../components/ui';
 
@@ -165,10 +167,107 @@ function LinkChip({ fresh, nowTs, lastTs }: { fresh: Freshness; nowTs: number; l
   return <StatusBadge status="stale" label={fill(flow.connect.stale, { age: ago(nowTs - (lastTs ?? nowTs)) })} />;
 }
 
+const PROFILE_ORDER: readonly DeviceProfile[] = ['huawei_ble', 'xiaomi_zepp', 'simulated'] as const;
+
+/** 3-option device profile selector persisted in src/app/db.ts across sessions. */
+function DeviceProfileSelector() {
+  const profile = useBand((s) => s.profile);
+  const setProfile = useBand((s) => s.setProfile);
+
+  return (
+    <section className={`${CARD} flex flex-col gap-3`} aria-label={flow.connect.profileTitle}>
+      <div className="flex flex-col gap-1">
+        <h2 className="text-[20px] font-bold">{flow.connect.profileTitle}</h2>
+        <p className="text-[15px] text-ink-2">{flow.connect.profileHint}</p>
+      </div>
+      <div role="radiogroup" aria-label={flow.connect.profileTitle} className="grid gap-3 md:grid-cols-3">
+        {PROFILE_ORDER.map((id) => {
+          const item = flow.connect.profiles[id];
+          const active = profile === id;
+          return (
+            <button
+              key={id}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              data-testid={`profile-${id}`}
+              onClick={() => setProfile(id)}
+              className={`${PANEL} flex flex-col items-start gap-2 text-left transition ${
+                active ? 'border-2 border-brand-ink bg-brand-bg' : 'hover:bg-surface-3'
+              }`}
+            >
+              <span className="inline-flex items-center rounded-full bg-surface px-2.5 py-0.5 text-[13px] font-bold text-brand-ink">
+                {item.badge}
+              </span>
+              <span className="text-[17px] font-bold leading-snug">{item.label}</span>
+              <span className="text-[14px] text-ink-2">{item.desc}</span>
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+/** Quick guide for Huawei Band 8 / standard BLE (0x180D) keyless mode. */
+function HuaweiQuickGuide() {
+  const g = flow.connect.profiles.huawei_ble;
+  return (
+    <div className={`${PANEL} flex flex-col gap-2 border-l-4 border-brand-ink`} data-testid="huawei-guide">
+      <p className="text-[18px] font-bold text-brand-ink">{g.guideTitle}</p>
+      <p className="text-[15px] text-ink-2">{g.guideIntro}</p>
+      <ol className="list-decimal pl-5 text-[15px] flex flex-col gap-1">
+        {g.guideSteps.map((step) => (
+          <li key={step}>{step}</li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+/** Live stream preview when Biomonitor Simulado (Live Stream) is selected. */
+function SimulatedBiomonitorPanel() {
+  const nowTs = useApp((s) => s.nowTs);
+  const recoveryStartTs = useApp((s) => s.recoveryStartTs);
+  const sample = sampleAt(Math.floor(nowTs / 5000) * 5000, { recoveryStartTs });
+  const sim = flow.connect.profiles.simulated;
+
+  return (
+    <div className={`${CARD} flex flex-col gap-4`} data-testid="simulated-biomonitor">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="inline-flex items-center gap-2 rounded-full bg-brand-bg px-3 py-1 font-bold text-brand-ink">
+          <span className="h-2.5 w-2.5 rounded-full bg-brand-ink" aria-hidden />
+          {sim.badge}
+        </span>
+        <span className="text-[15px] text-ink-2">{flow.watch.simulated}</span>
+      </div>
+      <h2 className="text-[24px] font-bold">{sim.simActiveTitle}</h2>
+      <p className="text-ink-2">{sim.simActiveHint}</p>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className={`${PANEL} flex flex-col gap-1`}>
+          <span className="text-[14px] text-ink-2">{flow.watch.signals.heartRate}</span>
+          <p className="flex items-baseline gap-2">
+            <span className="tabular text-[48px] font-bold leading-none" data-testid="sim-bpm">{sample.heartRate}</span>
+            <span className="text-ink-2">{flow.watch.units.heartRate}</span>
+          </p>
+        </div>
+        <div className={`${PANEL} flex flex-col gap-1`}>
+          <span className="text-[14px] text-ink-2">{flow.watch.signals.hrv}</span>
+          <p className="flex items-baseline gap-2">
+            <span className="tabular text-[48px] font-bold leading-none" data-testid="sim-hrv">{sample.hrv}</span>
+            <span className="text-ink-2">{flow.watch.units.hrv}</span>
+          </p>
+        </div>
+      </div>
+      <Link href="/watch" className={BTN_PRIMARY}>{sim.openSimulatedWatch}</Link>
+    </div>
+  );
+}
+
 function LivePanel() {
   const nowTs = useWallClock();
   const lang = useLang();
-  const { deviceName, battery, connectedTs, lastTs, samples, phase, attempt } = useBand();
+  const { deviceName, battery, connectedTs, lastTs, samples, hrv, phase, attempt } = useBand();
   const disconnect = useBand((s) => s.disconnect);
   const fresh = freshness(lastTs, nowTs);
   const latest = samples[samples.length - 1];
@@ -189,12 +288,21 @@ function LivePanel() {
 
       <div className={`flex flex-col gap-3 ${fresh === 'stale' || fresh === 'lost' ? 'hatch rounded-card p-3' : ''}`}>
         <LinkChip fresh={fresh} nowTs={nowTs} lastTs={lastTs} />
-        <p className="flex items-baseline gap-3" aria-live="polite">
-          <span className={`tabular text-[96px] font-bold leading-none ${showNumber && fresh === 'live' ? '' : 'text-ink-2'}`} data-testid="band-bpm">
-            {showNumber ? latest.bpm : '–'}
-          </span>
-          <span className="text-[22px] text-ink-2">{flow.watch.units.heartRate}</span>
-        </p>
+        <div className="flex flex-wrap items-end gap-6">
+          <p className="flex items-baseline gap-3" aria-live="polite">
+            <span className={`tabular text-[96px] font-bold leading-none ${showNumber && fresh === 'live' ? '' : 'text-ink-2'}`} data-testid="band-bpm">
+              {showNumber ? latest.bpm : '–'}
+            </span>
+            <span className="text-[22px] text-ink-2">{flow.watch.units.heartRate}</span>
+          </p>
+          {hrv !== null && (
+            <p className="flex items-baseline gap-2 pb-2" aria-live="polite">
+              <span className="text-[15px] text-ink-2">HRV (RMSSD):</span>
+              <span className="tabular text-[32px] font-bold leading-none" data-testid="band-hrv">{hrv}</span>
+              <span className="text-[16px] text-ink-2">{flow.watch.units.hrv}</span>
+            </p>
+          )}
+        </div>
         {fresh === 'waiting' && <p className="text-ink-2">{flow.connect.waitingHint}</p>}
         {fresh === 'stale' && <p className="text-ink-2">{flow.connect.staleHint}</p>}
       </div>
@@ -220,7 +328,7 @@ function LivePanel() {
  * fitness apps add a device: start → get ready → choose from the system list → live.
  */
 export function ConnectScreen() {
-  const { support, phase, problem, problemDetail, stage, scan } = useBand();
+  const { support, phase, problem, problemDetail, stage, scan, profile } = useBand();
   const { checkSupport, prepare, back, connect, retry, chooseDevice, cancelPick } = useBand.getState();
 
   useEffect(() => {
@@ -232,6 +340,8 @@ export function ConnectScreen() {
   let body: ReactNode;
   if (phase === 'connected' || phase === 'reconnecting') {
     body = <LivePanel />;
+  } else if (profile === 'simulated') {
+    body = <SimulatedBiomonitorPanel />;
   } else if (phase === 'picking') {
     const found = [...scan].sort((a, b) => Number(!a.name) - Number(!b.name));
     body = (
@@ -268,7 +378,10 @@ export function ConnectScreen() {
         <Notice title={p.title} hint={p.hint}>
           {problemDetail && problem !== 'needs-key' && <p className="text-[15px] text-ink-2">{fill(flow.connect.detail, { text: problemDetail })}</p>}
         </Notice>
-        {(problem === 'needs-key' || problem === 'wrong-key') && <KeyField actionLabel={flow.connect.saveAndConnect} onSaved={() => void retry()} />}
+        {profile === 'huawei_ble' && <HuaweiQuickGuide />}
+        {(profile === 'xiaomi_zepp' || problem === 'needs-key' || problem === 'wrong-key') && (
+          <KeyField actionLabel={flow.connect.saveAndConnect} onSaved={() => void retry()} />
+        )}
         <div className="grid gap-3 sm:grid-cols-3">
           <button type="button" className={BTN_PRIMARY} onClick={() => void retry()}>{flow.connect.tryAgain}</button>
           <button type="button" className={BTN_SECONDARY} onClick={() => void connect()}>{flow.connect.chooseAnother}</button>
@@ -280,15 +393,21 @@ export function ConnectScreen() {
     body = (
       <div className={`${CARD} flex flex-col gap-4`}>
         <h2 className="text-[24px] font-bold">{flow.connect.readyTitle}</h2>
-        <ol className="flex flex-col gap-2">
-          {flow.connect.readyList.map((item, i) => (
-            <li key={item} className={`${PANEL} flex gap-3`}>
-              <span className="tabular flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand font-bold text-on-brand">{i + 1}</span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ol>
-        <KeyField />
+        {profile === 'huawei_ble' ? (
+          <HuaweiQuickGuide />
+        ) : (
+          <>
+            <ol className="flex flex-col gap-2">
+              {flow.connect.readyList.map((item, i) => (
+                <li key={item} className={`${PANEL} flex gap-3`}>
+                  <span className="tabular flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand font-bold text-on-brand">{i + 1}</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ol>
+            <KeyField />
+          </>
+        )}
         {problem === 'cancelled' && <p role="status" className="font-bold">{flow.connect.problems.cancelled.title}. {flow.connect.problems.cancelled.hint}</p>}
         <p className="text-ink-2">{flow.connect.readyNote}</p>
         <div className="grid gap-3 sm:grid-cols-[2fr_1fr]">
@@ -304,6 +423,9 @@ export function ConnectScreen() {
         <span className="text-ink-2"><BandGlyph /></span>
         <p className="text-[24px] font-bold">{flow.connect.none}</p>
         <p className="max-w-[46ch] text-ink-2">{flow.connect.noneHint}</p>
+        <div className="w-full max-w-[560px] text-left">
+          {profile === 'huawei_ble' ? <HuaweiQuickGuide /> : <KeyField />}
+        </div>
         {blocked && <div className="w-full max-w-[560px] text-left"><Notice title={blocked.title} hint={blocked.hint} /></div>}
         <div className="grid w-full max-w-[560px] gap-3">
           <button type="button" className={BTN_PRIMARY} disabled={support !== 'ok'} onClick={prepare}>
@@ -323,6 +445,7 @@ export function ConnectScreen() {
           <p className="text-ink-2">{flow.connect.intro}</p>
           <Stepper step={step} />
         </header>
+        {phase !== 'picking' && phase !== 'connecting' && <DeviceProfileSelector />}
         {body}
         <p className="text-[15px] text-ink-2">{flow.connect.prototype}</p>
       </div>

@@ -357,6 +357,35 @@
     "pickTitle": "Elige tu banda",
     "searching": "Buscando dispositivos cercanos…",
     "unnamed": "Dispositivo sin nombre",
-    "pickHint": "¿No aparece? Apaga el Bluetooth de tu celular y toca la pantalla de la banda para despertarla."
+    "pickHint": "¿No aparece? Apaga el Bluetooth de tu celular y toca la pantalla de la banda para despertarla.",
+    "profileTitle": "Selector de dispositivo",
+    "profileHint": "Se guarda en la base de datos local (db.ts) para recordar la configuración entre sesiones.",
+    "profiles": {
+      "huawei_ble": {
+        "label": "Huawei Band 8 / BLE Estándar (Sin Key)",
+        "badge": "Estándar 0x180D · Sin Key",
+        "desc": "Conexión directa mediante el estándar abierto Bluetooth Heart Rate (0x180D / 0x2A37) sin pedir claves al usuario.",
+        "guideTitle": "Guía rápida · Huawei Band 8 (Sin Key)",
+        "guideIntro": "Antes de pulsar «Conectar», activa la transmisión de pulso en tu pulsera:",
+        "guideSteps": [
+          "En tu Huawei Band 8, ve a Ajustes → Transmisión de frecuencia cardíaca.",
+          "Activa la transmisión y confirma en la pantalla de la pulsera para exponer el servicio BLE 0x180D.",
+          "Mantén la pulsera en tu muñeca, apaga el Bluetooth del celular si Huawei Health ocupa el enlace y pulsa Conectar."
+        ]
+      },
+      "xiaomi_zepp": {
+        "label": "Xiaomi / Zepp (Requiere Auth Key)",
+        "badge": "Propietario 0xFEE0 · Clave 32 hex",
+        "desc": "Para Xiaomi Mi Band 4, 5, 6 y bandas Zepp que exigen una authKey hexadecimal de 32 caracteres."
+      },
+      "simulated": {
+        "label": "Biomonitor Simulado (Live Stream)",
+        "badge": "Live Stream · Sin hardware",
+        "desc": "Mantiene la simulación biométrica en vivo (Sol 142) para pruebas sin hardware físico.",
+        "simActiveTitle": "Biomonitor Simulado Activo (Live Stream)",
+        "simActiveHint": "La pantalla del Reloj y el motor de evaluación reciben latidos, SpO₂, respiración, temperatura cutánea y VFC en tiempo real.",
+        "openSimulatedWatch": "Abrir Reloj (Live Stream)"
+      }
+    }
   }
 }

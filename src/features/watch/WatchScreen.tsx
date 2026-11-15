@@ -63,15 +63,41 @@ export function WatchScreen() {
   const mins = activityMinutes(nowTs, now.activity);
   const context = `${flow.activity[now.activity].toLowerCase()} · ${fill(flow.watch.forMin, { min: mins })}`;
 
+  const liveReadings = useMemo<Reading[]>(() => {
+    if (!fromBand || bandFresh !== 'live' || !bandLatest) return readings;
+    const liveHr: Reading = {
+      indicatorId: 'heart_rate',
+      value: bandLatest.bpm,
+      ts: nowTs,
+      missionDay: ctx.missionDay,
+      phase: ctx.phase,
+      origin: 'sensor_sim',
+    };
+    return [...readings, liveHr];
+  }, [readings, fromBand, bandFresh, bandLatest, nowTs, ctx.missionDay, ctx.phase]);
+
+  const evals = useMemo(() => engine.evaluate(liveReadings, [], ctx, nowTs), [liveReadings, ctx, nowTs]);
+  const liveHrEval = evals.find((e) => e.indicatorId === 'heart_rate');
+
   const simulatedHr = { key: 'hr', name: flow.watch.signals.heartRate, value: String(now.heartRate), unit: flow.watch.units.heartRate, status: level(openHeart), series: hour.map((s) => s.heartRate), min: 40, max: 150, band: now.activity === 'rest' ? RESTING_BAND : undefined, note: now.activity === 'rest' ? fill(flow.watch.usual, { low: RESTING_BAND[0], high: RESTING_BAND[1] }) : context };
-  // Real readings: the watch rules still run on the demo series, so no health badge is claimed for them.
   const bandHr = fromBand ? {
     ...simulatedHr,
     value: String(bandLatest.bpm),
-    status: bandFresh === 'live' ? simulatedHr.status : ('stale' as Status),
+    status: bandFresh === 'live' ? (liveHrEval?.status ?? simulatedHr.status) : ('stale' as Status),
     badge: bandFresh === 'live' ? <span className="rounded-full bg-brand-bg px-2 py-0.5 text-[15px] font-bold text-brand-ink">● {flow.connect.live}</span> : undefined,
     series: band.samples.map((s) => s.bpm),
     band: undefined,
+    note: fill(flow.watch.fromBand, { name: band.deviceName ?? '' }),
+  } : null;
+
+  const simulatedHrv = { key: 'hrv', name: flow.watch.signals.hrv, value: String(now.hrv), unit: flow.watch.units.hrv, status: 'green' as Status, series: hour.map((s) => s.hrv), min: 0, max: 70, note: context };
+  const bandHrvSeries = band.samples.map((s) => s.hrv).filter((v): v is number => v !== undefined);
+  const bandHrv = fromBand && band.hrv !== null ? {
+    ...simulatedHrv,
+    value: String(band.hrv),
+    status: bandFresh === 'live' ? ('green' as Status) : ('stale' as Status),
+    badge: bandFresh === 'live' ? <span className="rounded-full bg-brand-bg px-2 py-0.5 text-[15px] font-bold text-brand-ink">● {flow.connect.live}</span> : undefined,
+    series: bandHrvSeries.length > 0 ? bandHrvSeries : [band.hrv],
     note: fill(flow.watch.fromBand, { name: band.deviceName ?? '' }),
   } : null;
 
@@ -80,7 +106,7 @@ export function WatchScreen() {
     { key: 'spo2', name: flow.watch.signals.spo2, value: String(now.spo2), unit: flow.watch.units.spo2, status: level(openSpo2), series: hour.map((s) => s.spo2), min: 85, max: 100, band: [95, 100], note: context },
     { key: 'resp', name: flow.watch.signals.respRate, value: String(now.respRate), unit: flow.watch.units.respRate, status: 'green', series: hour.map((s) => s.respRate), min: 8, max: 32, note: context },
     { key: 'skin', name: flow.watch.signals.skinTemp, value: `${now.skinTempDelta >= 0 ? '+' : ''}${dec(now.skinTempDelta.toFixed(1), lang)}`, unit: flow.watch.units.skinTemp, status: 'green', series: hour.map((s) => s.skinTempDelta), min: -1, max: 2, band: [-0.5, 0.5], note: flow.watch.vsUsual },
-    { key: 'hrv', name: flow.watch.signals.hrv, value: String(now.hrv), unit: flow.watch.units.hrv, status: 'green', series: hour.map((s) => s.hrv), min: 0, max: 70, note: context },
+    bandHrv ?? simulatedHrv,
   ];
 
   const blocks = useMemo(() => {
@@ -96,8 +122,6 @@ export function WatchScreen() {
   const knots = alerts
     .filter((a) => a.alert.detectedTs >= dayStart && a.alert.signal !== 'quality')
     .map((a) => ({ index: Math.min(day.length - 1, Math.floor((a.alert.detectedTs - dayStart) / 300_000)), size: a.alert.level === 'emergency' ? 6 : a.alert.level === 'warning' ? 5 : 4 }));
-
-  const evals = useMemo(() => engine.evaluate(readings, [], ctx, nowTs), [readings, ctx, nowTs]);
   const latest = (id: string): Reading | undefined => {
     let best: Reading | undefined;
     for (const r of readings) if (r.indicatorId === id && (!best || r.ts > best.ts)) best = r;
@@ -135,7 +159,7 @@ export function WatchScreen() {
                 </p>
                 <Thread values={t.series} min={t.min} max={t.max} band={t.band} tone={toneOf(t.status)} height={44} label={`${t.name}, ${flow.watch.lastHour.toLowerCase()}`} />
                 <p className="text-[15px] text-ink-2">{t.note}</p>
-                <p className="text-xs font-semibold text-brand-ink">{t.key === 'hr' && fromBand
+                <p className="text-xs font-semibold text-brand-ink">{(t.key === 'hr' && fromBand) || (t.key === 'hrv' && bandHrv !== null)
                   ? (lang === 'es' ? 'Pulsera conectada · lectura real' : 'Connected band · real reading')
                   : (lang === 'es' ? 'Sensor simulado' : 'Simulated sensor')}</p>
               </li>

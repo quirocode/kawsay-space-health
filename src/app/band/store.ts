@@ -6,8 +6,11 @@
 import { create } from 'zustand';
 import { BandError, bluetoothSupport, openBand, pickBand, type BandErrorCode, type BandLink, type BluetoothSupport } from './bluetooth';
 import { parseAuthKey } from './huami';
-import { BAND_LINK, isUsable, keepWindow, parseHeartRateMeasurement, reconnectDelayMs, type BandSample } from './heartRate';
+import { BAND_LINK, computeHrvRmssd, isUsable, keepWindow, parseHeartRateMeasurement, reconnectDelayMs, type BandSample } from './heartRate';
+import { loadDeviceProfile, saveDeviceProfile, type DeviceProfile } from '../db';
+import { useApp } from '../store';
 
+export type { DeviceProfile };
 export type BandPhase = 'idle' | 'ready' | 'picking' | 'connecting' | 'connected' | 'reconnecting' | 'failed';
 export type BandProblem = BandErrorCode | 'lost';
 export type BandStage = 'connecting' | 'authenticating' | 'starting';
@@ -40,6 +43,8 @@ interface BandState {
   /** The browser's own error text, shown small under the friendly message. */
   problemDetail: string | null;
   stage: BandStage;
+  /** Selected connection profile persisted in src/app/db.ts. */
+  profile: DeviceProfile;
   /** What the crew member typed as the band key ('' = none). */
   authKeyText: string;
   deviceName: string | null;
@@ -48,11 +53,17 @@ interface BandState {
   /** Newest usable reading, wall-clock ms. */
   lastTs: number | null;
   samples: BandSample[];
+  /** Rolling beat-to-beat RR intervals (ms) extracted from 0x2A37 bit 4. */
+  rrIntervals: number[];
+  /** Live Heart Rate Variability (RMSSD in ms) derived from RR intervals. */
+  hrv: number | null;
   attempt: number;
   /** Desktop app: devices found so far while the in-app list is open. */
   scan: { id: string; name: string }[];
 
   checkSupport(): Promise<void>;
+  /** Select and persist the device connection profile ('huawei_ble' | 'xiaomi_zepp' | 'simulated'). */
+  setProfile(profile: DeviceProfile): void;
   /** Save the band key. Returns false when it is not 32 hex characters. */
   setAuthKey(text: string): boolean;
   /** Step 2: show the "get your band ready" checklist. */
@@ -86,7 +97,23 @@ export const useBand = create<BandState>()((set, get) => {
       return; // malformed packet: ignore it, freshness will show the gap
     }
     if (!isUsable(m)) return;
-    set((s) => ({ lastTs: ts, samples: keepWindow([...s.samples, { ts, bpm: m.bpm }], ts) }));
+    set((s) => {
+      const validRr = m.rrMs.filter((rr) => Number.isFinite(rr) && rr >= 250 && rr <= 2000);
+      const rrIntervals = validRr.length > 0 ? [...s.rrIntervals, ...validRr].slice(-60) : s.rrIntervals;
+      const hrv = validRr.length > 0 ? (computeHrvRmssd(rrIntervals) ?? s.hrv) : s.hrv;
+      const sample: BandSample = {
+        ts,
+        bpm: m.bpm,
+        ...(m.rrMs.length > 0 ? { rrMs: m.rrMs } : {}),
+        ...(hrv !== null ? { hrv } : {}),
+      };
+      return {
+        lastTs: ts,
+        rrIntervals,
+        hrv,
+        samples: keepWindow([...s.samples, sample], ts),
+      };
+    });
   };
 
   const attach = async (d: BluetoothDevice) => {
@@ -116,17 +143,50 @@ export const useBand = create<BandState>()((set, get) => {
     problem: null,
     problemDetail: null,
     stage: 'connecting',
+    profile: loadDeviceProfile(),
     authKeyText: loadKey(),
     deviceName: null,
     battery: null,
     connectedTs: null,
     lastTs: null,
     samples: [],
+    rrIntervals: [],
+    hrv: null,
     attempt: 0,
     scan: [],
 
     async checkSupport() {
       set({ support: await bluetoothSupport() });
+    },
+    setProfile(profile) {
+      saveDeviceProfile(profile);
+      try {
+        useApp.getState().setDeviceProfile(profile);
+      } catch {
+        // ignore if app store is initializing
+      }
+      if (profile === 'simulated' && (link || device)) {
+        clearRetry();
+        link?.close();
+        link = null;
+        device = null;
+        set({
+          profile,
+          phase: 'idle',
+          problem: null,
+          problemDetail: null,
+          deviceName: null,
+          battery: null,
+          connectedTs: null,
+          lastTs: null,
+          samples: [],
+          rrIntervals: [],
+          hrv: null,
+          attempt: 0,
+        });
+        return;
+      }
+      set({ profile, problem: null, problemDetail: null });
     },
     setAuthKey(text) {
       const clean = text.trim();
@@ -153,7 +213,7 @@ export const useBand = create<BandState>()((set, get) => {
           stopListening?.();
         }
         set({ phase: 'connecting', scan: [] });
-        set({ deviceName: device.name ?? null, samples: [], lastTs: null });
+        set({ deviceName: device.name ?? null, samples: [], rrIntervals: [], hrv: null, lastTs: null });
         await attach(device);
       } catch (e) {
         const code = e instanceof BandError ? e.code : 'failed';
@@ -181,7 +241,7 @@ export const useBand = create<BandState>()((set, get) => {
       link?.close();
       link = null;
       device = null;
-      set({ phase: 'idle', problem: null, deviceName: null, battery: null, connectedTs: null, lastTs: null, samples: [], attempt: 0 });
+      set({ phase: 'idle', problem: null, deviceName: null, battery: null, connectedTs: null, lastTs: null, samples: [], rrIntervals: [], hrv: null, attempt: 0 });
     },
   };
 });
