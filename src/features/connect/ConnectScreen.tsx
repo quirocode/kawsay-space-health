@@ -7,6 +7,32 @@ import { BAND_LINK, freshness, type Freshness } from '../../app/band/heartRate';
 import { StatusBadge, StatusIcon } from '../../components/StatusBadge';
 import { BTN_PRIMARY, BTN_SECONDARY, CARD, PANEL, Screen, Thread } from '../../components/ui';
 
+/** Where the crew signs in once to fetch the band's key. */
+const ZEPP_URL = 'https://watchface.zepp.com/';
+
+/**
+ * The one-time helper the crew pastes into the Zepp page's console. It runs inside their
+ * logged-in Zepp session, reads only their own device list, pulls out the band's auth key
+ * and copies it. Kept free of backticks, ${ } and real newlines so it survives being stored
+ * here and pasted straight into a browser console. See tools/get-band-key-browser.js.
+ */
+const KEY_SNIPPET =
+  "(async()=>{const c=n=>(document.cookie.match(new RegExp(n+'=(.*?)(;|$)'))||[])[1];" +
+  "const i=c('hm-user-login-info');let u,t;" +
+  "if(i){const x=JSON.parse(decodeURIComponent(i).split('%2C').join(',')).token_info||{};u=x.user_id;t=x.app_token;}" +
+  "else{u=(c('userid')||'').split('%2C').join(',');t=(c('apptoken')||'').split('%2C').join(',');}" +
+  "if(!u||!t){alert('Not signed in. Sign in at watchface.zepp.com with your band account, then run again.');return;}" +
+  "const H=['api-mifit-us2.zepp.com','api-mifit-us3.zepp.com','api-mifit.zepp.com','api-mifit-de2.zepp.com'];" +
+  "const p='appid=2882303761517383915&channel=play&enableMultiDevice=true&device_type=android_phone&cv=151262_8.7.1-play&device=android_33&v=2.0&lang=en_US&country=US';" +
+  "const h={apptoken:t,channel:'play',appname:'com.huami.midong',appplatform:'android_phone',cv:'151262_8.7.1-play',v:'2.0',lang:'en_US',country:'US'};" +
+  "let items=null;for(const host of H){try{const r=await fetch('https://'+host+'/users/'+u+'/devices?'+p,{headers:h});if(!r.ok)continue;const d=await r.json();if(d.items&&d.items.length){items=d.items;break;}}catch(e){}}" +
+  "if(!items){alert('Signed in, but no band on this account. Use the account your Mi Fitness app uses.');return;}" +
+  "const K=[];for(const d of items){let k=null;try{k=JSON.parse(d.additionalInfo||'{}').auth_key||null;}catch(e){}if(k&&/^[0-9a-f]{32}$/i.test(k))K.push('0x'+k.toLowerCase());}" +
+  "if(!K.length){alert('Found a device but no usable key (it may be a newer watch).');return;}" +
+  "console.log('KAWSAY band key:',K[0]);" +
+  "try{await navigator.clipboard.writeText(K[0]);alert('Band key copied to the clipboard:  '+K[0]+'   — go back to KAWSAY and paste it.');}" +
+  "catch(e){alert('Your band key is:  '+K[0]+'   — copy it into KAWSAY.');}})();";
+
 /** Wall-clock "now", once a second: band readings carry real time, not ship time. */
 export function useWallClock(): number {
   const [now, setNow] = useState(() => Date.now());
@@ -68,10 +94,17 @@ function KeyField({ onSaved, actionLabel }: { onSaved?: () => void; actionLabel?
   const setAuthKey = useBand((s) => s.setAuthKey);
   const [text, setText] = useState(stored);
   const [note, setNote] = useState<'saved' | 'invalid' | null>(null);
+  const [opened, setOpened] = useState(false);
   const save = () => {
     const ok = setAuthKey(text);
     setNote(ok ? 'saved' : 'invalid');
     if (ok) onSaved?.();
+  };
+  // One click: copy the console helper, then open the Xiaomi/Zepp sign-in page.
+  const getKey = () => {
+    void navigator.clipboard?.writeText(KEY_SNIPPET).catch(() => {});
+    window.open(ZEPP_URL, '_blank', 'noopener,noreferrer');
+    setOpened(true);
   };
   return (
     <div className={`${PANEL} flex flex-col gap-2`}>
@@ -91,6 +124,22 @@ function KeyField({ onSaved, actionLabel }: { onSaved?: () => void; actionLabel?
       <p className="text-[15px] text-ink-2" role={note ? 'status' : undefined}>
         {note === 'invalid' ? flow.connect.keyInvalid : note === 'saved' ? flow.connect.keySaved : flow.connect.keyHint}
       </p>
+
+      <div className="mt-1 flex flex-col gap-2 rounded-card border border-line bg-surface p-3">
+        <p className="text-[15px] text-ink-2">{flow.connect.getKeyIntro}</p>
+        <button type="button" onClick={getKey} className={`${BTN_SECONDARY} w-full`}>
+          {flow.connect.getKeyButton}
+        </button>
+        {opened && (
+          <div role="status">
+            <p className="text-[15px] font-bold text-brand-ink">{flow.connect.getKeyOpened}</p>
+            <ol className="mt-1 list-decimal pl-5 text-[15px]">
+              {flow.connect.getKeySteps.map((line) => <li key={line}>{line}</li>)}
+            </ol>
+          </div>
+        )}
+      </div>
+
       <details>
         <summary className="min-h-10 cursor-pointer font-bold text-brand-ink">{flow.connect.keyHelpTitle}</summary>
         <ol className="mt-1 list-decimal pl-5 text-[15px]">{flow.connect.keyHelp.map((line) => <li key={line}>{line}</li>)}</ol>

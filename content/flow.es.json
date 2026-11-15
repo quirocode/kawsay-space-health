@@ -331,13 +331,20 @@
     "keyHint": "Se guarda solo en esta computadora. Las bandas de pecho y otras bandas no la necesitan.",
     "keyInvalid": "Eso no es una clave de banda. Tiene 32 caracteres, 0–9 y a–f.",
     "keySaved": "Clave guardada en esta computadora.",
-    "keyHelpTitle": "Cómo obtener la clave",
+    "getKeyIntro": "¿Aún sin clave? Obtenla desde tu cuenta Xiaomi — solo se hace una vez, con internet.",
+    "getKeyButton": "Obtener la clave de mi banda",
+    "getKeyOpened": "Abrimos la página de inicio de sesión de Xiaomi y copiamos un pequeño ayudante en tu portapapeles.",
+    "getKeySteps": [
+      "Inicia sesión en la página que se acaba de abrir — usa la cuenta de tu app Xiaomi / Mi Fitness.",
+      "En esa página pulsa F12, abre «Console», pega con Ctrl+V y pulsa Enter.",
+      "Mostrará tu clave como 0x… — vuelve aquí, pégala en el recuadro de arriba y pulsa Guardar."
+    ],
+    "keyHelpTitle": "Otras formas de obtener la clave",
     "keyHelp": [
-      "La banda nunca envía su clave por Bluetooth, así que hay que obtenerla una vez desde tu cuenta (se necesita internet una sola vez).",
-      "Lo más fácil: ejecuta  node tools/get-band-key.mjs  e inicia sesión con la cuenta a la que está vinculada la banda; imprime una clave 0x… para pegar aquí.",
-      "¿La banda está en una cuenta Xiaomi de teléfono? Usa tools/get-band-key-browser.js en el navegador (pasos en tools/README-band-key.md).",
-      "No reinicies ni vuelvas a vincular la banda después: eso cambia la clave. Desde entonces KAWSAY solo necesita Bluetooth.",
-      "Sin clave: una banda de pecho Bluetooth estándar (Polar, CooSpo, Wahoo…) funciona aquí sin cuenta."
+      "La banda nunca envía su clave por Bluetooth, así que se obtiene una vez desde tu cuenta; después KAWSAY solo necesita Bluetooth.",
+      "En una computadora con Node: ejecuta  node tools/get-band-key.mjs  e inicia sesión con la cuenta de la banda; imprime una clave 0x….",
+      "Los pasos completos y una opción de banda de pecho que no necesita clave están en tools/README-band-key.md.",
+      "No reinicies ni vuelvas a vincular la banda después: eso cambia la clave y tendrías que obtenerla de nuevo."
     ],
     "saveAndConnect": "Guardar clave y conectar",
     "stages": {

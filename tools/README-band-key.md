@@ -27,20 +27,21 @@ Enter the email and password of the account the band is bound to. It prints the 
 a key like `0x1a2b3c…`. Paste that into KAWSAY → **Connect** → **Band key**. Your password goes
 only to Zepp's own servers (encrypted, the same way the app sends it) and is never stored.
 
-## Method 2 — browser, no install (band on a Xiaomi phone-number account)
+## Method 2 — the in-app button (easiest, works with a Xiaomi phone account)
 
-If Method 1 says it found no band, your band is probably on a Xiaomi account. Use the
-bundled browser script instead — it runs on Zepp's own site using the login you already have:
+In KAWSAY, open **Connect**, tap **Connect band**, and under **Band key** press
+**Get my band key**. That opens the Xiaomi sign-in page and copies a short helper to your
+clipboard. Then:
 
-1. Open <https://watchface.zepp.com/> and sign in with the account the band is linked to.
-2. Open the browser console: press **F12** (or `Ctrl + Shift + I`) and click **Console**.
-3. Open `tools/get-band-key-browser.js`, copy the whole file, paste it into the console, press Enter.
-4. It prints your band's key as `0x…` and copies it to the clipboard. Paste it into
-   KAWSAY → **Connect** → **Band key**, and save it somewhere safe.
+1. Sign in on the page that opened, with the account your Xiaomi / Mi Fitness app uses.
+2. Press **F12** (or `Ctrl + Shift + I`), click **Console**, paste with **Ctrl + V**, press Enter.
+3. It shows your key as `0x…` and copies it. Go back to KAWSAY and paste it in the Band key box.
 
-This reuses your signed-in Zepp session and only calls Zepp's servers; KAWSAY never sees your
-password. It is an extended version of the community snippet from the
-[Gadgetbridge guide](https://gadgetbridge.org/basics/pairing/huami-xiaomi-server/).
+The helper is the same snippet as `tools/get-band-key-browser.js`. It runs inside your
+signed-in Zepp session and only calls Zepp's servers; KAWSAY never sees your password. It is an
+extended version of the community snippet from the
+[Gadgetbridge guide](https://gadgetbridge.org/basics/pairing/huami-xiaomi-server/). If you ever
+need the raw script, it is in `tools/get-band-key-browser.js`.
 
 ## Method 3 — from the phone (last resort)
 
