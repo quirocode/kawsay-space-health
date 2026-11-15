@@ -9,14 +9,13 @@
     "switchLanguage": "Cambiar a inglés",
     "challenge": "El reto",
     "advantages": "Por qué KAWSAY",
-    "technology": "Tecnología",
-    "demo": "Ver demo"
+    "technology": "Tecnología"
   },
   "hero": {
     "badge": "NASA Space Apps Challenge 2026",
     "title": "KAWSAY",
     "subtitle": "Un copiloto de salud para astronautas en misiones largas. Responde la pregunta que ningún panel contesta: ¿cómo llegará tu cuerpo al aterrizaje?",
-    "primary": "Prueba la demo",
+    "primary": "Try the demo",
     "secondary": "Mira el video",
     "scroll": "Desplázate para saber más"
   },

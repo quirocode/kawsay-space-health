@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Landing } from './Landing';
 import copy from '../../content/landing.json';
@@ -31,12 +31,21 @@ describe('Landing page', () => {
     const { unmount } = render(<Landing />);
     expect(document.documentElement.lang).toBe('en');
 
+    const header = screen.getByRole('navigation', { name: copy.nav.label });
+    const demo = within(header).getByRole('link', { name: copy.hero.primary });
+    expect(demo).toHaveTextContent(copy.hero.primary);
+    const demoClasses = demo.className;
+
     await user.click(screen.getByRole('button', { name: copy.nav.switchLanguage }));
     expect(document.documentElement.lang).toBe('es');
     expect(document.title).toBe(spanish.pageTitle);
     expect(screen.getByText(spanish.hero.subtitle)).toBeInTheDocument();
     expect(screen.getByText(spanish.footer.disclaimer)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: spanish.nav.demo })).toHaveAttribute('href', '/app/?lang=es');
+    expect(demo).toHaveTextContent(copy.hero.primary);
+    expect(demo).toHaveAttribute('lang', 'en');
+    expect(demo).toHaveAttribute('href', '/app/?lang=es');
+    expect(demo.className).toBe(demoClasses);
+    expect(screen.getAllByRole('link', { name: copy.hero.primary })).toHaveLength(3);
     expect(screen.getByRole('link', { name: spanish.footer.app[1].label })).toHaveAttribute('href', '/app/?lang=es#/check');
 
     unmount();

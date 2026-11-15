@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Link, Route, Router, Switch, useLocation } from 'wouter';
 import { useHashLocation } from 'wouter/use-hash-location';
 import { useApp, type Scene } from './store';
 import { clock, missionLabel, landingLabel, delayLabel, envLabel, daysToLanding, fill } from './format';
-import { LANGS, syncLang, useCopy, useLang } from './i18n';
+import { syncLang, useCopy, useLang } from './i18n';
 import { FutureSelfScreen } from '../features/future-self/FutureSelfScreen';
 import { CheckInScreen } from '../features/check-in';
 import { LoopScreen } from '../features/finding';
@@ -41,12 +41,9 @@ function useOnline() {
 
 function TopBar() {
   const ctx = useApp((s) => s.context);
-  const theme = useApp((s) => s.theme);
-  const toggleTheme = useApp((s) => s.toggleTheme);
-  const setLang = useApp((s) => s.setLang);
-  const lang = useLang();
   const { ui } = useCopy();
   const online = useOnline();
+  const lang = useLang();
   const env = envLabel(ctx.environment, lang);
   return (
     <header className="flex flex-wrap items-center gap-3 border-b border-line bg-surface px-6 py-3">
@@ -66,30 +63,60 @@ function TopBar() {
       <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{delayLabel(ctx.commDelayMin, lang)}</span>
       <DemoMenu />
       {!online && <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{ui.app.offline}</span>}
-      <div role="radiogroup" aria-label={lang === 'es' ? 'Idioma' : 'Language'} className="flex gap-1">
-        {LANGS.map((l) => (
-          <button
-            key={l.id}
-            type="button"
-            role="radio"
-            aria-checked={lang === l.id}
-            title={l.title}
-            onClick={() => setLang(l.id)}
-            className={`min-h-14 rounded-full px-3 text-[15px] font-bold ${lang === l.id ? 'bg-brand text-on-brand' : 'text-ink-2'}`}
-          >
-            {l.label}
-          </button>
-        ))}
-      </div>
+      <DisplayPreferences />
+    </header>
+  );
+}
+
+function DisplayPreferences() {
+  const theme = useApp((s) => s.theme);
+  const toggleTheme = useApp((s) => s.toggleTheme);
+  const setLang = useApp((s) => s.setLang);
+  const lang = useLang();
+  const { ui: { preferences } } = useCopy();
+  const night = theme === 'night';
+  const nextLang = lang === 'en' ? 'es' : 'en';
+
+  function switchLanguage() {
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('lang')) {
+      url.searchParams.set('lang', nextLang);
+      window.history.replaceState(window.history.state, '', url);
+    }
+    setLang(nextLang);
+  }
+
+  return (
+    <div className="flex shrink-0 items-center gap-2">
       <button
         type="button"
+        role="switch"
+        aria-checked={night}
+        aria-label={preferences.nightMode}
+        title={night ? preferences.switchToDay : preferences.switchToNight}
         onClick={toggleTheme}
-        className="min-h-14 rounded-full border border-line px-4 text-[15px]"
-        aria-label={theme === 'day' ? (lang === 'es' ? 'Cambiar a modo noche' : 'Switch to night mode') : (lang === 'es' ? 'Cambiar a modo día' : 'Switch to day mode')}
+        className="inline-flex min-h-14 items-center gap-1 rounded-full border border-line px-2 hover:bg-surface-2"
       >
-        {theme === 'day' ? (lang === 'es' ? 'Noche' : 'Night') : (lang === 'es' ? 'Día' : 'Day')}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden
+          className={`size-8 rounded-full p-1.5 ${night ? 'text-ink-2' : 'bg-brand-bg text-brand-ink'}`}>
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+        </svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" aria-hidden
+          className={`size-8 rounded-full p-1.5 ${night ? 'bg-brand-bg text-brand-ink' : 'text-ink-2'}`}>
+          <path d="M20.8 15.5A9 9 0 0 1 8.5 3.2a9 9 0 1 0 12.3 12.3Z" />
+        </svg>
       </button>
-    </header>
+      <button
+        type="button"
+        aria-label={preferences.switchLanguage}
+        title={preferences.switchLanguage}
+        onClick={switchLanguage}
+        className="min-h-14 w-14 rounded-full border border-line text-[15px] font-bold text-brand-ink hover:bg-surface-2"
+      >
+        <span lang={nextLang}>{nextLang.toUpperCase()}</span>
+      </button>
+    </div>
   );
 }
 
@@ -254,27 +281,29 @@ export function App() {
 
   return (
     <Router hook={useHashLocation}>
-      <div key={lang} className="flex h-full flex-col">
+      <div className="flex h-full flex-col">
         <TopBar />
-        <Disclaimer />
-        <AlertBanner />
-        <main className="flex-1 overflow-auto">
-          <Switch>
-            <Route path="/" component={FutureSelfScreen} />
-            <Route path="/check" component={CheckInScreen} />
-            <Route path="/connect" component={ConnectScreen} />
-            <Route path="/watch" component={WatchScreen} />
-            <Route path="/respond" component={RespondScreen} />
-            <Route path="/loop" component={LoopScreen} />
-            <Route path="/brief" component={BriefScreen} />
-            <Route path="/environment" component={EnvironmentScreen} />
-            <Route>
-              <p className="p-8">{lang === 'es' ? 'Pantalla no encontrada.' : 'Not found.'}</p>
-            </Route>
-          </Switch>
-        </main>
-        <NavBar />
-        <AlarmOverlay />
+        <Fragment key={lang}>
+          <Disclaimer />
+          <AlertBanner />
+          <main className="flex-1 overflow-auto">
+            <Switch>
+              <Route path="/" component={FutureSelfScreen} />
+              <Route path="/check" component={CheckInScreen} />
+              <Route path="/connect" component={ConnectScreen} />
+              <Route path="/watch" component={WatchScreen} />
+              <Route path="/respond" component={RespondScreen} />
+              <Route path="/loop" component={LoopScreen} />
+              <Route path="/brief" component={BriefScreen} />
+              <Route path="/environment" component={EnvironmentScreen} />
+              <Route>
+                <p className="p-8">{lang === 'es' ? 'Pantalla no encontrada.' : 'Not found.'}</p>
+              </Route>
+            </Switch>
+          </main>
+          <NavBar />
+          <AlarmOverlay />
+        </Fragment>
       </div>
     </Router>
   );

@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { App } from './App';
+import { useApp } from './store';
 
 afterEach(cleanup);
 
@@ -49,5 +50,55 @@ describe('App shell', () => {
     expect(screen.getByText('Day 30 of 90')).toBeInTheDocument();
     expect(screen.getByText(/60 days to landing/)).toBeInTheDocument();
     window.location.hash = '';
+  });
+
+  it('toggles the day and night theme with a single switch', () => {
+    const originalTheme = useApp.getState().theme;
+    try {
+      useApp.setState({ theme: 'night' });
+      render(<App />);
+      const theme = screen.getByRole('switch', { name: 'Night mode' });
+      expect(theme).toHaveAttribute('aria-checked', 'true');
+
+      fireEvent.click(theme);
+      expect(theme).toHaveAttribute('aria-checked', 'false');
+      expect(document.documentElement).toHaveAttribute('data-theme', 'day');
+
+      fireEvent.click(theme);
+      expect(document.documentElement).toHaveAttribute('data-theme', 'night');
+    } finally {
+      cleanup();
+      useApp.setState({ theme: originalTheme });
+    }
+  });
+
+  it('alternates languages with one button, preserving focus and the demo URL settings', () => {
+    const originalUrl = window.location.href;
+    const originalLang = useApp.getState().lang;
+    try {
+      window.history.replaceState(null, '', '/app/?lang=en&source=landing#/');
+      useApp.setState({ lang: 'en' });
+      render(<App />);
+      const language = screen.getByRole('button', { name: 'Switch to Spanish' });
+      language.focus();
+      expect(language).toHaveTextContent('ES');
+
+      fireEvent.click(language);
+      expect(screen.getByRole('button', { name: 'Cambiar a inglés' })).toBe(language);
+      expect(language).toHaveFocus();
+      expect(language).toHaveTextContent('EN');
+      expect(document.documentElement.lang).toBe('es');
+      expect(window.location.search).toBe('?lang=es&source=landing');
+      expect(window.location.hash).toBe('#/');
+
+      fireEvent.click(language);
+      expect(screen.getByRole('button', { name: 'Switch to Spanish' })).toBe(language);
+      expect(document.documentElement.lang).toBe('en');
+      expect(window.location.search).toBe('?lang=en&source=landing');
+    } finally {
+      cleanup();
+      useApp.setState({ lang: originalLang });
+      window.history.replaceState(null, '', originalUrl);
+    }
   });
 });
