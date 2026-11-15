@@ -10,12 +10,14 @@ import { LoopScreen } from '../features/finding';
 import { BriefScreen } from '../features/brief';
 import { EnvironmentScreen } from '../features/environment';
 import { WatchScreen } from '../features/watch/WatchScreen';
+import { ConnectScreen } from '../features/connect/ConnectScreen';
 import { RespondScreen } from '../features/watch/RespondScreen';
 import { AlarmOverlay, AlertBanner } from '../features/watch/Alarm';
 
 const NAV = [
   { href: '/', key: 'home' },
   { href: '/check', key: 'check' },
+  { href: '/connect', key: 'connect' },
   { href: '/watch', key: 'watch' },
   { href: '/loop', key: 'loop' },
   { href: '/brief', key: 'brief' },
@@ -138,7 +140,7 @@ function NavBar() {
   const [loc] = useLocation();
   const { ui, flow } = useCopy();
   const lang = useLang();
-  const navLabel = (key: (typeof NAV)[number]['key']) => (key === 'watch' ? flow.nav.watch : ui.nav[key]);
+  const navLabel = (key: (typeof NAV)[number]['key']) => (key === 'watch' || key === 'connect' ? flow.nav[key] : ui.nav[key]);
   return (
     <nav aria-label={lang === 'es' ? 'Principal' : 'Main'} className="flex gap-2 border-t border-line bg-surface px-4 py-2">
       {NAV.map((n) => {
@@ -196,6 +198,7 @@ export function App() {
           <Switch>
             <Route path="/" component={FutureSelfScreen} />
             <Route path="/check" component={CheckInScreen} />
+            <Route path="/connect" component={ConnectScreen} />
             <Route path="/watch" component={WatchScreen} />
             <Route path="/respond" component={RespondScreen} />
             <Route path="/loop" component={LoopScreen} />

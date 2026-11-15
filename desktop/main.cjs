@@ -7,7 +7,7 @@
  * Run:    npm run desktop:dev      (needs `npm run build` first)
  * Build:  npm run desktop:build    (writes release/KAWSAY-win32-x64/KAWSAY.exe)
  */
-const { app, BrowserWindow, protocol, session, shell } = require('electron');
+const { app, BrowserWindow, dialog, protocol, session, shell } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -57,6 +57,60 @@ function openOutside(url) {
 
 let blockedRequests = 0;
 
+// ── Bluetooth band ──────────────────────────────────────────────────────────
+// Web Bluetooth works in Electron, but Electron has no device chooser of its own:
+// the app must pick. We scan for a few seconds, then show the bands found in a
+// native dialog. Bluetooth is local radio, so this needs no internet.
+const BLUETOOTH_SCAN_MS = 4000;
+const MAX_LISTED = 6;
+let bluetoothPick = null; // { callback, devices: Map<id, name> }
+
+function onSelectBluetoothDevice(win, event, devices, callback) {
+  event.preventDefault();
+  if (!bluetoothPick) {
+    bluetoothPick = { callback, devices: new Map() };
+    setTimeout(() => void chooseBluetoothDevice(win), BLUETOOTH_SCAN_MS);
+  }
+  bluetoothPick.callback = callback; // Chromium sends a fresh callback with each updated list
+  for (const d of devices) bluetoothPick.devices.set(d.deviceId, d.deviceName || 'Unnamed device');
+}
+
+async function chooseBluetoothDevice(win) {
+  const pick = bluetoothPick;
+  bluetoothPick = null;
+  if (!pick) return;
+  const found = [...pick.devices].slice(0, MAX_LISTED);
+  if (found.length === 0) {
+    await dialog.showMessageBox(win, {
+      type: 'info', title: 'KAWSAY', message: 'No band found',
+      detail: 'Check that Bluetooth is on, the band is awake and close, and it is not connected to your phone.',
+    });
+    pick.callback('');
+    return;
+  }
+  const { response } = await dialog.showMessageBox(win, {
+    type: 'question', title: 'KAWSAY', message: 'Choose your band',
+    detail: 'Bands and heart-rate sensors found nearby.',
+    buttons: [...found.map(([, name]) => name), 'Cancel'],
+    cancelId: found.length, noLink: true,
+  });
+  pick.callback(response < found.length ? found[response][0] : '');
+}
+
+/** Windows may ask to confirm pairing. Confirm plain requests; we cannot type a PIN for the user. */
+function onBluetoothPairing(details, respond) {
+  if (details.pairingKind === 'confirm') return respond({ confirmed: true });
+  if (details.pairingKind === 'confirmPin') {
+    const [win] = BrowserWindow.getAllWindows();
+    void dialog.showMessageBox(win, {
+      type: 'question', title: 'KAWSAY', message: `Does the band show ${details.pin}?`,
+      buttons: ['Yes, pair', 'Cancel'], cancelId: 1, noLink: true,
+    }).then(({ response }) => respond({ confirmed: response === 0 }));
+    return;
+  }
+  respond({ confirmed: false });
+}
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 1440,
@@ -68,6 +122,8 @@ function createWindow() {
     autoHideMenuBar: true,
     webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
+
+  win.webContents.on('select-bluetooth-device', (event, devices, callback) => onSelectBluetoothDevice(win, event, devices, callback));
 
   win.webContents.setWindowOpenHandler(({ url }) => {
     openOutside(url);
@@ -93,6 +149,8 @@ async function smokeTest(win, pngPath) {
     rootChildren: document.getElementById('root')?.childElementCount ?? 0,
     navLinks: document.querySelectorAll('nav a').length,
     heading: document.querySelector('h1, h2')?.textContent ?? null,
+    secureContext: window.isSecureContext,
+    webBluetooth: 'bluetooth' in navigator,
   })`);
   if (pngPath) fs.writeFileSync(pngPath, (await win.webContents.capturePage()).toPNG());
   console.log(JSON.stringify({ ...page, blockedRequests }));
@@ -104,6 +162,7 @@ if (!app.requestSingleInstanceLock()) {
 } else {
   app.whenReady().then(() => {
     protocol.handle(SCHEME, serveFromDisk);
+    session.defaultSession.setBluetoothPairingHandler(onBluetoothPairing);
 
     // Offline by construction: cancel anything that is not the app itself.
     session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
