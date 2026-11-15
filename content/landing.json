@@ -1,5 +1,12 @@
 {
+  "pageTitle": "KAWSAY — What body will you land with?",
+  "pageDescription": "KAWSAY — a health copilot that shows astronauts the body they will land with. NASA Space Apps Challenge 2026 prototype, not a medical device.",
   "nav": {
+    "label": "Main navigation",
+    "nightMode": "Night mode",
+    "switchToDay": "Switch to day mode",
+    "switchToNight": "Switch to night mode",
+    "switchLanguage": "Switch to Spanish",
     "challenge": "Challenge",
     "advantages": "Why KAWSAY",
     "technology": "Technology",
@@ -65,6 +72,7 @@
       { "icon": "delay", "title": "Communication-delay model", "text": "Knows the one-way delay for the ISS, Orion, the Moon and Mars, and shows when Earth's answer will arrive." },
       { "icon": "cloud", "title": "Vercel and GitHub Actions", "text": "Every change is type-checked, tested and built in CI, then deployed to the public demo." }
     ],
+    "stackLabel": "Technology stack",
     "stack": ["TypeScript", "React 19", "Vite", "Tailwind CSS", "Zustand", "Motion", "Vitest", "IndexedDB", "PWA", "Electron", "Vercel", "GitHub Actions"]
   },
   "cta": {

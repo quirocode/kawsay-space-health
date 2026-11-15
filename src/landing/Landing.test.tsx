@@ -1,13 +1,19 @@
-import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Landing } from './Landing';
 import copy from '../../content/landing.json';
+import spanish from '../../content/landing.es.json';
 
 describe('Landing page', () => {
+  beforeEach(() => localStorage.clear());
+  afterEach(cleanup);
+
   it('links the demo to the app and the video button to the video section', () => {
     render(<Landing />);
     const demo = screen.getAllByRole('link', { name: new RegExp(copy.hero.primary) });
-    expect(demo[0]).toHaveAttribute('href', '/app/');
+    expect(demo).toHaveLength(3);
+    demo.forEach((link) => expect(link).toHaveAttribute('href', '/app/?lang=en'));
     expect(screen.getByRole('link', { name: copy.hero.secondary })).toHaveAttribute('href', '#video');
     expect(screen.getByRole('link', { name: copy.cta.download })).toHaveAttribute('href', copy.links.download);
   });
@@ -18,5 +24,44 @@ describe('Landing page', () => {
     for (const s of copy.challenge.solutions) expect(screen.getAllByText(s.title).length).toBeGreaterThan(0);
     for (const s of copy.advantages.stats) expect(screen.getAllByText(s.label).length).toBeGreaterThan(0);
     for (const t of copy.technology.items) expect(screen.getAllByText(t.title).length).toBeGreaterThan(0);
+  });
+
+  it('switches the landing copy and demo links to Spanish and restores the saved language', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<Landing />);
+    expect(document.documentElement.lang).toBe('en');
+
+    await user.click(screen.getByRole('button', { name: copy.nav.switchLanguage }));
+    expect(document.documentElement.lang).toBe('es');
+    expect(document.title).toBe(spanish.pageTitle);
+    expect(screen.getByText(spanish.hero.subtitle)).toBeInTheDocument();
+    expect(screen.getByText(spanish.footer.disclaimer)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: spanish.nav.demo })).toHaveAttribute('href', '/app/?lang=es');
+    expect(screen.getByRole('link', { name: spanish.footer.app[1].label })).toHaveAttribute('href', '/app/?lang=es#/check');
+
+    unmount();
+    render(<Landing />);
+    expect(screen.getByText(spanish.hero.subtitle)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: spanish.nav.switchLanguage }));
+    expect(document.documentElement.lang).toBe('en');
+    expect(screen.getByText(copy.hero.subtitle)).toBeInTheDocument();
+  });
+
+  it('switches the theme with the keyboard and restores it after reopening the landing page', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<Landing />);
+    const themeSwitch = screen.getByRole('switch', { name: copy.nav.nightMode });
+    expect(themeSwitch).toHaveAttribute('aria-checked', 'true');
+
+    themeSwitch.focus();
+    await user.keyboard(' ');
+    expect(themeSwitch).toHaveAttribute('aria-checked', 'false');
+    expect(document.documentElement).toHaveAttribute('data-landing-theme', 'day');
+
+    unmount();
+    render(<Landing />);
+    expect(screen.getByRole('switch', { name: copy.nav.nightMode })).toHaveAttribute('aria-checked', 'false');
+    await user.click(screen.getByRole('switch', { name: copy.nav.nightMode }));
+    expect(document.documentElement).toHaveAttribute('data-landing-theme', 'night');
   });
 });
