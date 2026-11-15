@@ -29,14 +29,18 @@ only to Zepp's own servers (encrypted, the same way the app sends it) and is nev
 
 ## Method 2 — browser, no install (band on a Xiaomi phone-number account)
 
-If the tool says it found no band, your band is probably on a Xiaomi account. Then:
+If Method 1 says it found no band, your band is probably on a Xiaomi account. Use the
+bundled browser script instead — it runs on Zepp's own site using the login you already have:
 
 1. Open <https://watchface.zepp.com/> and sign in with the account the band is linked to.
-2. Open the browser console (`Ctrl + Shift + I` → **Console**).
-3. Paste the snippet from the Gadgetbridge guide and press Enter:
-   <https://gadgetbridge.org/basics/pairing/huami-xiaomi-server/>
-4. In the output, find `additionalInfo` → `auth_key` (a 32-character hex string).
-5. Put `0x` in front of it and paste it into KAWSAY → **Connect** → **Band key**.
+2. Open the browser console: press **F12** (or `Ctrl + Shift + I`) and click **Console**.
+3. Open `tools/get-band-key-browser.js`, copy the whole file, paste it into the console, press Enter.
+4. It prints your band's key as `0x…` and copies it to the clipboard. Paste it into
+   KAWSAY → **Connect** → **Band key**, and save it somewhere safe.
+
+This reuses your signed-in Zepp session and only calls Zepp's servers; KAWSAY never sees your
+password. It is an extended version of the community snippet from the
+[Gadgetbridge guide](https://gadgetbridge.org/basics/pairing/huami-xiaomi-server/).
 
 ## Method 3 — from the phone (last resort)
 

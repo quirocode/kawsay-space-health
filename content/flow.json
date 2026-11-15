@@ -335,7 +335,7 @@
     "keyHelp": [
       "The band never sends its key over Bluetooth, so it has to be fetched once from your account (internet needed one time).",
       "Easiest: run  node tools/get-band-key.mjs  and sign in with the account the band is bound to; it prints a 0x… key to paste here.",
-      "Band on a Xiaomi phone account? Use the browser method in tools/README-band-key.md.",
+      "Band on a Xiaomi phone account? Use tools/get-band-key-browser.js in your browser (steps in tools/README-band-key.md).",
       "Do not reset or re-pair the band afterwards: that changes the key. From then on KAWSAY needs only Bluetooth.",
       "No key at all: a standard Bluetooth chest strap (Polar, CooSpo, Wahoo…) works here with no account."
     ],
