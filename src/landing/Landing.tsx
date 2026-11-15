@@ -2,6 +2,9 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import english from '../../content/landing.json';
 import spanish from '../../content/landing.es.json';
 import { DemoTour } from './DemoTour';
+import { SpaceAtmosphere } from './SpaceAtmosphere';
+import { SpaceshipCursor } from './SpaceshipCursor';
+import { BiometricPulse } from './BiometricPulse';
 
 /**
  * Public landing page (P1). A single scrolling page: hero, video, challenge,
@@ -177,6 +180,7 @@ function Nav({ copy, language, theme, onLanguageChange, onThemeChange }: {
 function Hero({ copy, language }: { copy: Copy; language: Language }) {
   return (
     <section id="top" className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-4">
+      <SpaceAtmosphere />
       <div className="stars" aria-hidden />
       <div className="planet" aria-hidden />
       <div className="hero-fade absolute inset-0" aria-hidden />
@@ -448,6 +452,7 @@ export function Landing() {
       />
       <main>
         <Hero copy={copy} language={language} />
+        <BiometricPulse />
         <DemoTour copy={copy.tour} language={language} linkTo={(path) => demoLink(path, language)} />
         <Video copy={copy} language={language} />
         <Challenge copy={copy} />
@@ -456,6 +461,7 @@ export function Landing() {
         <CallToAction copy={copy} language={language} />
       </main>
       <Footer copy={copy} language={language} />
+      <SpaceshipCursor />
     </>
   );
 }

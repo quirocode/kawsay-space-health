@@ -252,3 +252,46 @@ body {
 .demo-tour-dialog img {
   max-height: calc(94dvh - 4rem);
 }
+
+
+/* Approved landing-only additions. Preserve the existing stars, planet and reveal animations. */
+.k-atmosphere { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
+.k-nebula { position:absolute; inset:-12%; filter:blur(35px); opacity:.45; animation:k-nebula-drift 36s ease-in-out infinite alternate; }
+.k-nebula-violet { background:radial-gradient(ellipse 31% 39% at 22% 41%,#6545A055,transparent 80%); }
+.k-nebula-cyan { background:radial-gradient(ellipse 30% 35% at 81% 39%,#236DA346,transparent 80%); animation-duration:43s; }
+.k-nebula-center { background:radial-gradient(ellipse 24% 23% at 50% 43%,#236DA326,transparent 85%); animation-duration:52s; }
+@keyframes k-nebula-drift { from{transform:translate3d(-1%,0,0)} to{transform:translate3d(1%,1%,0)} }
+.k-ambient-star { position:absolute; border-radius:50%; box-shadow:0 0 5px currentColor; animation:k-ambient-twinkle 5s ease-in-out infinite alternate; }
+@keyframes k-ambient-twinkle { from{opacity:.15; transform:scale(.82)} to{opacity:var(--k-opacity,.75); transform:scale(1.12)} }
+[data-landing-theme='day'] .k-atmosphere { display:none; }
+.k-cursor-root { position:fixed; inset:0; pointer-events:none; z-index:2147483647; opacity:0; transition:opacity .12s; }
+.k-cursor-particles { position:absolute; inset:0; pointer-events:none; }
+.k-cursor-ship { position:absolute; top:0;left:0; width:38px;height:44px; transform-origin:19px 17px; will-change:transform; filter:drop-shadow(0 0 5px #75E6F080); }
+.k-cursor-spark { position:absolute;left:0;top:0;border-radius:50%;box-shadow:0 0 7px #FFD76A;pointer-events:none; }
+@media(hover:hover) and (pointer:fine) {
+  body:has(.k-cursor-root), body:has(.k-cursor-root) a, body:has(.k-cursor-root) button { cursor:none; }
+}
+@media(hover:none),(pointer:coarse) { .k-cursor-root { display:none; } }
+.k-pulse-section { position:relative; padding:96px 20px; background:radial-gradient(ellipse at 50% 10%,#17305644,transparent 65%),var(--l-bg); isolation:isolate; }
+.k-pulse-container { width:100%; max-width:1050px; margin:auto; }
+.k-pulse-card { display:grid;grid-template-columns:minmax(220px,.95fr) minmax(300px,1.25fr); gap:22px;align-items:center; min-height:190px;padding:35px 34px;
+  overflow:hidden;border-radius:20px;border:1px solid #36547a; background:linear-gradient(110deg,#15233c,#101d35);box-shadow:0 25px 75px #02060f5e; }
+.k-pulse-copy { position:relative; z-index:1; }
+.k-pulse-eyebrow { color:#75E6F0; font-size:13px;font-weight:700;letter-spacing:.19em; }
+.k-pulse-copy h2 { color:#F4FAFF; font-size:clamp(21px,2.2vw,28px);font-weight:700;margin:12px 0 14px; }
+.k-pulse-copy > p:last-child { color:#afbdd0;font-size:16px;line-height:1.5; }
+.k-pulse-visual {height:130px;position:relative;overflow:hidden;pointer-events:none;mask-image:linear-gradient(to right,transparent,black 7%,black 92%,transparent); }
+.k-pulse-visual svg { width:100%;height:100%;overflow:hidden; }
+.k-pulse-baseline { stroke:#75E6F055; stroke-width:1.5; }
+.k-pulse-path { fill:none; stroke:#75E6F0; stroke-width:2.7;stroke-linejoin:round;stroke-linecap:round; }
+.k-pulse-glow { stroke-width:10; opacity:.35;filter:blur(6px); }
+.k-pulse-beat { animation:k-pulse-travel 5s linear infinite; }
+@keyframes k-pulse-travel { from {transform:translateX(-270px)} to{transform:translateX(810px)} }
+[data-landing-theme='day'] .k-pulse-section { background:var(--l-bg); }
+@media(max-width:680px){ .k-pulse-section{padding:64px 16px} .k-pulse-card{grid-template-columns:1fr;padding:26px 22px;gap:10px}.k-pulse-visual{height:100px} .k-nebula{filter:blur(22px)} }
+@media(prefers-reduced-motion:reduce){
+ .k-nebula,.k-ambient-star,.k-pulse-beat { animation:none !important; }
+ .k-pulse-beat{transform:translateX(220px)}
+ .k-cursor-root{display:none}
+ body:has(.k-cursor-root),body:has(.k-cursor-root) a,body:has(.k-cursor-root) button{cursor:auto}
+}
