@@ -357,6 +357,35 @@
     "pickTitle": "Choose your band",
     "searching": "Searching nearby devices…",
     "unnamed": "Unnamed device",
-    "pickHint": "Not in the list? Turn off Bluetooth on your phone and tap the band screen to wake it."
+    "pickHint": "Not in the list? Turn off Bluetooth on your phone and tap the band screen to wake it.",
+    "profileTitle": "Device connection mode",
+    "profileHint": "Saved in the local database (db.ts) to remember your setup across sessions.",
+    "profiles": {
+      "huawei_ble": {
+        "label": "Huawei Band 8 / BLE Estándar (Sin Key)",
+        "badge": "Standard 0x180D · No Key",
+        "desc": "Direct connection via open Bluetooth Heart Rate (0x180D / 0x2A37) without requiring any authentication key.",
+        "guideTitle": "Quick Guide · Huawei Band 8 (Keyless)",
+        "guideIntro": "Before pressing Connect, activate Heart Rate Broadcasting on your band:",
+        "guideSteps": [
+          "On your Huawei Band 8, open Ajustes → Transmisión de frecuencia cardíaca (Settings → Heart rate broadcast).",
+          "Enable heart-rate broadcasting and confirm on the band screen so it exposes service 0x180D.",
+          "Keep the band on your wrist, turn off your phone's Bluetooth if Huawei Health occupies the link, then press Connect."
+        ]
+      },
+      "xiaomi_zepp": {
+        "label": "Xiaomi / Zepp (Requiere Auth Key)",
+        "badge": "Proprietary 0xFEE0 · 32-hex Key",
+        "desc": "For Xiaomi Mi Band 4, 5, 6 and Zepp bands that require a 32-character hexadecimal authKey."
+      },
+      "simulated": {
+        "label": "Biomonitor Simulado (Live Stream)",
+        "badge": "Live Stream · Hardware-free",
+        "desc": "Real-time simulated biometric stream (Sol 142) for live testing without physical hardware.",
+        "simActiveTitle": "Simulated Biomonitor Active (Live Stream)",
+        "simActiveHint": "WatchScreen and the evaluation engine receive live simulated heartbeats, SpO₂, breathing rate, skin temperature and HRV.",
+        "openSimulatedWatch": "Open Watch (Live Stream)"
+      }
+    }
   }
 }

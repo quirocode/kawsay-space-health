@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { BAND_LINK, freshness, isUsable, keepWindow, parseHeartRateMeasurement, reconnectDelayMs } from './heartRate';
+import { BAND_LINK, computeHrvRmssd, freshness, isUsable, keepWindow, parseHeartRateMeasurement, reconnectDelayMs } from './heartRate';
+import { parseHeartRatePayload } from './bluetooth';
 
 const packet = (...bytes: number[]) => new DataView(new Uint8Array(bytes).buffer);
 
@@ -28,6 +29,15 @@ describe('parseHeartRateMeasurement', () => {
   it('rejects packets that are too short', () => {
     expect(() => parseHeartRateMeasurement(packet(0x00))).toThrow();
     expect(() => parseHeartRateMeasurement(packet(0x01, 0x40))).toThrow();
+  });
+
+  it('exposes parseHeartRatePayload on bluetooth.ts and computes RMSSD HRV from RR intervals', () => {
+    // 0x10 = RR-interval bit 4 set, uint8 BPM = 68, RR intervals: 820/1024s (801ms), 860/1024s (840ms), 810/1024s (791ms)
+    const m = parseHeartRatePayload(packet(0x10, 68, 0x34, 0x03, 0x5c, 0x03, 0x2a, 0x03));
+    expect(m.bpm).toBe(68);
+    expect(m.rrMs).toEqual([801, 840, 791]);
+    expect(computeHrvRmssd(m.rrMs)).toBe(44);
+    expect(computeHrvRmssd([800])).toBeNull();
   });
 });
 

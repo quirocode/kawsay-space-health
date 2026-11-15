@@ -4,11 +4,31 @@
  * answers the device chooser in desktop/main.cjs). Bluetooth is local radio: no internet.
  *
  * Two kinds of band:
- * - Standard heart-rate sensors (chest straps, most bands): subscribe to 0x2A37 and listen.
- * - Xiaomi bands (Mi Band 4–6): authenticate with the band's key first (huami.ts), then
- *   ask the band to measure continuously and keep it awake.
+ * - Standard BLE Heart Rate Service (0x180D / 0x2A37) — Huawei Band 8 (with Heart Rate
+ *   Broadcast enabled), Polar/Garmin straps, and open BLE sensors: subscribe directly to
+ *   0x2A37 and stream BPM + RR-intervals (HRV) in real time with no authKey or AES handshake.
+ * - Proprietary Xiaomi/Zepp bands (0xFEE0 / 0xFEE1, Mi Band 4–6): authenticate with the
+ *   band's 16-byte key first (huami.ts), then ask the band to measure continuously.
  */
 import { AUTH_CMD, HR_CONTROL, HUAMI, aesBlock, parseAuthReply, type AuthReply } from './huami';
+import { computeHrvRmssd, parseHeartRateMeasurement, type HeartRateMeasurement } from './heartRate';
+
+export { computeHrvRmssd, parseHeartRateMeasurement, type HeartRateMeasurement };
+
+/** Official Bluetooth SIG 16-bit service UUIDs and Xiaomi/Zepp proprietary UUIDs. */
+export const BLE_SERVICES = {
+  heartRate: 0x180d,
+  battery: 0x180f,
+  xiaomiFee0: 0xfee0,
+  huamiFee1: HUAMI.service,
+} as const;
+
+/** Official Bluetooth SIG 16-bit characteristic UUIDs. */
+export const BLE_CHARACTERISTICS = {
+  heartRateMeasurement: 0x2a37,
+  heartRateControlPoint: 0x2a39,
+  batteryLevel: 0x2a19,
+} as const;
 
 export type BluetoothSupport = 'ok' | 'no-api' | 'insecure' | 'off';
 
@@ -20,8 +40,33 @@ export class BandError extends Error {
   }
 }
 
-/** Names the Xiaomi bands advertise. Anything that advertises the standard heart-rate service also shows. */
-const NAME_PREFIXES = ['Xiaomi Smart Band', 'Mi Smart Band', 'Mi Band', 'Amazfit'];
+/**
+ * Official parser for the 0x2A37 (Heart Rate Measurement) payload:
+ * - Bit 0 of flags (offset 0): 0 = uint8 BPM at offset 1; 1 = uint16 little-endian BPM at offset 1..2.
+ * - Bits 1..2 of flags: sensor skin contact status.
+ * - Bit 3 of flags: Energy Expended present (uint16, skipped).
+ * - Bit 4 of flags: RR-Interval values present (uint16 little-endian in 1/1024 s units -> ms) for HRV.
+ */
+export function parseHeartRatePayload(view: DataView): HeartRateMeasurement & { hrvRmssd: number | null } {
+  const parsed = parseHeartRateMeasurement(view);
+  return {
+    ...parsed,
+    hrvRmssd: computeHrvRmssd(parsed.rrMs),
+  };
+}
+
+/** Names that Huawei and Xiaomi/Amazfit bands advertise. Anything advertising 0x180D also shows. */
+const NAME_PREFIXES = ['HUAWEI', 'Huawei', 'HONOR', 'Xiaomi Smart Band', 'Mi Smart Band', 'Mi Band', 'Amazfit'];
+
+export const OPTIONAL_BLE_SERVICES: BluetoothServiceUUID[] = [
+  'heart_rate',
+  'battery_service',
+  BLE_SERVICES.heartRate,
+  BLE_SERVICES.battery,
+  BLE_SERVICES.xiaomiFee0,
+  BLE_SERVICES.huamiFee1,
+];
+
 /** Windows often fails the first GATT connection to a band; the next one usually works. */
 const CONNECT_TRIES = 3;
 const CONNECT_RETRY_MS = 1500;
@@ -40,15 +85,40 @@ export async function bluetoothSupport(): Promise<BluetoothSupport> {
   }
 }
 
+export interface PickBandOptions {
+  /** Fallback to acceptAllDevices when a band does not advertise its name or service UUID in scan packets. */
+  acceptAllDevices?: boolean;
+}
+
 /** Opens the system device list. Must run inside a click handler (browser rule). */
-export async function pickBand(): Promise<BluetoothDevice> {
+export async function pickBand(options?: PickBandOptions): Promise<BluetoothDevice> {
   if (!navigator.bluetooth) throw new BandError('failed', 'Web Bluetooth is not available');
   try {
-    return await navigator.bluetooth.requestDevice({
-      filters: [{ services: ['heart_rate'] }, ...NAME_PREFIXES.map((namePrefix) => ({ namePrefix }))],
-      // Services must be declared up front or Web Bluetooth hides them.
-      optionalServices: ['heart_rate', 'battery_service', 0xfee0, HUAMI.service],
-    });
+    if (options?.acceptAllDevices) {
+      return await navigator.bluetooth.requestDevice({
+        acceptAllDevices: true,
+        optionalServices: OPTIONAL_BLE_SERVICES,
+      });
+    }
+    try {
+      return await navigator.bluetooth.requestDevice({
+        filters: [
+          { services: ['heart_rate'] },
+          { namePrefix: 'HUAWEI' },
+          { services: [BLE_SERVICES.heartRate] },
+          ...NAME_PREFIXES.filter((p) => p !== 'HUAWEI').map((namePrefix) => ({ namePrefix })),
+        ],
+        // Services must be declared up front or Web Bluetooth hides them.
+        optionalServices: OPTIONAL_BLE_SERVICES,
+      });
+    } catch (inner) {
+      if (inner instanceof DOMException && inner.name === 'NotFoundError') throw inner;
+      // Fallback to acceptAllDevices if filter combination is rejected by the platform adapter
+      return await navigator.bluetooth.requestDevice({
+        acceptAllDevices: true,
+        optionalServices: OPTIONAL_BLE_SERVICES,
+      });
+    }
   } catch (e) {
     if (e instanceof DOMException && e.name === 'NotFoundError') throw new BandError('cancelled', 'No device chosen');
     throw new BandError('failed', errText(e));
@@ -107,9 +177,36 @@ function nextAuthReply(char: BluetoothRemoteGATTCharacteristic, want: (r: AuthRe
   });
 }
 
+async function getService(
+  server: BluetoothRemoteGATTServer,
+  primary: BluetoothServiceUUID,
+  fallback?: BluetoothServiceUUID,
+): Promise<BluetoothRemoteGATTService> {
+  try {
+    return await server.getPrimaryService(primary);
+  } catch (e) {
+    if (fallback !== undefined) return await server.getPrimaryService(fallback);
+    throw e;
+  }
+}
+
+async function getChar(
+  service: BluetoothRemoteGATTService,
+  primary: BluetoothCharacteristicUUID,
+  fallback?: BluetoothCharacteristicUUID,
+): Promise<BluetoothRemoteGATTCharacteristic> {
+  try {
+    return await service.getCharacteristic(primary);
+  } catch (e) {
+    if (fallback !== undefined) return await service.getCharacteristic(fallback);
+    throw e;
+  }
+}
+
 /** Xiaomi challenge: ask for a random number, return it encrypted with the band's key. */
 async function authenticateHuami(server: BluetoothRemoteGATTServer, key: Uint8Array): Promise<void> {
-  const auth = await (await server.getPrimaryService(HUAMI.service)).getCharacteristic(HUAMI.auth);
+  const huamiSvc = await getService(server, HUAMI.service, BLE_SERVICES.xiaomiFee0);
+  const auth = await huamiSvc.getCharacteristic(HUAMI.auth);
   await auth.startNotifications();
 
   const challenge = nextAuthReply(auth, (r) => r.kind !== 'other' && r.kind !== 'ok' && r.kind !== 'wrong-key');
@@ -133,7 +230,13 @@ async function hasService(server: BluetoothRemoteGATTServer, uuid: BluetoothServ
   }
 }
 
-/** Connect, authenticate if it is a Xiaomi band, subscribe to Heart Rate Measurement, read battery. */
+/**
+ * Connect and bifurcate GATT flow:
+ * 1. If the device exposes standard Heart Rate Service (0x180D / 'heart_rate') without Xiaomi's
+ *    proprietary service (0xFEE0 / 0xFEE1), subscribe directly to 0x2A37 ('heart_rate_measurement')
+ *    and stream notifications in real time without running AES authentication (Huawei Band 8 flow).
+ * 2. Execute the authKey AES handshake only if the device exposes the proprietary 0xFEE0 / 0xFEE1 service.
+ */
 export async function openBand(device: BluetoothDevice, events: BandEvents, options: BandOptions): Promise<BandLink> {
   if (!device.gatt) throw new BandError('failed', 'This device has no GATT server');
   let closing = false;
@@ -162,8 +265,11 @@ export async function openBand(device: BluetoothDevice, events: BandEvents, opti
   let measurement: BluetoothRemoteGATTCharacteristic | undefined;
   let onValue = () => {};
   try {
-    const huami = await hasService(server, HUAMI.service);
-    if (huami) {
+    const proprietaryXiaomi =
+      (await hasService(server, BLE_SERVICES.xiaomiFee0)) ||
+      (await hasService(server, BLE_SERVICES.huamiFee1));
+
+    if (proprietaryXiaomi) {
       if (!options.authKey) throw new BandError('needs-key', 'This Xiaomi band needs its key');
       events.onStage?.('authenticating');
       await authenticateHuami(server, options.authKey);
@@ -172,8 +278,8 @@ export async function openBand(device: BluetoothDevice, events: BandEvents, opti
     events.onStage?.('starting');
     let hrService: BluetoothRemoteGATTService;
     try {
-      hrService = await server.getPrimaryService('heart_rate');
-      measurement = await hrService.getCharacteristic('heart_rate_measurement');
+      hrService = await getService(server, 'heart_rate', BLE_SERVICES.heartRate);
+      measurement = await getChar(hrService, 'heart_rate_measurement', BLE_CHARACTERISTICS.heartRateMeasurement);
     } catch {
       throw new BandError('no-hr-service', 'The band does not offer the standard heart-rate service');
     }
@@ -185,16 +291,20 @@ export async function openBand(device: BluetoothDevice, events: BandEvents, opti
     try {
       await m.startNotifications();
     } catch (e) {
-      throw new BandError(huami ? 'auth-refused' : 'no-hr-service', errText(e));
+      throw new BandError(proprietaryXiaomi ? 'auth-refused' : 'no-hr-service', errText(e));
     }
 
-    if (huami) {
-      const control = await hrService.getCharacteristic('heart_rate_control_point');
-      await control.writeValue(Uint8Array.from(HR_CONTROL.stopManual));
-      await control.writeValue(Uint8Array.from(HR_CONTROL.startContinuous));
-      keepAlive = setInterval(() => {
-        control.writeValue(Uint8Array.from(HR_CONTROL.keepAlive)).catch(() => undefined);
-      }, HR_CONTROL.keepAliveEveryMs);
+    if (proprietaryXiaomi) {
+      try {
+        const control = await getChar(hrService, 'heart_rate_control_point', BLE_CHARACTERISTICS.heartRateControlPoint);
+        await control.writeValue(Uint8Array.from(HR_CONTROL.stopManual));
+        await control.writeValue(Uint8Array.from(HR_CONTROL.startContinuous));
+        keepAlive = setInterval(() => {
+          control.writeValue(Uint8Array.from(HR_CONTROL.keepAlive)).catch(() => undefined);
+        }, HR_CONTROL.keepAliveEveryMs);
+      } catch {
+        // Some 0xFEE0 devices stream 0x2A37 directly after auth without exposing 0x2A39
+      }
     }
   } catch (e) {
     measurement?.removeEventListener('characteristicvaluechanged', onValue);
@@ -203,7 +313,8 @@ export async function openBand(device: BluetoothDevice, events: BandEvents, opti
 
   let battery: number | null = null;
   try {
-    const level = await (await server.getPrimaryService('battery_service')).getCharacteristic('battery_level');
+    const batterySvc = await getService(server, 'battery_service', BLE_SERVICES.battery);
+    const level = await getChar(batterySvc, 'battery_level', BLE_CHARACTERISTICS.batteryLevel);
     battery = (await level.readValue()).getUint8(0);
   } catch {
     battery = null; // not every band shares it; not knowing is fine

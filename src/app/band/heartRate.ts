@@ -77,6 +77,24 @@ export function reconnectDelayMs(attempt: number): number {
 export interface BandSample {
   ts: number;
   bpm: number;
+  rrMs?: number[];
+  hrv?: number;
+}
+
+/**
+ * Compute Heart Rate Variability (HRV) as RMSSD (Root Mean Square of Successive Differences, in ms)
+ * from Bluetooth 0x2A37 RR-intervals (when flag bit 4 is active).
+ * Filters to physiologically plausible beat-to-beat intervals (250..2000 ms).
+ */
+export function computeHrvRmssd(rrMs: number[]): number | null {
+  const valid = rrMs.filter((rr) => Number.isFinite(rr) && rr >= 250 && rr <= 2000);
+  if (valid.length < 2) return null;
+  let sumSq = 0;
+  for (let i = 1; i < valid.length; i++) {
+    const diff = valid[i] - valid[i - 1];
+    sumSq += diff * diff;
+  }
+  return Math.round(Math.sqrt(sumSq / (valid.length - 1)));
 }
 
 /** Keep only the samples inside the rolling window, oldest first. */

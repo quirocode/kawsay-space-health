@@ -9,11 +9,11 @@ import type {
   CountermeasurePlan, Environment, Finding, FlightSurgeonBrief, MissionContext, Reading, WatchAlert, WatchSample,
 } from '../domain/types';
 import { engine, loadDemoMission, watchEngine } from './engine';
-import { indexedDatabase, memoryDatabase, type AlertRecord, type CaseRecord, type Database, type LoggedVerification, type MissionInfo, type PendingRecheck, type Session, type Snapshot } from './db';
+import { indexedDatabase, loadDeviceProfile, memoryDatabase, saveDeviceProfile, type AlertRecord, type CaseRecord, type Database, type DeviceProfile, type LoggedVerification, type MissionInfo, type PendingRecheck, type Session, type Snapshot } from './db';
 import { sampleAt, windowOf } from '../data/watchSeries';
 import { cabinSamples, tsOf } from '../data/sol142';
 
-export type { AlertRecord, CaseRecord, MissionInfo, PendingRecheck } from './db';
+export type { AlertRecord, CaseRecord, DeviceProfile, MissionInfo, PendingRecheck } from './db';
 
 /** The seeded demo mission. Fictional name; the crew name matches the brief. */
 export const DEFAULT_MISSION: MissionInfo = { name: 'Inti-1', crew: 'A. Quispe' };
@@ -76,6 +76,7 @@ export interface AppState extends Prefs {
   recoveryStartTs: number | null;
   lastCheckTs: number | null;
   mission: MissionInfo;
+  deviceProfile: DeviceProfile;
 
   hydrate(db?: Database): Promise<void>;
   addReadings(rs: Reading[]): void;
@@ -85,6 +86,7 @@ export interface AppState extends Prefs {
   setViewDay(d: number): void;
   setEnvironment(env: Environment, commDelayMin: number): void;
   setMission(edit: MissionEdit): void;
+  setDeviceProfile(profile: DeviceProfile): void;
 
   startRecheck(finding: Finding): void;
   acknowledge(ruleId: string): void;
@@ -156,6 +158,7 @@ export function seedSnapshot(): Snapshot {
       recoveryStartTs: null,
       lastCheckTs: null,
       mission: DEFAULT_MISSION,
+      deviceProfile: loadDeviceProfile(),
     },
     readings: demo.history,
     cases: [],
@@ -167,7 +170,7 @@ export function seedSnapshot(): Snapshot {
 const sessionOf = (s: AppState): Session => ({
   demoVersion: DEMO_VERSION, context: s.context, nowTs: s.nowTs, plan: s.plan, planAccepted: s.planAccepted, viewDay: s.viewDay,
   pending: s.pending, acknowledged: s.acknowledged, recoveryStartTs: s.recoveryStartTs, lastCheckTs: s.lastCheckTs,
-  mission: s.mission,
+  mission: s.mission, deviceProfile: s.deviceProfile,
 });
 
 const fromSnapshot = (snap: Snapshot) => ({
@@ -175,6 +178,7 @@ const fromSnapshot = (snap: Snapshot) => ({
   viewDay: snap.session.viewDay, pending: snap.session.pending, acknowledged: snap.session.acknowledged,
   recoveryStartTs: snap.session.recoveryStartTs, lastCheckTs: snap.session.lastCheckTs,
   mission: snap.session.mission ?? DEFAULT_MISSION,
+  deviceProfile: snap.session.deviceProfile ?? loadDeviceProfile(),
   readings: snap.readings, cases: snap.cases, alerts: snap.alerts, briefs: snap.briefs,
 });
 
@@ -333,6 +337,10 @@ export const useApp = create<AppState>()((set, get) => {
       // Future Self keeps looking at landing day when that was where it stood.
       const viewDay = s.viewDay >= s.context.arrivalDay ? m.arrivalDay : Math.min(m.arrivalDay, Math.max(m.missionDay, s.viewDay));
       commit({ mission: { name: m.name, crew: m.crew }, context: { ...s.context, missionDay: m.missionDay, arrivalDay: m.arrivalDay }, viewDay });
+    },
+    setDeviceProfile: (deviceProfile) => {
+      saveDeviceProfile(deviceProfile);
+      commit({ deviceProfile });
     },
 
     startRecheck: (finding) => {

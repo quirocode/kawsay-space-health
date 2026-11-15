@@ -55,6 +55,37 @@ export interface PendingRecheck {
   before: Reading;
 }
 
+export type DeviceProfile = 'huawei_ble' | 'xiaomi_zepp' | 'simulated';
+
+export const DEFAULT_DEVICE_PROFILE: DeviceProfile = 'huawei_ble';
+
+const DEVICE_PROFILE_STORAGE_KEY = 'kawsay.deviceProfile';
+
+export function isDeviceProfile(value: unknown): value is DeviceProfile {
+  return value === 'huawei_ble' || value === 'xiaomi_zepp' || value === 'simulated';
+}
+
+/** Load the remembered biometric device profile across sessions. */
+export function loadDeviceProfile(): DeviceProfile {
+  try {
+    const raw = typeof localStorage !== 'undefined' ? localStorage.getItem(DEVICE_PROFILE_STORAGE_KEY) : null;
+    return isDeviceProfile(raw) ? raw : DEFAULT_DEVICE_PROFILE;
+  } catch {
+    return DEFAULT_DEVICE_PROFILE;
+  }
+}
+
+/** Persist the selected biometric device profile across sessions. */
+export function saveDeviceProfile(profile: DeviceProfile): void {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(DEVICE_PROFILE_STORAGE_KEY, profile);
+    }
+  } catch {
+    // storage blocked: profile still works in memory for this session
+  }
+}
+
 export interface Session {
   demoVersion: number;
   context: MissionContext;
@@ -67,6 +98,7 @@ export interface Session {
   recoveryStartTs: number | null;         // simulated watch: when the crew member finished responding
   lastCheckTs: number | null;
   mission?: MissionInfo;                 // optional: saves from before it existed get the demo default
+  deviceProfile?: DeviceProfile;         // selected device profile persisted between sessions
 }
 
 /** Who and what is flying. Shown in the header; editable on the Mission screen. */
@@ -105,8 +137,14 @@ export function memoryDatabase(): Database {
   const copy = <T>(v: T): T => structuredClone(v);
   return {
     load: async () => (snap ? copy(snap) : null),
-    replace: async (s) => { snap = copy(s); },
-    saveSession: async (session) => { if (snap) snap.session = copy(session); },
+    replace: async (s) => {
+      snap = copy(s);
+      if (s.session.deviceProfile) saveDeviceProfile(s.session.deviceProfile);
+    },
+    saveSession: async (session) => {
+      if (snap) snap.session = copy(session);
+      if (session.deviceProfile) saveDeviceProfile(session.deviceProfile);
+    },
     putReadings: async (rs) => { if (snap) for (const r of rs) upsert(snap.readings, copy(r), (x) => x.indicatorId === r.indicatorId && x.ts === r.ts); },
     putCase: async (c) => { if (snap) upsert(snap.cases, copy(c), (x) => x.id === c.id); },
     putAlert: async (a) => { if (snap) upsert(snap.alerts, copy(a), (x) => x.id === a.id); },
@@ -174,22 +212,28 @@ export function indexedDatabase(factory: IDBFactory): Database {
         all<Reading>(tx, 'readings'), all<CaseRecord>(tx, 'cases'), all<AlertRecord>(tx, 'alerts'), all<FlightSurgeonBrief>(tx, 'briefs'),
       ]);
       return {
-        session: session.value,
+        session: { ...session.value, deviceProfile: session.value.deviceProfile ?? loadDeviceProfile() },
         readings: readings.sort((a, b) => a.ts - b.ts),
         cases: cases.sort((a, b) => a.startedTs - b.startedTs),
         alerts: alerts.sort((a, b) => a.alert.detectedTs - b.alert.detectedTs),
         briefs: briefs.sort((a, b) => a.generatedTs - b.generatedTs),
       };
     },
-    replace: (s) => write([...STORES], (tx) => {
-      for (const name of STORES) tx.objectStore(name).clear();
-      tx.objectStore('session').put({ key: 'session', value: s.session });
-      for (const r of s.readings) tx.objectStore('readings').put(r);
-      for (const c of s.cases) tx.objectStore('cases').put(c);
-      for (const a of s.alerts) tx.objectStore('alerts').put(a);
-      for (const b of s.briefs) tx.objectStore('briefs').put(b);
-    }),
-    saveSession: (session) => putAll('session', [{ key: 'session', value: session }]),
+    replace: (s) => {
+      if (s.session.deviceProfile) saveDeviceProfile(s.session.deviceProfile);
+      return write([...STORES], (tx) => {
+        for (const name of STORES) tx.objectStore(name).clear();
+        tx.objectStore('session').put({ key: 'session', value: s.session });
+        for (const r of s.readings) tx.objectStore('readings').put(r);
+        for (const c of s.cases) tx.objectStore('cases').put(c);
+        for (const a of s.alerts) tx.objectStore('alerts').put(a);
+        for (const b of s.briefs) tx.objectStore('briefs').put(b);
+      });
+    },
+    saveSession: (session) => {
+      if (session.deviceProfile) saveDeviceProfile(session.deviceProfile);
+      return putAll('session', [{ key: 'session', value: session }]);
+    },
     putReadings: (rs) => putAll('readings', rs),
     putCase: (c) => putAll('cases', [c]),
     putAlert: (a) => putAll('alerts', [a]),

@@ -194,4 +194,24 @@ describe('desktop device list', () => {
     expect(useBand.getState().phase).toBe('connected');
     Reflect.deleteProperty(window, 'kawsayBluetooth');
   });
+
+  it('connects to Huawei Band 8 via standard 0x180D/0x2A37 without authKey and updates BPM + HRV from RR intervals', async () => {
+    useBand.getState().setProfile('huawei_ble');
+    useBand.getState().setAuthKey('');
+    const band = fakeBand();
+    band.device.name = 'HUAWEI Band 8-4AF';
+    install(async () => band.device);
+
+    await useBand.getState().connect();
+    expect(useBand.getState().phase).toBe('connected');
+    expect(useBand.getState().deviceName).toBe('HUAWEI Band 8-4AF');
+    expect(useBand.getState().profile).toBe('huawei_ble');
+
+    // Send 0x2A37 packet with bit 4 (RR-Interval) set: flags=0x10, bpm=65, RR1=819 (800ms), RR2=860 (840ms)
+    band.send(0x10, 65, 0x33, 0x03, 0x5c, 0x03);
+    const s = useBand.getState();
+    expect(s.samples.map((x) => x.bpm)).toEqual([65]);
+    expect(s.rrIntervals).toEqual([800, 840]);
+    expect(s.hrv).toBe(40);
+  });
 });
