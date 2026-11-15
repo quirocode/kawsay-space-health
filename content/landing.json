@@ -30,9 +30,9 @@
       "future": {
         "tab": "Future Self",
         "title": "See how you might land",
-        "description": "Compare your body today with its projected state on landing day. The two figures show which areas could improve with a plan.",
-        "action": "Move the day slider, then tap a body area to see what drives the projection.",
-        "imageAlt": "Future Self screen with two body figures, a mission timeline and a landing readiness score."
+        "description": "Compare your body today with its projected state on landing day. Rotate the two 3D models, switch between muscles and organs, and select a structure to review its body zone.",
+        "action": "Drag to rotate, scroll to zoom, then select a muscle or organ. Move the day slider to compare the projection.",
+        "imageAlt": "Future Self screen with two interactive 3D anatomy models, a mission timeline and a landing readiness score."
       },
       "check": {
         "tab": "Daily check",

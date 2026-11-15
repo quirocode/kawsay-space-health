@@ -58,23 +58,23 @@ export function FutureSelfScreen() {
     <section className="mx-auto grid max-w-[1400px] gap-5 p-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(360px,1fr)]">
       {/* Left: the double body + woven timeline */}
       <div className="flex flex-col gap-4 rounded-sheet bg-surface p-5 shadow-sm">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <figure className="flex flex-col items-center">
-            <figcaption className="text-[20px] font-bold">
+            <figcaption className="min-h-12 text-[20px] font-bold">
               {ui.future.today} · <span className="tabular">{fill(ui.future.dayLabel, { day: ctx.missionDay })}</span>
             </figcaption>
-            <div className="h-[360px] w-full max-w-[220px]">
+            <div className="min-h-[540px] w-full">
               <BodyFigure zones={today} variant="today" title={lang === 'es' ? `Tu cuerpo hoy, día ${ctx.missionDay}` : `Your body today, day ${ctx.missionDay}`} selected={selected} onSelect={setSelected} />
             </div>
           </figure>
           <figure className="flex flex-col items-center">
-            <figcaption className="flex flex-col items-center text-[20px] font-bold text-future" aria-live="polite">
+            <figcaption className="flex min-h-12 flex-col items-center text-[20px] font-bold text-future" aria-live="polite">
               {futureTitle}
               <span className="text-[15px] font-normal text-ink-2">
                 {viewDay - ctx.missionDay === 1 ? ui.future.inOneDay : fill(ui.future.inDays, { days: viewDay - ctx.missionDay })}
               </span>
             </figcaption>
-            <div className="h-[360px] w-full max-w-[220px]">
+            <div className="min-h-[540px] w-full">
               <BodyFigure zones={future} variant="future" title={lang === 'es'
                 ? `Tu cuerpo proyectado, día ${viewDay}, ${withPlan ? 'con tu plan' : 'con tus hábitos actuales'}`
                 : `Your projected body, day ${viewDay}, ${withPlan ? 'with your plan' : 'with current habits'}`} selected={selected} onSelect={setSelected} />
