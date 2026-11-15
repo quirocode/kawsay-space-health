@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import english from '../../content/landing.json';
 import spanish from '../../content/landing.es.json';
 import { DemoTour } from './DemoTour';
+import { SpaceEffects } from '../components/SpaceEffects';
 
 /**
  * Public landing page (P1). A single scrolling page: hero, video, challenge,
@@ -433,6 +434,7 @@ export function Landing() {
 
   return (
     <>
+      <SpaceEffects landing />
       <Nav
         copy={copy}
         language={language}

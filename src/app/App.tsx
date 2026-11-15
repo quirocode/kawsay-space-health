@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
+import { SpaceEffects } from '../components/SpaceEffects';
 import { Link, Route, Router, Switch, useLocation } from 'wouter';
 import { useHashLocation } from 'wouter/use-hash-location';
 import { useApp, type Scene } from './store';
@@ -287,7 +288,8 @@ export function App() {
 
   return (
     <Router hook={useHashLocation}>
-      <div className="flex h-full flex-col">
+      <div className="relative flex h-full flex-col">
+        <SpaceEffects />
         <TopBar />
         <Fragment key={lang}>
           <Disclaimer />

@@ -252,3 +252,14 @@ body {
 .demo-tour-dialog img {
   max-height: calc(94dvh - 4rem);
 }
+
+/* Full-page backdrop; keep all content and interactive surfaces above the stars. */
+.space-starfield-landing { color: rgb(201 222 255 / 0.75); }
+#root > main, #root > footer { position: relative; z-index: 1; }
+#root > main > section { position: relative; }
+#root > main > section:not(#top), #root > footer {
+  background-color: transparent;
+}
+[data-landing-theme='day'] .space-starfield-landing { color: rgb(23 77 158 / 0.5); }
+
+/* Existing hero stars remain local to the horizon. */

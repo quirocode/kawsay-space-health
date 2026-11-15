@@ -145,3 +145,10 @@ body {
 .breathe {
   animation: breathe 10s ease-in-out infinite;
 }
+
+/* The app keeps its original day/night tokens. Stars stay below all controls. */
+:root[data-theme='night'] .space-starfield { color: rgb(201 222 255 / 0.72); }
+:root:not([data-theme='night']) .space-starfield { color: rgb(11 61 145 / 0.38); }
+#root .space-starfield ~ header,
+#root .space-starfield ~ nav,
+#root .space-starfield ~ main { position: relative; z-index: 1; }
