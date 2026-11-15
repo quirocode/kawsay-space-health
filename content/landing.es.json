@@ -16,8 +16,46 @@
     "title": "KAWSAY",
     "subtitle": "Un copiloto de salud para astronautas en misiones largas. Responde la pregunta que ningún panel contesta: ¿cómo llegará tu cuerpo al aterrizaje?",
     "primary": "Try the demo",
-    "secondary": "Mira el video",
-    "scroll": "Desplázate para saber más"
+    "secondary": "Mira el video"
+  },
+  "tour": {
+    "nav": "Explora la demo",
+    "title": "Así funciona la demo de KAWSAY",
+    "intro": "Estás en el día 142 de una misión simulada. Elige una pantalla para ver qué hace y probarla por tu cuenta.",
+    "tryThis": "Prueba esto",
+    "openScreen": "Abrir en la demo",
+    "enlarge": "Ampliar captura",
+    "close": "Cerrar",
+    "steps": {
+      "future": {
+        "tab": "Yo futuro",
+        "title": "Mira cómo podrías llegar al aterrizaje",
+        "description": "Compara tu cuerpo de hoy con su estado previsto al aterrizar. Las dos siluetas muestran qué zonas podrían mejorar si sigues un plan.",
+        "action": "Mueve el control de días y toca una zona del cuerpo para ver qué influye en la proyección.",
+        "imageAlt": "Pantalla de Yo futuro con dos siluetas, una línea de tiempo y un indicador de aptitud para el aterrizaje."
+      },
+      "check": {
+        "tab": "Chequeo diario",
+        "title": "Registra un síntoma y descubre qué hacer",
+        "description": "Registra cómo te sientes y revisa las mediciones. KAWSAY cruza los síntomas con datos como el sueño y el CO₂ de la cabina para explicar sus hallazgos.",
+        "action": "Abre el menú «Demo» y elige la escena de dolor de cabeza para ver un hallazgo con datos ya cargados.",
+        "imageAlt": "Pantalla de chequeo diario con los campos de presión arterial y el teclado en pantalla."
+      },
+      "watch": {
+        "tab": "Pulsera y alertas",
+        "title": "Sigue un cambio en el pulso",
+        "description": "Revisa el gráfico de pulso y otras señales. La demo puede simular una alerta y guiarte durante la respuesta.",
+        "action": "Abre «Demo», elige «La frecuencia cardíaca sube en reposo» y espera la alerta.",
+        "imageAlt": "Pantalla de la pulsera con un gráfico de pulso, un indicador de sensor simulado y otras mediciones."
+      },
+      "suit": {
+        "tab": "Traje y fases",
+        "title": "Cambia la fase de la misión",
+        "description": "El chequeo del traje adapta los sensores simulados y la lista de tareas a cada fase, desde el lanzamiento hasta el aterrizaje.",
+        "action": "Elige «Reentrada y aterrizaje», selecciona «Actuar ya» y ejecuta el chequeo para ver el resultado simulado.",
+        "imageAlt": "Chequeo del traje con el resultado simulado de la reentrada y los pasos que recomienda la demo."
+      }
+    }
   },
   "video": {
     "title": "KAWSAY en",
