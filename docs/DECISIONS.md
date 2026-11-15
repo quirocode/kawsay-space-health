@@ -32,3 +32,4 @@ One line per decision: date/time · decision · why.
 - Sun 12:10 · Choosing an environment applies it at once and the header shows it as a chip next to the title · there was a separate "Use this environment" button, so the header looked stale after a choice.
 - Sun 12:10 · Daily check values are text fields (numeric keyboard on touch, autofocus with a mouse) as well as the keypad; Enter moves on, number keys answer the 1–5 scales · desktop users could only click the pad.
 - Sun 12:10 · "Download for Windows" points at the GitHub release `latest` · the packaged app folder is ~360 MB, too big for the Vercel deploy; the release still has to be published.
+- Sun 12:45 · Save public landing preferences locally, default to English and night, and pass the language through the existing demo query parameter · keeps both entry points consistent without changing the demo's theme preference.

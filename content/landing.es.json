@@ -1,0 +1,239 @@
+{
+  "pageTitle": "KAWSAY — ¿Cómo llegará tu cuerpo al aterrizaje?",
+  "pageDescription": "KAWSAY, un copiloto de salud que proyecta el estado físico de los astronautas al aterrizar. Prototipo de NASA Space Apps Challenge 2026. No es un dispositivo médico.",
+  "nav": {
+    "label": "Navegación principal",
+    "nightMode": "Modo noche",
+    "switchToDay": "Cambiar a modo día",
+    "switchToNight": "Cambiar a modo noche",
+    "switchLanguage": "Cambiar a inglés",
+    "challenge": "El reto",
+    "advantages": "Por qué KAWSAY",
+    "technology": "Tecnología",
+    "demo": "Ver demo"
+  },
+  "hero": {
+    "badge": "NASA Space Apps Challenge 2026",
+    "title": "KAWSAY",
+    "subtitle": "Un copiloto de salud para astronautas en misiones largas. Responde la pregunta que ningún panel contesta: ¿cómo llegará tu cuerpo al aterrizaje?",
+    "primary": "Prueba la demo",
+    "secondary": "Mira el video",
+    "scroll": "Desplázate para saber más"
+  },
+  "video": {
+    "title": "KAWSAY en",
+    "titleAccent": "30 segundos",
+    "subtitle": "Un tripulante deja de entrenar durante una semana, ve cómo empeora su proyección para el aterrizaje y toma medidas para recuperarse.",
+    "soon": "Video disponible próximamente",
+    "soonHint": "Mientras tanto, recorre la historia completa del Sol 142 en la demo sin ingresar datos."
+  },
+  "challenge": {
+    "title": "El reto que",
+    "titleAccent": "abordamos",
+    "subtitle": "En el espacio profundo, el astronauta es quien primero debe atenderse",
+    "problemsTitle": "Retos actuales",
+    "solutionsTitle": "Nuestra aplicación",
+    "problems": [
+      {
+        "icon": "slope",
+        "title": "El deterioro es lento y silencioso",
+        "text": "Los huesos y la condición física se debilitan poco a poco. De un día a otro, el cambio es tan pequeño que cuesta detectarlo."
+      },
+      {
+        "icon": "link",
+        "title": "Los riesgos se potencian",
+        "text": "Un dolor de cabeza puede deberse a falta de sueño, exceso de CO₂, poco oxígeno o presión ocular. Evaluar un indicador a la vez puede ocultar la causa."
+      },
+      {
+        "icon": "signal",
+        "title": "La señal tarda hasta 20 minutos en llegar a la Tierra",
+        "text": "Desde Marte, una respuesta puede tardar hasta 40 minutos entre ida y vuelta. Durante la conjunción solar, puede que nunca llegue."
+      },
+      {
+        "icon": "landing",
+        "title": "El aterrizaje llega cuando el cuerpo está más débil",
+        "text": "El día más exigente de la misión llega tras meses sin gravedad, cuando el cuerpo está en su momento más vulnerable."
+      }
+    ],
+    "solutions": [
+      {
+        "icon": "mirror",
+        "title": "Tu yo futuro",
+        "text": "Compara tu estado actual con tu proyección para el día de llegada. Cada entrenamiento, vaso de agua y hora de sueño modifica esa trayectoria."
+      },
+      {
+        "icon": "rules",
+        "title": "Motor de riesgos combinados",
+        "text": "Un conjunto de reglas explicables evalúa varios indicadores a la vez. Cada regla cita la fuente de la NASA que la respalda."
+      },
+      {
+        "icon": "loop",
+        "title": "Seguimiento autónomo",
+        "text": "Mide, entiende, actúa, verifica y escala. KAWSAY comprueba si la medida funcionó antes de pedir ayuda a la Tierra."
+      },
+      {
+        "icon": "watch",
+        "title": "Una alerta en tu muñeca",
+        "text": "La pulsera monitorea seis señales de forma continua y emite alertas incluso con la aplicación en segundo plano."
+      }
+    ]
+  },
+  "advantages": {
+    "title": "Pensado para",
+    "titleAccent": "la tripulación",
+    "subtitle": "Diseñado en torno a las necesidades de quien lo usa",
+    "stats": [
+      {
+        "icon": "clock",
+        "value": 3,
+        "prefix": "<",
+        "suffix": " min",
+        "label": "Chequeo diario",
+        "hint": "la pulsera mide el resto"
+      },
+      {
+        "icon": "watch",
+        "value": 6,
+        "prefix": "",
+        "suffix": "",
+        "label": "Señales continuas",
+        "hint": "desde la pulsera, cada segundo"
+      },
+      {
+        "icon": "offline",
+        "value": 0,
+        "prefix": "",
+        "suffix": "",
+        "label": "Servidores necesarios",
+        "hint": "funciona sin conexión"
+      },
+      {
+        "icon": "book",
+        "value": 100,
+        "prefix": "",
+        "suffix": "%",
+        "label": "Reglas con fuente",
+        "hint": "cifra de la NASA o valor marcado como prototipo"
+      }
+    ]
+  },
+  "technology": {
+    "title": "Basado en",
+    "titleAccent": "ciencia de la NASA y tecnología abierta",
+    "subtitle": "Investigación oficial de la NASA, un motor determinista y una pulsera inteligente en una aplicación que funciona sin servidor",
+    "items": [
+      {
+        "icon": "nasa",
+        "title": "Programa de Investigación Humana de la NASA",
+        "text": "Los cinco riesgos de los vuelos espaciales y las fuentes de la NASA orientan nuestras reglas: pérdida ósea del 1 al 1,5 % al mes, condición física, SANS, sueño e hipoxia."
+      },
+      {
+        "icon": "standard",
+        "title": "Límites de NASA-STD-3001",
+        "text": "El límite de CO₂ en la cabina, 3 mmHg en promedio durante una hora, orienta la regla de dolor de cabeza. Cada cifra se identifica como NASA o Prototipo."
+      },
+      {
+        "icon": "watch",
+        "title": "Integración con pulsera inteligente",
+        "text": "Frecuencia cardíaca, variabilidad cardíaca, oxígeno en sangre, frecuencia respiratoria, temperatura de la piel y movimiento. El contexto de actividad distingue el ejercicio de una alerta real."
+      },
+      {
+        "icon": "rules",
+        "title": "Motor de reglas determinista",
+        "text": "TypeScript puro con pruebas unitarias para cada función. Las reglas determinan el estado de salud y explican el motivo."
+      },
+      {
+        "icon": "code",
+        "title": "TypeScript y React 19",
+        "text": "Desarrollada con Vite y Tailwind CSS, con Zustand para el estado, Motion para las animaciones y variables de nuestro sistema de diseño."
+      },
+      {
+        "icon": "offline",
+        "title": "Pensada para funcionar sin conexión",
+        "text": "Aplicación web progresiva con una base de datos local IndexedDB. Los datos se quedan en el dispositivo y la aplicación funciona sin señal."
+      },
+      {
+        "icon": "desktop",
+        "title": "Aplicación de escritorio para Windows",
+        "text": "La versión con Electron carga desde el disco y bloquea las solicitudes de red. Incluye un archivo .exe para la laptop de la estación."
+      },
+      {
+        "icon": "delay",
+        "title": "Modelo de demora en las comunicaciones",
+        "text": "Calcula la demora de ida para la EEI, Orión, la Luna y Marte, y muestra cuándo llegará la respuesta de la Tierra."
+      },
+      {
+        "icon": "cloud",
+        "title": "Vercel y GitHub Actions",
+        "text": "GitHub Actions comprueba los tipos, ejecuta las pruebas y compila cada cambio antes del despliegue de la demo pública."
+      }
+    ],
+    "stackLabel": "Tecnologías utilizadas",
+    "stack": [
+      "TypeScript",
+      "React 19",
+      "Vite",
+      "Tailwind CSS",
+      "Zustand",
+      "Motion",
+      "Vitest",
+      "IndexedDB",
+      "PWA",
+      "Electron",
+      "Vercel",
+      "GitHub Actions"
+    ]
+  },
+  "cta": {
+    "title": "Descubre cómo llegarás al aterrizaje",
+    "text": "Abre la aplicación web en tu navegador o descarga la versión para Windows y ejecútala sin internet.",
+    "web": "Abrir la aplicación web",
+    "download": "Descargar para Windows (.exe)"
+  },
+  "footer": {
+    "tagline": "¿Cómo llegará tu cuerpo al aterrizaje? Un copiloto de salud para misiones de larga duración.",
+    "appTitle": "Aplicación",
+    "app": [
+      {
+        "label": "Tu yo futuro",
+        "href": "/app/#/"
+      },
+      {
+        "label": "Chequeo diario",
+        "href": "/app/#/check"
+      },
+      {
+        "label": "Pulsera",
+        "href": "/app/#/watch"
+      },
+      {
+        "label": "Informe para el médico de vuelo",
+        "href": "/app/#/brief"
+      }
+    ],
+    "resourcesTitle": "Recursos",
+    "resources": [
+      {
+        "label": "Código fuente",
+        "href": "https://github.com/quirocode/kawsay-space-health"
+      },
+      {
+        "label": "Programa de Investigación Humana de la NASA",
+        "href": "https://www.nasa.gov/hrp/hazards/"
+      },
+      {
+        "label": "NASA Space Apps Challenge",
+        "href": "https://www.spaceappschallenge.org/"
+      }
+    ],
+    "connectTitle": "Contacto",
+    "repoLabel": "Repositorio en GitHub",
+    "copyright": "© 2026 KAWSAY. Proyecto presentado a NASA Space Apps Challenge 2026.",
+    "disclaimer": "Prototipo de hackatón. No es un dispositivo médico."
+  },
+  "links": {
+    "app": "/app/",
+    "download": "https://github.com/quirocode/kawsay-space-health/releases/latest",
+    "repo": "https://github.com/quirocode/kawsay-space-health"
+  }
+}
