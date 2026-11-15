@@ -13,12 +13,17 @@ import { WatchScreen } from '../features/watch/WatchScreen';
 import { ConnectScreen } from '../features/connect/ConnectScreen';
 import { RespondScreen } from '../features/watch/RespondScreen';
 import { AlarmOverlay, AlertBanner } from '../features/watch/Alarm';
+import { SuitScreen } from '../features/suit';
+import { HowScreen } from '../features/how';
+import suitCopy from '../../content/suit.json';
+import howCopy from '../../content/how.json';
 
 const NAV = [
   { href: '/', key: 'home' },
   { href: '/check', key: 'check' },
   { href: '/connect', key: 'connect' },
   { href: '/watch', key: 'watch' },
+  { href: '/suit', key: 'suit' },
   { href: '/loop', key: 'loop' },
   { href: '/brief', key: 'brief' },
   { href: '/environment', key: 'environment' },
@@ -62,6 +67,7 @@ function TopBar() {
       <MissionDays />
       <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{delayLabel(ctx.commDelayMin, lang)}</span>
       <DemoMenu />
+      <Link href="/how" className="flex min-h-14 items-center rounded-full border border-line px-4 text-[15px] font-bold">? {howCopy[lang].button}</Link>
       {!online && <span className="rounded-full bg-surface-2 px-3 py-1 text-[15px]">{ui.app.offline}</span>}
       <DisplayPreferences />
     </header>
@@ -231,7 +237,7 @@ function NavBar() {
   const [loc] = useLocation();
   const { ui, flow } = useCopy();
   const lang = useLang();
-  const navLabel = (key: (typeof NAV)[number]['key']) => (key === 'watch' || key === 'connect' ? flow.nav[key] : ui.nav[key]);
+  const navLabel = (key: (typeof NAV)[number]['key']) => (key === 'watch' || key === 'connect' ? flow.nav[key] : key === 'suit' ? suitCopy[lang].nav : ui.nav[key]);
   return (
     <nav aria-label={lang === 'es' ? 'Principal' : 'Main'} className="flex gap-2 border-t border-line bg-surface px-4 py-2">
       {NAV.map((n) => {
@@ -296,6 +302,8 @@ export function App() {
               <Route path="/loop" component={LoopScreen} />
               <Route path="/brief" component={BriefScreen} />
               <Route path="/environment" component={EnvironmentScreen} />
+              <Route path="/suit" component={SuitScreen} />
+              <Route path="/how" component={HowScreen} />
               <Route>
                 <p className="p-8">{lang === 'es' ? 'Pantalla no encontrada.' : 'Not found.'}</p>
               </Route>
