@@ -135,6 +135,9 @@ export function WatchScreen() {
                 </p>
                 <Thread values={t.series} min={t.min} max={t.max} band={t.band} tone={toneOf(t.status)} height={44} label={`${t.name}, ${flow.watch.lastHour.toLowerCase()}`} />
                 <p className="text-[15px] text-ink-2">{t.note}</p>
+                <p className="text-xs font-semibold text-brand-ink">{t.key === 'hr' && fromBand
+                  ? (lang === 'es' ? 'Pulsera conectada · lectura real' : 'Connected band · real reading')
+                  : (lang === 'es' ? 'Sensor simulado' : 'Simulated sensor')}</p>
               </li>
             ))}
             <li className={`${CARD} flex flex-col gap-1 !p-4`}>

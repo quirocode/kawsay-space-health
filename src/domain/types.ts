@@ -45,6 +45,7 @@ export interface Source {
 export interface Threshold {
   status: Exclude<Status, 'green' | 'stale'>;
   min?: number;
+  minExclusive?: boolean;
   max?: number;
   sdFromBaseline?: number;
   /** Plain-language band, shown under "Why?". e.g. "Below 6 h of sleep". */
@@ -75,6 +76,7 @@ export interface Reading {
   missionDay: number;
   phase: MissionPhase;
   origin: 'manual' | 'sensor_sim' | 'camera';
+  simulated?: boolean;               // measurement or crew report supplied by a demo fixture
 }
 
 export interface Baseline {
@@ -197,7 +199,7 @@ export interface FlightSurgeonBrief {
 export interface Engine {
   indicators(): IndicatorDef[];
   evaluate(readings: Reading[], baselines: Baseline[], ctx: MissionContext, nowTs: number): Evaluation[];
-  findCompound(readings: Reading[], ctx: MissionContext): Finding[];
+  findCompound(readings: Reading[], ctx: MissionContext, nowTs?: number): Finding[];
   project(history: Reading[], ctx: MissionContext, plan?: CountermeasurePlan): LandingReadiness;
   verify(before: Reading, after: Reading): VerificationResult;
   brief(input: {

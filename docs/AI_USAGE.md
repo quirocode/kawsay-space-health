@@ -30,3 +30,4 @@ Log every use as you go. One line each.
 | Sun 14:25 | Anatomy | Codex (OpenAI) | Integrated selectable 3D anatomy with Three.js, adapted open-licensed Z-Anatomy meshes and verified rotation, picking, isolation and language controls in Chromium | `src/features/future-self/`, `public/anatomy/`, `content/anatomy.json` |
 | Sun 14:43 | Anatomy | Codex (OpenAI) | Added a translucent body surface, interactive region outlines, and bilingual anatomy region controls | `src/features/future-self/`, `public/anatomy/`, `content/anatomy.json` |
 | Sun 15:17 | Demo | Codex (OpenAI) | Integrated the reviewed demo redesign and refreshed the bilingual tour captures | `src/app/`, `src/features/`, `public/demo-tour/` |
+| Sun 15:59 | Mission guide | Codex (OpenAI) | Implemented bilingual guided mission, hourly cabin CO₂ evidence, and data provenance for the 3D comparison | `src/features/mission-guide/`, `src/domain/cabinCo2.ts`, `src/features/future-self/` |

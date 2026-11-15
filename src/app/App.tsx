@@ -14,6 +14,7 @@ import { ConnectScreen } from '../features/connect/ConnectScreen';
 import { RespondScreen } from '../features/watch/RespondScreen';
 import { AlarmOverlay, AlertBanner } from '../features/watch/Alarm';
 import { SuitScreen } from '../features/suit';
+import { MissionGuide } from '../features/mission-guide/MissionGuide';
 import { HowScreen } from '../features/how';
 import { Glyph, WorkspaceNav } from './WorkspaceNav';
 
@@ -271,6 +272,7 @@ export function App() {
                 <Route path="/environment" component={EnvironmentScreen} />
                 <Route path="/suit" component={SuitScreen} />
                 <Route path="/how" component={HowScreen} />
+                <Route path="/mission-guide" component={MissionGuide} />
                 <Route>
                   <p className="p-8">{lang === 'es' ? 'Pantalla no encontrada.' : 'Not found.'}</p>
                 </Route>

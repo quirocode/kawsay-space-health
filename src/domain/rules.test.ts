@@ -6,6 +6,8 @@ const ctx: MissionContext = { environment: 'mars_transit', phase: 'cruise', miss
 const r = (indicatorId: string, value: number, missionDay = 142, ts = missionDay * 1000): Reading => ({
   indicatorId, value, ts, missionDay, phase: 'cruise', origin: 'manual',
 });
+const WINDOW_END = 4_000_000;
+const series = (value: number) => [60, 45, 30, 15, 0].map((min) => r('cabin_co2', value, 142, WINDOW_END - min * 60_000));
 const rule = (id: string) => RULES.find((x) => x.id === id)!;
 const sleepWeek = [r('sleep_hours', 4.6, 140), r('sleep_hours', 4.6, 141), r('sleep_hours', 6.4, 142)];
 
@@ -25,20 +27,22 @@ describe('helpers', () => {
 
 describe('compound rules (P3-03)', () => {
   it('Sol 142: headache + short sleep + high cabin CO₂', () => {
-    const [f] = findCompound([...sleepWeek, r('headache_score', 4), r('cabin_co2', 4.1)], ctx);
+    const [f] = findCompound([...sleepWeek, r('headache_score', 4), ...series(4.1)], ctx);
     expect(f).toMatchObject({ ruleId: 'co2_headache', status: 'yellow', title: 'Headache + short sleep + high cabin CO₂' });
-    expect(f.because).toEqual(['Headache reported (4 of 5).', 'Cabin CO₂ 4.1 mmHg — NASA limit is 3 mmHg.', 'Sleep averaged 5.2 h over 3 nights.']);
+    expect(f.because).toEqual(['Headache reported (4 of 5).', 'Cabin CO₂ (1-hour average): 4.1 mmHg. NASA habitat limit: 3 mmHg.', 'Sleep averaged 5.2 h over 3 nights.']);
     expect(f.actions[0]).toMatchObject({ id: 'co2_headache.primary', recheckIndicatorId: 'headache_score', recheckInMin: 30, escalate: false });
     expect(f.sources.some((s) => s.official)).toBe(true);
   });
 
   it('co2_headache: title follows what matched; red with confusion; silent without a cause', () => {
-    expect(rule('co2_headache').check([r('headache_score', 3), r('cabin_co2', 3.2)], ctx)?.title).toBe('Headache + high cabin CO₂');
-    const red = rule('co2_headache').check([r('headache_score', 4), r('cabin_co2', 4), r('symptom_confusion', 1)], ctx)!;
+    expect(rule('co2_headache').check([r('headache_score', 3), ...series(3.2)], ctx)?.title).toBe('Headache + high cabin CO₂');
+    const red = rule('co2_headache').check([r('headache_score', 4), ...series(4), r('symptom_confusion', 1)], ctx)!;
     expect(red.status).toBe('red');
     expect(red.actions[0].escalate).toBe(true);
-    expect(rule('co2_headache').check([r('headache_score', 4), r('cabin_co2', 2.4)], ctx)).toBeNull();
-    expect(rule('co2_headache').check([r('headache_score', 2), r('cabin_co2', 5)], ctx)).toBeNull();
+    expect(rule('co2_headache').check([r('headache_score', 4), ...series(2.4)], ctx)).toBeNull();
+    expect(rule('co2_headache').check([r('headache_score', 4), ...series(3)], ctx)).toBeNull();
+    expect(rule('co2_headache').check([r('headache_score', 4), r('cabin_co2', 5)], ctx)).toBeNull();
+    expect(rule('co2_headache').check([r('headache_score', 2), ...series(5)], ctx)).toBeNull();
   });
 
   it('hypoxia_signs needs low oxygen and a symptom', () => {

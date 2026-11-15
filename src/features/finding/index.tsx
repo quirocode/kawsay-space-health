@@ -5,7 +5,8 @@ import { flow, te, useLang } from '../../app/i18n';
 import type { Finding, HazardId } from '../../domain/types';
 import { engine } from '../../app/engine';
 import { isOpen, useApp, type AlertRecord, type CaseRecord } from '../../app/store';
-import { clock, countdown, fill } from '../../app/format';
+import { clock, countdown, dec, fill } from '../../app/format';
+import { CabinEvidence } from '../mission-guide/CabinEvidence';
 import { StatusBadge, StatusIcon } from '../../components/StatusBadge';
 import { BTN_PRIMARY, BTN_SECONDARY, CARD, PANEL, Screen, SourceList, SourceTag } from '../../components/ui';
 
@@ -25,7 +26,7 @@ export function LoopScreen() {
   const acknowledged = useApp((s) => s.acknowledged);
   const [picked, setPicked] = useState<string | null>(null);
 
-  const findings = useMemo(() => engine.findCompound(readings, ctx), [readings, ctx]);
+  const findings = useMemo(() => engine.findCompound(readings, ctx, nowTs), [readings, ctx, nowTs]);
   const toVerify = cases.find((c) => c.kind === 'finding' && c.verification && c.closedTs === null);
   const pendingCase = pending ? cases.find((c) => c.id === pending.caseId) : undefined;
 
@@ -67,7 +68,10 @@ export function LoopScreen() {
   );
 }
 
-function Because({ finding }: { finding: Finding }) {
+function Because({ finding, at }: { finding: Finding; at?: number }) {
+  const readings = useApp((s) => s.readings);
+  const context = useApp((s) => s.context);
+  const nowTs = useApp((s) => s.nowTs);
   const official = finding.sources.find((s) => s.official);
   return (
     <>
@@ -84,6 +88,7 @@ function Because({ finding }: { finding: Finding }) {
         {ui.finding.hazards}
         {finding.hazards.map((h) => <span key={h} className="rounded-full bg-surface-3 px-3 py-1 font-bold text-ink">{te(HAZARD[h])}</span>)}
       </div>
+      {finding.ruleId === 'co2_headache' && <CabinEvidence readings={readings} nowTs={at ?? nowTs} context={context} />}
       <SourceList sources={finding.sources} />
     </>
   );
@@ -134,13 +139,14 @@ function Waiting({ finding }: { finding: Finding }) {
   const nowTs = useApp((s) => s.nowTs);
   const pending = useApp((s) => s.pending)!;
   const skip = useApp((s) => s.skipToRecheck);
+  const started = useApp((s) => s.cases.find((record) => record.id === pending.caseId)?.startedTs);
   return (
     <Screen>
       <div className="grid flex-1 gap-5 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <div className={`${CARD} flex flex-col gap-3`}>
           <StatusBadge status={finding.status} />
           <h1 className="text-[34px] font-bold leading-tight">{te(finding.title)}</h1>
-          <Because finding={finding} />
+          <Because finding={finding} at={started} />
         </div>
         <div className={`${CARD} flex flex-col gap-4`}>
           <h2 className="font-bold text-brand-ink">{ui.finding.doNow}</h2>
@@ -197,6 +203,7 @@ function Remeasure({ finding }: { finding: Finding }) {
 }
 
 function Verification({ record }: { record: CaseRecord }) {
+  const lang = useLang();
   const closeCase = useApp((s) => s.closeCase);
   const [, navigate] = useLocation();
   const v = record.verification!;
@@ -216,9 +223,9 @@ function Verification({ record }: { record: CaseRecord }) {
               <div key={c.label} className={PANEL}>
                 <p className="font-bold">{te(c.label)}</p>
                 <p className="tabular mt-1 flex items-baseline gap-3 text-[44px]">
-                  <span className="text-ink-2">{c.before}</span>
+                  <span className="text-ink-2">{dec(Number(c.before.toFixed(2)), lang)}</span>
                   <span className="text-[24px] text-ink-2" aria-label={te('to')}>→</span>
-                  <span className={tone}>{c.after}</span>
+                  <span className={tone}>{dec(Number(c.after.toFixed(2)), lang)}</span>
                   <span className="font-sans text-[15px] text-ink-2">{c.unit}</span>
                 </p>
               </div>

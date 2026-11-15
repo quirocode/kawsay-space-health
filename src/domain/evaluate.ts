@@ -3,6 +3,7 @@
  * Pure: no clock, no randomness. This module has no figures of its own; it only applies
  * the thresholds it receives, so every status it returns carries that threshold's source.
  */
+import { cabinCo2 } from './cabinCo2';
 import type { Baseline, Evaluation, IndicatorDef, MissionContext, Reading, Source, Status, Threshold } from './types';
 
 const HOUR_MS = 3_600_000;
@@ -14,7 +15,7 @@ export function fmt(v: number): string {
 
 function matches(th: Threshold, value: number, baseline?: Baseline): boolean {
   const absolute = th.min !== undefined || th.max !== undefined;
-  if (absolute) return (th.min === undefined || value >= th.min) && (th.max === undefined || value < th.max);
+  if (absolute) return (th.min === undefined || (th.minExclusive ? value > th.min : value >= th.min)) && (th.max === undefined || value < th.max);
   if (th.sdFromBaseline === undefined || !baseline || baseline.sd <= 0) return false;
   return Math.abs(value - baseline.mean) / baseline.sd >= th.sdFromBaseline;
 }
@@ -80,21 +81,26 @@ export function evaluate(
   const latest = latestByIndicator(readings);
   const baselineOf = new Map(baselines.map((b) => [b.indicatorId, b]));
   return defs.map((def) => {
-    const r = latest.get(def.id);
+    const co2 = def.id === 'cabin_co2' ? cabinCo2(readings, nowTs) : null;
+    const r = co2 ? co2.latest : latest.get(def.id);
     if (!r) return { indicatorId: def.id, status: 'stale', reason: 'No reading yet.', sources: dedupe(def.sources) };
     const ageH = (nowTs - r.ts) / HOUR_MS;
     if (ageH > def.staleAfterHours) {
       const age = ageH >= 48 ? `${Math.floor(ageH / 24)} days` : `${Math.floor(ageH)} h`;
       return { indicatorId: def.id, status: 'stale', reason: `Last reading is ${age} old.`, sources: dedupe(def.sources) };
     }
+    if (co2 && co2.value === null) {
+      return { indicatorId: def.id, status: 'stale', reason: 'Insufficient data for the 1-hour cabin CO₂ average.', sources: dedupe(def.sources) };
+    }
+    const value = co2?.value ?? r.value;
     const baseline = baselineOf.get(def.id);
-    const hit = statusOf(def, r.value, baseline);
+    const hit = statusOf(def, value, baseline);
     if (hit.status === 'green') {
       return { indicatorId: def.id, status: 'green', reason: `${def.name} is in the expected range.`, sources: dedupe(def.sources) };
     }
     const reason = hit.fromBaseline
       ? `${def.name} is unusual for you (more than 2 SD from your last ${baseline?.windowDays ?? 0} days).`
-      : `${def.name} ${def.input === 'boolean' ? 'reported' : `${fmt(r.value)} ${def.unit}`}: ${hit.label}.`;
+      : `${def.name} ${def.input === 'boolean' ? 'reported' : `${fmt(value)} ${def.unit}`}: ${hit.label}.`;
     return { indicatorId: def.id, status: hit.status, reason, sources: dedupe([hit.source!, ...def.sources]) };
   });
 }

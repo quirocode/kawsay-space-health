@@ -5,6 +5,7 @@
  * thresholds aligned with docs/tasks/P3-01-indicators.md; P3's copy kept where it fit.
  * Official numbers used here: CO₂ 3 mmHg (SRC.co2) and exercise 90 min/day (SRC.fitness). Everything else is a prototype value.
  */
+import { CABIN_CO2_LIMIT } from './cabinCo2';
 import type { IndicatorDef, Source, Threshold } from './types';
 
 const nasa = (label: string, url: string): Source => ({ label, url, official: true });
@@ -31,7 +32,7 @@ export const SRC = {
   distance: nasa('NASA HRP — Hazard: Distance from Earth', 'https://www.nasa.gov/hrp/hazard-distance-from-earth/'),
   gravity: nasa('NASA HRP — Hazard: Gravity Fields', 'https://www.nasa.gov/hrp/hazard-gravity-fields/'),
   environment: nasa('NASA HRP — Hazard: Hostile and Closed Environments', 'https://www.nasa.gov/hrp/hazard-hostile-closed-environments/'),
-  co2: nasa('NASA-STD-3001 Technical Brief OCHMO-TB-004 — Carbon Dioxide', 'https://www.nasa.gov/ochmo-tb-004-carbon-dioxide-2/'),
+  co2: nasa('NASA-STD-3001 Vol. 2 Rev. F · V2 6004 — Cabin carbon dioxide', 'https://www.nasa.gov/wp-content/uploads/2025/05/nasa-std-3001-vol-2.pdf'),
   prototype: {
     label: 'KAWSAY prototype value (general adult reference, not a NASA figure)',
     url: 'https://github.com/quirocode/kawsay-space-health/blob/main/docs/04-recursos-nasa.md',
@@ -41,7 +42,7 @@ export const SRC = {
 
 const P = SRC.prototype;
 const red = (label: string, b: { min?: number; max?: number }, source: Source = P): Threshold => ({ status: 'red', label, source, ...b });
-const yellow = (label: string, b: { min?: number; max?: number }, source: Source = P): Threshold => ({ status: 'yellow', label, source, ...b });
+const yellow = (label: string, b: { min?: number; max?: number; minExclusive?: boolean }, source: Source = P): Threshold => ({ status: 'yellow', label, source, ...b });
 const unusual: Threshold = { status: 'yellow', sdFromBaseline: 2, label: 'Unusual for you (more than 2 SD from your recent days)', source: P };
 const reported = [yellow('Reported', { min: 1 })];
 
@@ -164,8 +165,8 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'cabin_co2', name: 'Cabin CO₂', unit: 'mmHg', zone: 'lungs',
     risks: ['hypoxia'], hazards: ['environment'], input: 'number', cadence: 'daily', staleAfterHours: 2,
-    thresholds: [red('6 mmHg or more', { min: 6 }), yellow('Above the NASA limit of 3 mmHg (1-hour average)', { min: 3 }, SRC.co2)],
-    howToMeasure: 'Open the cabin air panel · Read the CO₂ value · Enter it',
+    thresholds: [red('6 mmHg or more', { min: 6 }), yellow('Above the NASA limit of 3 mmHg (1-hour average)', { min: CABIN_CO2_LIMIT, minExclusive: true }, SRC.co2)],
+    howToMeasure: 'Use timestamped cabin pressure samples (mmHg) for the last hour',
     whyItMatters: 'High CO₂ can cause headaches and poor focus. NASA limits it to 3 mmHg as a 1-hour average.',
     sources: [SRC.co2, SRC.environment, P],
   },

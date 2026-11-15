@@ -73,6 +73,14 @@ export const indicators: Copy['indicators'] = bundleProxy('indicators');
 
 /** Spanish for fixed engine sentences that the dictionary covers but the source lists miss. */
 const TR_EXTRA: Record<string, string> = {
+  'Insufficient data for the 1-hour cabin CO₂ average.': 'Datos insuficientes para el promedio de CO₂ de cabina de una hora.',
+  'Cabin CO₂ (1-hour average)': 'CO₂ de cabina (promedio de una hora)',
+  'Log the symptoms and tell the crew so they can review the situation.': 'Registra los síntomas y avisa a la tripulación para que revise la situación.',
+  'Headache + short sleep + high cabin CO₂': 'Dolor de cabeza + poco sueño + CO₂ alto en la cabina',
+  'Headache + high cabin CO₂': 'Dolor de cabeza + CO₂ alto en la cabina',
+  'Headache + short sleep': 'Dolor de cabeza + poco sueño',
+  'high cabin CO₂': 'CO₂ alto en la cabina',
+
   // Indicator names and threshold bands
   'Blood pressure (systolic)': 'Presión arterial (sistólica)',
   'Blood pressure (diastolic)': 'Presión arterial (diastólica)',
@@ -198,6 +206,8 @@ const RANGE: [RegExp, (m: RegExpMatchArray) => string][] = [
 
 /** Sentences the engine builds with numbers. Order matters: first match wins. */
 const PATTERNS: [RegExp, (m: RegExpMatchArray) => string][] = [
+  [/^Cabin CO₂ \(1-hour average\): (.+) mmHg\. NASA habitat limit: 3 mmHg\.$/, (m) => `CO₂ de cabina (promedio de una hora): ${m[1]} mmHg. Límite NASA para el hábitat: 3 mmHg.`],
+
   // Verification
   [/^(.+) went from (.+) to (.+?)( .+)? — improved\.$/, (m) => `${tr(m[1], 'es')} pasó de ${m[2]} a ${m[3]}${m[4] ?? ''} — mejoró.`],
   [/^(.+) went from (.+) to (.+?)( .+)? — worse, we'll tell Earth\.$/, (m) => `${tr(m[1], 'es')} pasó de ${m[2]} a ${m[3]}${m[4] ?? ''} — empeoró, avisaremos a Tierra.`],

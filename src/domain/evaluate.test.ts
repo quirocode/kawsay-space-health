@@ -15,7 +15,7 @@ const co2: IndicatorDef = {
   ...base, id: 'cabin_co2', name: 'Cabin CO₂', unit: 'mmHg', staleAfterHours: 2, sources: [NASA, PROTO],
   thresholds: [
     { status: 'red', min: 6, label: '6 mmHg or more', source: PROTO },
-    { status: 'yellow', min: 3, label: 'Above the NASA limit', source: NASA },
+    { status: 'yellow', min: 3, minExclusive: true, label: 'Above the NASA limit', source: NASA },
   ],
 };
 const sleep: IndicatorDef = {
@@ -31,15 +31,18 @@ const reading = (indicatorId: string, value: number, ageMin: number, missionDay 
 });
 const one = (def: IndicatorDef, rs: Reading[], baselines: Baseline[] = []) => evaluate([def], rs, baselines, ctx, NOW)[0];
 
+const series = (value: number) => [60, 45, 30, 15, 0].map((age) => reading('cabin_co2', value, age));
+
 describe('evaluate (P3-02)', () => {
-  it('cabin CO₂: green, yellow at the official limit, red, stale and missing', () => {
-    expect(one(co2, [reading('cabin_co2', 2.6, 10)])).toMatchObject({ status: 'green', reason: 'Cabin CO₂ is in the expected range.' });
-    const yellow = one(co2, [reading('cabin_co2', 4.1, 10)]);
+  it('cabin CO₂: uses the hourly mean, treats equality as within limit, and distinguishes stale data', () => {
+    expect(one(co2, series(3))).toMatchObject({ status: 'green', reason: 'Cabin CO₂ is in the expected range.' });
+    const yellow = one(co2, series(4.1));
     expect(yellow.status).toBe('yellow');
     expect(yellow.reason).toContain('4.1 mmHg');
     expect(yellow.sources[0].official).toBe(true);
-    expect(one(co2, [reading('cabin_co2', 6, 10)]).status).toBe('red');
+    expect(one(co2, series(6)).status).toBe('red');
     expect(one(co2, [reading('cabin_co2', 2.6, 180)])).toMatchObject({ status: 'stale', reason: 'Last reading is 3 h old.' });
+    expect(one(co2, [reading('cabin_co2', 4.1, 1)])).toMatchObject({ status: 'stale', reason: 'Insufficient data for the 1-hour cabin CO₂ average.' });
     expect(one(co2, [])).toMatchObject({ status: 'stale', reason: 'No reading yet.' });
   });
 
@@ -58,8 +61,8 @@ describe('evaluate (P3-02)', () => {
     expect(one(sleep, [reading('sleep_hours', 7, 60 * 72)]).reason).toBe('Last reading is 3 days old.');
   });
 
-  it('latest reading wins; output follows defs order; stale is never green', () => {
-    const rs = [reading('cabin_co2', 7, 60), reading('cabin_co2', 2.5, 5), reading('sleep_hours', 7, 60 * 40)];
+  it('single fresh spike does not override a complete hourly mean; output follows defs order', () => {
+    const rs = [...series(2.5), reading('cabin_co2', 7, 1), reading('sleep_hours', 7, 60 * 40)];
     const out = evaluate([sleep, co2], rs, [], ctx, NOW);
     expect(out.map((e) => e.indicatorId)).toEqual(['sleep_hours', 'cabin_co2']);
     expect(out[1].status).toBe('green');
@@ -67,7 +70,7 @@ describe('evaluate (P3-02)', () => {
   });
 
   it('de-duplicates sources by url', () => {
-    const e = one(co2, [reading('cabin_co2', 4.1, 10)]);
+    const e = one(co2, series(4.1));
     expect(e.sources.map((s) => s.url)).toEqual([NASA.url, PROTO.url]);
   });
 

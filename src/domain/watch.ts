@@ -8,7 +8,8 @@
  */
 import { SRC } from './indicators';
 import { fmt } from './evaluate';
-import { lastNDaysAvg, latest } from './rules';
+import { cabinCo2, CABIN_CO2_LIMIT } from './cabinCo2';
+import { lastNDaysAvg } from './rules';
 import type { AlertLevel, Finding, MissionContext, ProtocolStep, Reading, Source, WatchAlert, WatchEngine, WatchSample } from './types';
 
 const P = SRC.prototype;
@@ -161,7 +162,7 @@ export function likely(alert: WatchAlert, readings: Reading[], sample: WatchSamp
   const waterToday = todays.length ? Math.max(...todays.map((r) => r.value)) : undefined;
   const water3 = lastNDaysAvg(readings, 'water_ml', 3, ctx);
   const sleep3 = lastNDaysAvg(readings, 'sleep_hours', 3, ctx);
-  const co2 = latest(readings, 'cabin_co2')?.value;
+  const co2 = cabinCo2(readings, sample.ts).value;
 
   const water = waterToday ?? water3;
   if (water !== undefined && water < 2000) {
@@ -172,9 +173,13 @@ export function likely(alert: WatchAlert, readings: Reading[], sample: WatchSamp
     causes.push('fatigue');
     reasons.push({ text: `Short sleep: ${fmt(sleep3)} h average over 3 nights.`, source: SRC.sleep });
   }
-  if (sample.spo2 < 92 || (co2 !== undefined && co2 >= 3)) {
+  if (co2 !== null && co2 > CABIN_CO2_LIMIT) {
+    causes.unshift('high cabin CO₂');
+    reasons.unshift({ text: `Cabin CO₂ (1-hour average): ${fmt(co2)} mmHg. NASA habitat limit: 3 mmHg.`, source: SRC.co2 });
+  }
+  if (sample.spo2 < 92) {
     causes.unshift('low oxygen');
-    reasons.unshift({ text: sample.spo2 < 92 ? `Blood oxygen ${fmt(sample.spo2)} %.` : `Cabin CO₂ ${fmt(co2!)} mmHg — NASA limit is 3 mmHg.`, source: sample.spo2 < 92 ? SRC.hypoxia : SRC.co2 });
+    reasons.unshift({ text: `Blood oxygen ${fmt(sample.spo2)} %.`, source: SRC.hypoxia });
   }
   if (sample.skinTempDelta >= 1.5) {
     causes.unshift('fever');
