@@ -273,7 +273,7 @@
       "Bluetooth is on on this computer.",
       "The band is charged, on your wrist and within 1 m.",
       "Turn off Bluetooth on your phone. The band keeps one Bluetooth link at a time, and the phone app takes it.",
-      "Xiaomi Mi Band 4, 5 or 6: have the band key ready. Xiaomi Smart Band 7 and newer use a different key check that KAWSAY does not support yet."
+      "Mi Band 4, 5 or 6: have the band key ready. Xiaomi Smart Band 7, 8 and 9 do not share live heart rate with other apps — use a Bluetooth chest strap or armband instead."
     ],
     "readyNote": "Next, a list of nearby devices opens. Pick your band.",
     "openList": "Open device list",
@@ -302,7 +302,7 @@
       },
       "no-hr-service": {
         "title": "This band does not share heart rate",
-        "hint": "It connected but offered no standard heart-rate service. A Xiaomi Smart Band 7 may need its pairing key for that. Use a chest strap or the demo data."
+        "hint": "It connected, but Xiaomi Smart Band 7, 8 and 9 do not share live heart rate with other apps — a pairing key does not change that. Use a Bluetooth chest strap or armband (Polar, CooSpo, Wahoo), an older Mi Band 5/6 with its key, or the demo data."
       },
       "failed": {
         "title": "Could not connect",

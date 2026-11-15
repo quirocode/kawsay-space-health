@@ -273,7 +273,7 @@
       "El Bluetooth de esta computadora está encendido.",
       "La banda está cargada, en tu muñeca y a menos de 1 m.",
       "Apaga el Bluetooth de tu celular. La banda mantiene un solo enlace Bluetooth a la vez, y la app del celular lo ocupa.",
-      "Xiaomi Mi Band 4, 5 o 6: ten a mano la clave de la banda. La Xiaomi Smart Band 7 y posteriores usan otra verificación que KAWSAY aún no soporta."
+      "Mi Band 4, 5 o 6: ten a mano la clave de la banda. Las Xiaomi Smart Band 7, 8 y 9 no comparten el pulso en vivo con otras apps — usa una banda de pecho o de brazo Bluetooth."
     ],
     "readyNote": "Ahora se abre una lista de dispositivos cercanos. Elige tu banda.",
     "openList": "Abrir lista de dispositivos",
@@ -302,7 +302,7 @@
       },
       "no-hr-service": {
         "title": "Esta banda no comparte el pulso",
-        "hint": "Se conectó, pero no ofrece el servicio estándar de pulso. Una Xiaomi Smart Band 7 puede necesitar su clave de vinculación. Usa una banda de pecho o los datos de demostración."
+        "hint": "Se conectó, pero las Xiaomi Smart Band 7, 8 y 9 no comparten el pulso en vivo con otras apps — una clave de vinculación no cambia eso. Usa una banda de pecho o de brazo Bluetooth (Polar, CooSpo, Wahoo), una Mi Band 5/6 con su clave, o los datos de demostración."
       },
       "failed": {
         "title": "No se pudo conectar",
