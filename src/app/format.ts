@@ -1,5 +1,7 @@
 import type { Environment, MissionContext } from '../domain/types';
 import { shipTime } from '../data/sol142';
+import uiEn from '../../content/ui.json';
+import uiEs from '../../content/ui.es.json';
 
 export type Lang = 'en' | 'es';
 
@@ -15,9 +17,23 @@ export function envLabel(env: Environment, lang: Lang = 'en'): string {
   return ENV_LABEL[env][lang];
 }
 
+const MISSION = { en: uiEn.mission, es: uiEs.mission };
+
+/** Days left until landing, never negative. */
+export function daysToLanding(ctx: Pick<MissionContext, 'missionDay' | 'arrivalDay'>): number {
+  return Math.max(0, ctx.arrivalDay - ctx.missionDay);
+}
+
+/** "Day 142 of 180". Mission days count from launch; landing is on `arrivalDay`. */
 export function missionLabel(ctx: MissionContext, lang: Lang = 'en'): string {
-  const tail = lang === 'es' ? `de ${ctx.arrivalDay}` : `of ${ctx.arrivalDay}`;
-  return `Sol ${ctx.missionDay} ${tail}`; // the environment has its own chip next to the title
+  return fill(MISSION[lang].label, { day: ctx.missionDay, total: ctx.arrivalDay });
+}
+
+/** "38 days to landing", "landing tomorrow" or "landing day". */
+export function landingLabel(ctx: MissionContext, lang: Lang = 'en'): string {
+  const days = daysToLanding(ctx);
+  const m = MISSION[lang];
+  return days === 0 ? m.landingToday : days === 1 ? m.landingTomorrow : fill(m.toLanding, { days });
 }
 
 export function delayLabel(min: number, lang: Lang = 'en'): string {

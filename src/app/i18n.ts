@@ -217,7 +217,7 @@ const PATTERNS: [RegExp, (m: RegExpMatchArray) => string][] = [
   [/^(.+) is in the expected range\.$/, (m) => `${tr(m[1], 'es')} está en el rango esperado.`],
   [/^(.+) is unusual for you \(more than 2 SD from your last (\d+) days\)\.$/, (m) => `${tr(m[1], 'es')} es inusual para ti (más de 2 DE respecto a tus últimos ${m[2]} días).`],
   [/^(.+) reported: (.+)\.$/, (m) => `${tr(m[1], 'es')}: ${label(m[2])}.`],
-  [/^Sol (\d+): bone has been releasing calcium for weeks\.$/, (m) => `Sol ${m[1]}: los huesos llevan semanas liberando calcio.`],
+  [/^Mission day (\d+): bone has been releasing calcium for weeks\.$/, (m) => `Día de misión ${m[1]}: los huesos llevan semanas liberando calcio.`],
   [/^(.+?) ([-\d.,]+) ?([A-Za-z%°]+)?: (.+)\.$/, (m) => `${tr(m[1], 'es')} ${m[2]}${m[3] ? ' ' + m[3] : ''}: ${label(m[4])}.`],
   // Compound findings
   [/^Headache reported \((.+) of 5\)\.$/, (m) => `Dolor de cabeza reportado (${m[1]} de 5).`],
