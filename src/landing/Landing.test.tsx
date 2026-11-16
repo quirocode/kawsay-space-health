@@ -18,6 +18,18 @@ describe('Landing page', () => {
     expect(screen.getByRole('link', { name: copy.cta.download })).toHaveAttribute('href', copy.links.download);
   });
 
+  it('loads the YouTube demo only after the visitor presses play', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<Landing />);
+    expect(container.querySelector('iframe')).toBeNull();
+    expect(screen.getByRole('img', { name: copy.video.poster })).toHaveAttribute('src', '/video/upright-demo-poster.webp');
+    expect(screen.getByRole('link', { name: copy.video.youtube })).toHaveAttribute('href', copy.links.youtube);
+
+    await user.click(screen.getByRole('button', { name: copy.video.play }));
+    const player = screen.getByTitle(copy.video.iframeTitle);
+    expect(player).toHaveAttribute('src', expect.stringMatching(/^https:\/\/www\.youtube-nocookie\.com\/embed\/YVjr5qVNuqQ\?autoplay=1/));
+  });
+
   it('shows the challenges, the advantages and the full technology list', () => {
     render(<Landing />);
     for (const p of copy.challenge.problems) expect(screen.getAllByText(p.title).length).toBeGreaterThan(0);
