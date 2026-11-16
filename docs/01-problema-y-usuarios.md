@@ -42,9 +42,9 @@ Hay decenas de equipos haciendo lo mismo: un tablero que dice **cómo estás hoy
 
 > **¿Con qué cuerpo vas a llegar?**
 
-### KAWSAY: el copiloto que te muestra tu yo del día del aterrizaje
+### UPRIGHT: el copiloto que te muestra tu yo del día del aterrizaje
 
-*(KAWSAY significa "vida" en quechua. Es un nombre de trabajo; se puede cambiar.)*
+*(El nombre viene de la primera tarea del día de llegada: ponerte de pie sin desmayarte. El repositorio y la URL del demo conservan el identificador anterior hasta que se renombre el despliegue.)*
 
 **1. Yo Futuro (trayectoria, no estado).**
 La pantalla principal muestra dos cuerpos: el de **hoy** y el del **día de llegada**, proyectado a partir de lo que el tripulante hace y mide. Cada acción (ejercicio, agua, sueño) mueve esa proyección a la vista. El número principal es la **Preparación para el aterrizaje**: ¿vas a poder pararte, ver, moverte y pensar ese día?

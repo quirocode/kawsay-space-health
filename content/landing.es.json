@@ -1,6 +1,6 @@
 {
-  "pageTitle": "KAWSAY — ¿Cómo llegará tu cuerpo al aterrizaje?",
-  "pageDescription": "KAWSAY, un copiloto de salud que proyecta el estado físico de los astronautas al aterrizar. Prototipo de NASA Space Apps Challenge 2026. No es un dispositivo médico.",
+  "pageTitle": "UPRIGHT — Aterriza de pie.",
+  "pageDescription": "UPRIGHT, un copiloto de salud que proyecta el estado físico de los astronautas al aterrizar. Prototipo de NASA Space Apps Challenge 2026. No es un dispositivo médico.",
   "nav": {
     "label": "Navegación principal",
     "nightMode": "Modo noche",
@@ -8,19 +8,19 @@
     "switchToNight": "Cambiar a modo noche",
     "switchLanguage": "Cambiar a inglés",
     "challenge": "El reto",
-    "advantages": "Por qué KAWSAY",
+    "advantages": "Por qué UPRIGHT",
     "technology": "Tecnología"
   },
   "hero": {
     "badge": "NASA Space Apps Challenge 2026",
-    "title": "KAWSAY",
-    "subtitle": "Un copiloto de salud para astronautas en misiones largas. Responde la pregunta que ningún panel contesta: ¿cómo llegará tu cuerpo al aterrizaje?",
+    "title": "UPRIGHT",
+    "subtitle": "Aterriza de pie. Un copiloto de salud que muestra el cuerpo con el que vas a llegar — y lo que lo cambia.",
     "primary": "Try the demo",
     "secondary": "Mira el video"
   },
   "tour": {
     "nav": "Explora la demo",
-    "title": "Así funciona la demo de KAWSAY",
+    "title": "Así funciona la demo de UPRIGHT",
     "intro": "Estás en el día 142 de una misión simulada. Elige una pantalla para ver qué hace y probarla por tu cuenta.",
     "tryThis": "Prueba esto",
     "openScreen": "Abrir en la demo",
@@ -37,7 +37,7 @@
       "check": {
         "tab": "Chequeo diario",
         "title": "Registra un síntoma y descubre qué hacer",
-        "description": "Registra cómo te sientes y revisa las mediciones. KAWSAY cruza los síntomas con datos como el sueño y el CO₂ de la cabina para explicar sus hallazgos.",
+        "description": "Registra cómo te sientes y revisa las mediciones. UPRIGHT cruza los síntomas con datos como el sueño y el CO₂ de la cabina para explicar sus hallazgos.",
         "action": "Abre el menú «Demo» y elige la escena de dolor de cabeza para ver un hallazgo con datos ya cargados.",
         "imageAlt": "Pantalla de chequeo diario con los campos de presión arterial y el teclado en pantalla."
       },
@@ -58,7 +58,7 @@
     }
   },
   "video": {
-    "title": "KAWSAY en",
+    "title": "UPRIGHT en",
     "titleAccent": "30 segundos",
     "subtitle": "Un tripulante deja de entrenar durante una semana, ve cómo empeora su proyección para el aterrizaje y toma medidas para recuperarse.",
     "soon": "Video disponible próximamente",
@@ -106,7 +106,7 @@
       {
         "icon": "loop",
         "title": "Seguimiento autónomo",
-        "text": "Mide, entiende, actúa, verifica y escala. KAWSAY comprueba si la medida funcionó antes de pedir ayuda a la Tierra."
+        "text": "Mide, entiende, actúa, verifica y escala. UPRIGHT comprueba si la medida funcionó antes de pedir ayuda a la Tierra."
       },
       {
         "icon": "watch",
@@ -265,7 +265,7 @@
     ],
     "connectTitle": "Contacto",
     "repoLabel": "Repositorio en GitHub",
-    "copyright": "© 2026 KAWSAY. Proyecto presentado a NASA Space Apps Challenge 2026.",
+    "copyright": "© 2026 UPRIGHT. Proyecto presentado a NASA Space Apps Challenge 2026.",
     "disclaimer": "Prototipo de hackatón. No es un dispositivo médico."
   },
   "links": {

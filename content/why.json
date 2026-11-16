@@ -47,11 +47,11 @@
       "nextWeek": "In next week's test.",
       "escalate": "If it does not get better, or you feel worse, call the crew medical officer.",
       "escalateNow": "This goes into the brief for the flight surgeon on Earth. Tell a crewmate now too.",
-      "none": "Keep your routine. KAWSAY looks again at your next check."
+      "none": "Keep your routine. UPRIGHT looks again at your next check."
     },
     "generic": {
       "green": { "meaning": "{name} is inside the expected range.", "doNow": "Nothing to do. Keep your routine." },
-      "stale": { "meaning": "KAWSAY cannot judge this: the reading is too old or missing. Old data is never shown as OK.", "doNow": "Measure it in your next check." },
+      "stale": { "meaning": "UPRIGHT cannot judge this: the reading is too old or missing. Old data is never shown as OK.", "doNow": "Measure it in your next check." },
       "unusual": { "meaning": "This value is inside the general range, but unusual for you.", "doNow": "Measure again later today to see if it repeats." }
     },
     "indicators": {
@@ -127,7 +127,7 @@
       "resting_tachycardia": "Your heart is beating fast while you rest. Too little water, short sleep, stress, fever or a heart rhythm problem can cause it.",
       "resting_bradycardia": "Your heart is beating very slowly while you are awake. With dizziness or tiredness, it needs a check.",
       "low_spo2": "Your blood oxygen is low. Your brain needs oxygen first, so low oxygen causes headache, confusion and poor judgement.",
-      "watch_stale": "The watch stopped sending data. KAWSAY cannot look after you until it is back, so this shows as old data, never as OK."
+      "watch_stale": "The watch stopped sending data. UPRIGHT cannot look after you until it is back, so this shows as old data, never as OK."
     }
   },
   "es": {
@@ -178,11 +178,11 @@
       "nextWeek": "En la prueba de la próxima semana.",
       "escalate": "Si no mejora, o te sientes peor, llama al oficial médico de la tripulación.",
       "escalateNow": "Esto va al informe para el médico de vuelo en Tierra. Avisa también ahora a un compañero.",
-      "none": "Sigue con tu rutina. KAWSAY lo vuelve a mirar en tu próximo chequeo."
+      "none": "Sigue con tu rutina. UPRIGHT lo vuelve a mirar en tu próximo chequeo."
     },
     "generic": {
       "green": { "meaning": "{name} está dentro del rango esperado.", "doNow": "Nada que hacer. Sigue con tu rutina." },
-      "stale": { "meaning": "KAWSAY no puede juzgarlo: la lectura es demasiado antigua o falta. Un dato viejo nunca se muestra como OK.", "doNow": "Mídelo en tu próximo chequeo." },
+      "stale": { "meaning": "UPRIGHT no puede juzgarlo: la lectura es demasiado antigua o falta. Un dato viejo nunca se muestra como OK.", "doNow": "Mídelo en tu próximo chequeo." },
       "unusual": { "meaning": "Este valor está dentro del rango general, pero es inusual en ti.", "doNow": "Mide otra vez más tarde hoy para ver si se repite." }
     },
     "indicators": {
@@ -258,7 +258,7 @@
       "resting_tachycardia": "Tu corazón late rápido mientras descansas. Puede deberse a poca agua, poco sueño, estrés, fiebre o un problema de ritmo cardíaco.",
       "resting_bradycardia": "Tu corazón late muy lento estando despierto. Con mareo o cansancio, hay que revisarlo.",
       "low_spo2": "Tu oxígeno en sangre está bajo. El cerebro es el primero que lo necesita: la falta de oxígeno causa dolor de cabeza, confusión y malas decisiones.",
-      "watch_stale": "El reloj dejó de enviar datos. KAWSAY no puede cuidarte hasta que vuelva, así que se muestra como dato viejo, nunca como OK."
+      "watch_stale": "El reloj dejó de enviar datos. UPRIGHT no puede cuidarte hasta que vuelva, así que se muestra como dato viejo, nunca como OK."
     }
   }
 }

@@ -4,7 +4,7 @@
 
 ---
 
-Write the NASA Space Apps 2026 submission for KAWSAY (challenge: "Create Health Monitoring Software for Astronauts on Space Missions"). Everything in English.
+Write the NASA Space Apps 2026 submission for UPRIGHT (challenge: "Create Health Monitoring Software for Astronauts on Space Missions"). Everything in English.
 
 ## 1. Project page (fill every checkbox in `docs/SUBMISSION.md`)
 - **Name + one sentence** (≤ 20 words). Must contain the question "What body will you land with?".
@@ -25,6 +25,6 @@ Write it as a table: `time | what is on screen | subtitle (≤ 10 words)`. Requi
 | 10–16 s | Headache → finding "Headache + short sleep + high cabin CO₂" → one action |
 | 16–21 s | 30 min later: "Improved"; brief "Arrives on Earth in 14 min" |
 | 21–27 s | Drag the slider to arrival with the plan: readiness 66 → 89, three of four landing tasks turn OK |
-| 27–30 s | "KAWSAY — life, in Quechua. Prototype, not a medical device." |
+| 27–30 s | "UPRIGHT — land on your feet. Prototype, not a medical device." |
 
 No NASA logos or patches. Any AI-generated image or clip must carry a visible "AI-generated" watermark.

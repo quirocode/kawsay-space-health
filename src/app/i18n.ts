@@ -150,8 +150,8 @@ const TR_EXTRA: Record<string, string> = {
     'Cerca del 70 % de los astronautas de la ISS muestra algo de hinchazón ocular (SANS, NASA). Cada día con visión borrosa lo reduce (prototipo).',
   'Short sleep slows decisions (NASA sleep risk). −8 points per hour under 7 h (prototype).':
     'El sueño corto ralentiza las decisiones (riesgo de sueño de la NASA). −8 puntos por cada hora bajo 7 h (prototipo).',
-  'KAWSAY prototype value (general adult reference, not a NASA figure)':
-    'Valor de prototipo de KAWSAY (referencia de adulto general, no una cifra de NASA)',
+  'UPRIGHT prototype value (general adult reference, not a NASA figure)':
+    'Valor de prototipo de UPRIGHT (referencia de adulto general, no una cifra de NASA)',
   '1.5 to 2 L': '1,5 a 2 L',
   'Below 4 h': 'Menos de 4 h',
   'Under 1.5 L': 'Menos de 1,5 L',

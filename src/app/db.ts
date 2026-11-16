@@ -173,7 +173,7 @@ function open(factory: IDBFactory): Promise<IDBDatabase> {
     };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
-    req.onblocked = () => reject(new Error('KAWSAY database is open in another window with an older version.'));
+    req.onblocked = () => reject(new Error('UPRIGHT database is open in another window with an older version.'));
   });
 }
 

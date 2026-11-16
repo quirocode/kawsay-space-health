@@ -46,8 +46,8 @@ export function CabinEvidence({ readings, nowTs, context }: { readings: Reading[
       </dl>
       <p className="mt-3 border-t border-line pt-3 text-xs text-ink-2">
         {es
-          ? 'NASA V2 6004 fija un máximo de 3 mmHg en promedio durante una hora para el hábitat. KAWSAY exige cobertura completa con muestras separadas por hasta 15 min. El cruce con síntomas y sueño es una regla del prototipo.'
-          : 'NASA V2 6004 sets a 1-hour habitat average limit of 3 mmHg. KAWSAY requires full coverage with samples at most 15 min apart. Combining symptoms and sleep is a prototype rule.'}
+          ? 'NASA V2 6004 fija un máximo de 3 mmHg en promedio durante una hora para el hábitat. UPRIGHT exige cobertura completa con muestras separadas por hasta 15 min. El cruce con síntomas y sueño es una regla del prototipo.'
+          : 'NASA V2 6004 sets a 1-hour habitat average limit of 3 mmHg. UPRIGHT requires full coverage with samples at most 15 min apart. Combining symptoms and sleep is a prototype rule.'}
         {' '}<a className="font-semibold text-brand-ink underline" href={SRC.co2.url} target="_blank" rel="noreferrer">{es ? 'Ver norma NASA' : 'View NASA standard'}</a>
       </p>
     </section>

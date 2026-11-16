@@ -15,7 +15,7 @@
     "showAll": "Show all structures",
     "zones": "Zone states and details",
     "noData": "No zone data",
-    "zoneNote": "Colors indicate the state of a KAWSAY body zone. Individual muscles share the zone's assessment. This atlas includes selected structures; the list below includes every monitored zone.",
+    "zoneNote": "Colors indicate the state of a UPRIGHT body zone. Individual muscles share the zone's assessment. This atlas includes selected structures; the list below includes every monitored zone.",
     "regions": {
       "headNeck": "Head & neck",
       "chest": "Chest",
@@ -46,7 +46,7 @@
     "showAll": "Mostrar todas las estructuras",
     "zones": "Estado y detalles de las zonas",
     "noData": "Sin datos de la zona",
-    "zoneNote": "Los colores indican el estado de una zona de KAWSAY. Los músculos individuales comparten la evaluación de su zona. El atlas incluye estructuras seleccionadas; la lista contiene todas las zonas monitoreadas.",
+    "zoneNote": "Los colores indican el estado de una zona de UPRIGHT. Los músculos individuales comparten la evaluación de su zona. El atlas incluye estructuras seleccionadas; la lista contiene todas las zonas monitoreadas.",
     "regions": {
       "headNeck": "Cabeza y cuello",
       "chest": "Pecho",

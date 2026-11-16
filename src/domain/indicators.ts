@@ -1,6 +1,6 @@
 // src/domain/indicators.ts
 /**
- * KAWSAY — indicator catalog (P3-01). 18 indicators, the challenge's six first.
+ * UPRIGHT — indicator catalog (P3-01). 18 indicators, the challenge's six first.
  * Integrated by P1 from P3's DeepSeek draft (src/data/indicators.ts): ids, paths and
  * thresholds aligned with docs/tasks/P3-01-indicators.md; P3's copy kept where it fit.
  * Official numbers used here: CO₂ 3 mmHg (SRC.co2) and exercise 90 min/day (SRC.fitness). Everything else is a prototype value.
@@ -34,7 +34,7 @@ export const SRC = {
   environment: nasa('NASA HRP — Hazard: Hostile and Closed Environments', 'https://www.nasa.gov/hrp/hazard-hostile-closed-environments/'),
   co2: nasa('NASA-STD-3001 Vol. 2 Rev. F · V2 6004 — Cabin carbon dioxide', 'https://www.nasa.gov/wp-content/uploads/2025/05/nasa-std-3001-vol-2.pdf'),
   prototype: {
-    label: 'KAWSAY prototype value (general adult reference, not a NASA figure)',
+    label: 'UPRIGHT prototype value (general adult reference, not a NASA figure)',
     url: 'https://github.com/quirocode/kawsay-space-health/blob/main/docs/04-recursos-nasa.md',
     official: false,
   },
@@ -110,7 +110,7 @@ export const INDICATORS: IndicatorDef[] = [
     risks: ['hypoxia', 'behavioral'], hazards: ['environment'], input: 'scale_1_5', cadence: 'per_event', staleAfterHours: 12,
     thresholds: [red('Severe', { min: 5 }), yellow('Moderate to strong', { min: 3, max: 5 })],
     howToMeasure: 'Rate it from 1 (none) to 5 (severe)',
-    whyItMatters: 'A headache can come from short sleep, high cabin CO₂ or low oxygen. KAWSAY checks them together.',
+    whyItMatters: 'A headache can come from short sleep, high cabin CO₂ or low oxygen. UPRIGHT checks them together.',
     sources: [SRC.hypoxia, SRC.co2, P],
   },
   {

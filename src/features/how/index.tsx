@@ -5,7 +5,7 @@ import { StatusBadge } from '../../components/StatusBadge';
 import { BTN_PRIMARY, CARD, PANEL, Screen, SourceTag } from '../../components/ui';
 import type { Status } from '../../domain/types';
 
-/** "How KAWSAY decides": the whole reasoning path on one screen, so nothing feels like a black box. */
+/** "How UPRIGHT decides": the whole reasoning path on one screen, so nothing feels like a black box. */
 export function HowScreen() {
   const lang = useLang();
   const t = howCopy[lang];

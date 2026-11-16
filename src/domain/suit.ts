@@ -46,7 +46,7 @@ export interface SuitSignalDef {
   sources: Source[];
 }
 
-const proto = (label: string): Source => ({ label: `KAWSAY prototype value — ${label}`, url: SRC.prototype.url, official: false });
+const proto = (label: string): Source => ({ label: `UPRIGHT prototype value — ${label}`, url: SRC.prototype.url, official: false });
 const EMU_PRESSURE: Source = {
   label: 'NASA — EMU nominal operating pressure 30 kPa (4.3 psia)',
   url: 'https://ntrs.nasa.gov/api/citations/20120003917/downloads/20120003917.pdf',

@@ -1,11 +1,11 @@
 'use strict';
 /**
- * KAWSAY desktop shell (P1). Wraps the built web app (dist/) in a window that
+ * UPRIGHT desktop shell (P1). Wraps the built web app (dist/) in a window that
  * never touches the network: every request is answered from disk, anything else
  * is cancelled. There is no server and no backend process.
  *
  * Run:    npm run desktop:dev      (needs `npm run build` first)
- * Build:  npm run desktop:build    (writes release/KAWSAY-win32-x64/KAWSAY.exe)
+ * Build:  npm run desktop:build    (writes release/UPRIGHT-win32-x64/UPRIGHT.exe)
  */
 const { app, BrowserWindow, dialog, ipcMain, protocol, session, shell } = require('electron');
 const fs = require('node:fs');
@@ -84,7 +84,7 @@ function onBluetoothPairing(details, respond) {
   if (details.pairingKind === 'confirmPin') {
     const [win] = BrowserWindow.getAllWindows();
     void dialog.showMessageBox(win, {
-      type: 'question', title: 'KAWSAY', message: `Does the band show ${details.pin}?`,
+      type: 'question', title: 'UPRIGHT', message: `Does the band show ${details.pin}?`,
       buttons: ['Yes, pair', 'Cancel'], cancelId: 1, noLink: true,
     }).then(({ response }) => respond({ confirmed: response === 0 }));
     return;
@@ -98,7 +98,7 @@ function createWindow() {
     height: 900,
     minWidth: 1024,
     minHeight: 720,
-    title: 'KAWSAY',
+    title: 'UPRIGHT',
     backgroundColor: '#0F1517',
     autoHideMenuBar: true,
     webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true, preload: path.join(__dirname, 'preload.cjs') },

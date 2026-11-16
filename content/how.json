@@ -1,14 +1,14 @@
 {
   "en": {
     "button": "How it works",
-    "title": "How KAWSAY decides",
-    "intro": "KAWSAY never guesses. Every colour you see comes from a written rule, a number you can check, and a source you can open. Here is the whole path, in plain words.",
+    "title": "How UPRIGHT decides",
+    "intro": "UPRIGHT never guesses. Every colour you see comes from a written rule, a number you can check, and a source you can open. Here is the whole path, in plain words.",
     "loopTitle": "The loop, every time",
     "loop": [
       { "name": "Measure", "text": "A sensor (wrist band, suit, cuff) or you give a number." },
       { "name": "Understand", "text": "Fixed rules compare it with a safe range and with your own last days. Rules also look at several readings together, because space risks feed each other." },
       { "name": "Act", "text": "You get one to five short steps, most urgent first." },
-      { "name": "Verify", "text": "KAWSAY asks you to measure again and checks if it got better." },
+      { "name": "Verify", "text": "UPRIGHT asks you to measure again and checks if it got better." },
       { "name": "Escalate", "text": "If it did not, it writes a one-screen brief for the flight surgeon, ready for the communication delay." }
     ],
     "statusTitle": "What the colours mean",
@@ -16,14 +16,14 @@
       "green": "Inside the safe range. Nothing to do.",
       "yellow": "Watch band. Not dangerous yet; a small action now avoids a bigger one later.",
       "red": "Act band. Do the steps now and tell a crewmate.",
-      "stale": "Old or missing data. KAWSAY never shows missing data as OK."
+      "stale": "Old or missing data. UPRIGHT never shows missing data as OK."
     },
     "sourcesTitle": "Where the numbers come from",
     "nasa": "A figure published by NASA or CSA. You can open the page.",
     "prototype": "Our own value, from general adult medicine or a NASA test procedure. Honest, but not an official NASA limit.",
     "phasesTitle": "Why the mission phase matters",
-    "phasesText": "The same heart rate means different things on the exercise bike, inside an EVA suit, or standing up for the first time after landing. KAWSAY changes what it watches and what it tells you depending on where you are: launch, cruise, spacewalk, entry or the first hours on the ground.",
-    "aiTitle": "What KAWSAY does not do",
+    "phasesText": "The same heart rate means different things on the exercise bike, inside an EVA suit, or standing up for the first time after landing. UPRIGHT changes what it watches and what it tells you depending on where you are: launch, cruise, spacewalk, entry or the first hours on the ground.",
+    "aiTitle": "What UPRIGHT does not do",
     "ai": [
       "It does not diagnose. It is not a medical device.",
       "No AI model decides your status. Only the written rules do.",
@@ -33,14 +33,14 @@
   },
   "es": {
     "button": "Cómo funciona",
-    "title": "Cómo decide KAWSAY",
-    "intro": "KAWSAY nunca adivina. Cada color que ves sale de una regla escrita, un número que puedes revisar y una fuente que puedes abrir. Este es el camino completo, en palabras simples.",
+    "title": "Cómo decide UPRIGHT",
+    "intro": "UPRIGHT nunca adivina. Cada color que ves sale de una regla escrita, un número que puedes revisar y una fuente que puedes abrir. Este es el camino completo, en palabras simples.",
     "loopTitle": "El ciclo, siempre",
     "loop": [
       { "name": "Medir", "text": "Un sensor (banda, traje, tensiómetro) o tú das un número." },
       { "name": "Entender", "text": "Reglas fijas lo comparan con un rango seguro y con tus propios últimos días. También miran varias lecturas juntas, porque los riesgos del espacio se potencian entre sí." },
       { "name": "Actuar", "text": "Recibes de uno a cinco pasos cortos, el más urgente primero." },
-      { "name": "Verificar", "text": "KAWSAY te pide medir otra vez y comprueba si mejoró." },
+      { "name": "Verificar", "text": "UPRIGHT te pide medir otra vez y comprueba si mejoró." },
       { "name": "Escalar", "text": "Si no mejoró, escribe un informe de una pantalla para el cirujano de vuelo, listo para el retraso de comunicación." }
     ],
     "statusTitle": "Qué significan los colores",
@@ -48,14 +48,14 @@
       "green": "Dentro del rango seguro. Nada que hacer.",
       "yellow": "Franja de vigilancia. Aún no es peligroso; una acción pequeña ahora evita una mayor después.",
       "red": "Franja de acción. Haz los pasos ya y avisa a un compañero.",
-      "stale": "Dato viejo o faltante. KAWSAY nunca muestra datos faltantes como correctos."
+      "stale": "Dato viejo o faltante. UPRIGHT nunca muestra datos faltantes como correctos."
     },
     "sourcesTitle": "De dónde salen los números",
     "nasa": "Una cifra publicada por NASA o la CSA. Puedes abrir la página.",
     "prototype": "Un valor nuestro, de medicina general de adultos o de un procedimiento de prueba de NASA. Honesto, pero no es un límite oficial de NASA.",
     "phasesTitle": "Por qué importa la fase de la misión",
-    "phasesText": "El mismo pulso significa cosas distintas en la bicicleta, dentro de un traje EVA o al ponerte de pie por primera vez tras aterrizar. KAWSAY cambia lo que vigila y lo que te dice según dónde estés: lanzamiento, crucero, caminata espacial, reentrada o primeras horas en tierra.",
-    "aiTitle": "Lo que KAWSAY no hace",
+    "phasesText": "El mismo pulso significa cosas distintas en la bicicleta, dentro de un traje EVA o al ponerte de pie por primera vez tras aterrizar. UPRIGHT cambia lo que vigila y lo que te dice según dónde estés: lanzamiento, crucero, caminata espacial, reentrada o primeras horas en tierra.",
+    "aiTitle": "Lo que UPRIGHT no hace",
     "ai": [
       "No diagnostica. No es un dispositivo médico.",
       "Ningún modelo de IA decide tu estado. Solo las reglas escritas.",

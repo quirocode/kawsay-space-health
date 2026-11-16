@@ -1,5 +1,5 @@
 /**
- * The slice of the Web Bluetooth API that KAWSAY uses. TypeScript's DOM library does not
+ * The slice of the Web Bluetooth API that UPRIGHT uses. TypeScript's DOM library does not
  * ship these types; declaring them here avoids a dependency.
  * Spec: https://webbluetoothcg.github.io/web-bluetooth/
  */
