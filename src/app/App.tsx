@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { Link, Route, Router, Switch, useLocation } from 'wouter';
 import { useHashLocation } from 'wouter/use-hash-location';
 import { useApp, type Scene } from './store';
+import { CREW_ROSTER, evaluateSilentSpaceRisks, getCrewMember } from '../domain/crew';
 import { clock, missionLabel, landingLabel, delayLabel, envLabel, daysToLanding, fill } from './format';
 import { syncLang, useCopy, useLang } from './i18n';
 import { FutureSelfScreen } from '../features/future-self/FutureSelfScreen';
@@ -43,6 +44,7 @@ function TopBar() {
     <header className="mission-header">
       <div className="mission-context">
         <MissionName />
+        <CrewQuickSwitcher />
         <span className="mission-divider" aria-hidden="true" />
         <Link href="/environment" aria-label={`${ui.nav.environment}: ${env}`} className="mission-environment">
           <Glyph name="environment" size={16} />{env}
@@ -121,6 +123,92 @@ function MissionName() {
       <span className="text-[16px] font-bold">{mission.name}</span>
       <span className="text-[14px] text-ink-2">{mission.crew}</span>
     </Link>
+  );
+}
+
+/** Quick selector for the 4-astronaut crew: switches profile, pre-existing conditions, and isolated readings. */
+function CrewQuickSwitcher() {
+  const activeCrewId = useApp((s) => s.activeCrewId);
+  const selectCrewMember = useApp((s) => s.selectCrewMember);
+  const readings = useApp((s) => s.readings);
+  const ctx = useApp((s) => s.context);
+  const lang = useLang();
+  const es = lang === 'es';
+  const [open, setOpen] = useState(false);
+  const active = getCrewMember(activeCrewId);
+  const silentAlerts = evaluateSilentSpaceRisks(active, readings, ctx);
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        className="flex min-h-11 items-center gap-1.5 rounded-full border border-line bg-surface-2 px-3 py-1 text-[13px] font-bold text-ink hover:border-brand-ink"
+      >
+        <span className="rounded-full bg-brand px-1.5 py-0.5 text-[11px] text-on-brand">{active.role}</span>
+        <span>{es ? '4 Tripulantes' : '4 Crew'}</span>
+        {silentAlerts.length > 0 && (
+          <span className="rounded-full bg-watch px-1.5 py-0.5 text-[11px] text-bg" title={es ? 'Riesgos silenciosos detectados' : 'Silent risks detected'}>
+            {silentAlerts.length}
+          </span>
+        )}
+        <span aria-hidden="true">⌄</span>
+      </button>
+      {open && (
+        <div
+          role="menu"
+          aria-label={es ? 'Seleccionar astronauta de la tripulación' : 'Select crew astronaut'}
+          className="absolute left-0 top-full z-40 mt-2 flex w-[360px] max-w-[92vw] flex-col gap-1.5 rounded-card border border-line bg-surface p-3 shadow-lg"
+        >
+          <p className="px-1 text-[13px] font-bold text-ink-2">
+            {es ? 'Tripulación activa (4 Astronautas · Perfiles aislados)' : 'Active Crew (4 Astronauts · Isolated Profiles)'}
+          </p>
+          {CREW_ROSTER.map((member) => {
+            const isSelected = member.id === active.id;
+            return (
+              <button
+                key={member.id}
+                type="button"
+                role="menuitemradio"
+                aria-checked={isSelected}
+                onClick={() => {
+                  selectCrewMember(member.id);
+                  setOpen(false);
+                }}
+                className={`flex flex-col gap-0.5 rounded-chip border p-2.5 text-left ${
+                  isSelected ? 'border-brand-ink bg-brand-bg' : 'border-line bg-surface-2 hover:border-brand-ink'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[15px] font-bold text-ink">
+                    <span className="mr-1.5 rounded bg-brand px-1.5 py-0.5 text-[12px] text-on-brand">{member.role}</span>
+                    {member.name}
+                  </span>
+                  <span className="text-[12px] font-semibold text-brand-ink">
+                    {isSelected ? (es ? 'Activo' : 'Active') : (es ? 'Cambiar' : 'Switch')}
+                  </span>
+                </div>
+                <span className="text-[12px] text-ink-2">{member.roleTitle[lang]} · {member.assignedDevice}</span>
+                {member.preExisting[0] && (
+                  <span className="text-[12px] text-watch">
+                    {es ? 'Preexistencia:' : 'Pre-existing:'} {member.preExisting[0].name[lang]}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+          <Link
+            href="/environment"
+            onClick={() => setOpen(false)}
+            className="mt-1 text-center text-[13px] font-bold text-brand-ink underline"
+          >
+            {es ? 'Ver matriz clínica de los 4 astronautas y riesgos silenciosos →' : 'View 4-crew clinical matrix & silent risks →'}
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }
 
