@@ -6,7 +6,9 @@ import { CREW_ALERT_AFTER_MS, demandingAlert, isOpen, useApp, type AlertRecord }
 import { clock, countdown, dec, fill } from '../../app/format';
 import { sampleAt, windowOf } from '../../data/watchSeries';
 import { StatusBadge } from '../../components/StatusBadge';
-import { BTN_PRIMARY, BTN_SECONDARY, SourceList, Thread } from '../../components/ui';
+import { BTN_PRIMARY, BTN_SECONDARY, Thread } from '../../components/ui';
+import { WhyPanel } from '../../components/WhyPanel';
+import { explainAlert } from '../../app/why/explain';
 import { activityMinutes, RESTING_BAND } from './WatchScreen';
 import { startAlarm, stopAlarm } from './alarmSound';
 
@@ -50,6 +52,7 @@ export function StateNow({ compact = false }: { compact?: boolean }) {
 }
 
 function AlarmBody({ record }: { record: AlertRecord }) {
+  const lang = useLang();
   const nowTs = useApp((s) => s.nowTs);
   const ack = useApp((s) => s.ackAlert);
   const silence = useApp((s) => s.silenceAlert);
@@ -72,7 +75,7 @@ function AlarmBody({ record }: { record: AlertRecord }) {
       <p className="text-[20px] text-ink-2">
         {te(alert.because[1])} {alert.signal === 'heartRate' && fill(flow.alarm.usual, { low: RESTING_BAND[0], high: RESTING_BAND[1] })}
       </p>
-      <SourceList sources={alert.sources} />
+      <WhyPanel why={explainAlert(alert, lang, te)} hideDoNow />
 
       <div className="grid flex-1 gap-5 lg:grid-cols-2">
         <StateNow />

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { ui, useLang } from '../app/i18n';
 import type { Source } from '../domain/types';
+import { WHY_COPY } from '../app/why/explain';
 
 /** Shared building blocks (P2). Colours come from the design tokens, never hard-coded. */
 export const BTN_PRIMARY = 'workspace-primary flex min-h-[72px] items-center justify-center rounded-card bg-brand px-6 text-[20px] font-bold text-on-brand disabled:opacity-40';
@@ -17,21 +18,32 @@ export function SourceTag({ official }: { official: boolean }) {
   );
 }
 
-/** The "Why?" list: every source behind a figure. The label is enough when offline. */
-export function SourceList({ sources }: { sources: Source[] }) {
+/** Every source behind a figure, NASA or Prototype. The label is enough when offline. */
+export function SourceItems({ sources }: { sources: Source[] }) {
   const seen = new Set<string>();
   const unique = sources.filter((s) => (seen.has(s.url) ? false : (seen.add(s.url), true)));
   return (
+    <ul className="mt-1 flex flex-col gap-2">
+      {unique.map((s) => (
+        <li key={s.url} className="flex items-start gap-2">
+          <SourceTag official={s.official} />
+          <a href={s.url} target="_blank" rel="noreferrer" className="underline">{s.label}</a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/**
+ * The sources behind a figure, folded. Used as evidence next to an explanation; the
+ * explanation itself is WhyPanel ("Why?"), never a bare list of links.
+ */
+export function SourceList({ sources, label }: { sources: Source[]; label?: string }) {
+  const lang = useLang();
+  return (
     <details className="text-[15px] text-ink-2">
-      <summary className="inline-flex min-h-12 cursor-pointer items-center font-bold text-brand-ink">{ui.why.title}</summary>
-      <ul className="mt-1 flex flex-col gap-2">
-        {unique.map((s) => (
-          <li key={s.url} className="flex items-start gap-2">
-            <SourceTag official={s.official} />
-            <a href={s.url} target="_blank" rel="noreferrer" className="underline">{s.label}</a>
-          </li>
-        ))}
-      </ul>
+      <summary className="inline-flex min-h-12 cursor-pointer items-center font-bold text-brand-ink">{label ?? WHY_COPY[lang].labels.sources}</summary>
+      <SourceItems sources={sources} />
     </details>
   );
 }

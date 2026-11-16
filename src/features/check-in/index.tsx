@@ -4,7 +4,7 @@ import { ui } from '../../app/i18n';
 import { flow } from '../../app/i18n';
 import { indicators as indicatorCopy } from '../../app/i18n';
 import { te, useLang } from '../../app/i18n';
-import type { BodyZone, Evaluation, IndicatorDef, Reading } from '../../domain/types';
+import type { BodyZone, Evaluation, Finding, IndicatorDef, Reading } from '../../domain/types';
 import { engine } from '../../app/engine';
 import { useApp } from '../../app/store';
 import { ago, clock, dec, fill } from '../../app/format';
@@ -12,6 +12,8 @@ import { StatusBadge } from '../../components/StatusBadge';
 import { BTN_PRIMARY, BTN_SECONDARY, CARD, NumberPad, PANEL, Screen, SourceList } from '../../components/ui';
 import { cabinCo2 } from '../../domain/cabinCo2';
 import { readingOrigin } from '../../components/readingEvidence';
+import { WhyPanel } from '../../components/WhyPanel';
+import { explainEvaluation } from '../../app/why/explain';
 import { BodyFigure } from '../future-self/BodyFigure';
 import { todayZones } from '../future-self/zones';
 
@@ -301,7 +303,7 @@ function Summary({ onAgain }: { onAgain: () => void }) {
 
           <ul className="flex flex-col gap-2">
             {rows.length === 0 && <li className={PANEL}>{zone ? flow.check.noIndicators : ui.check.summaryOk}</li>}
-            {rows.map(({ def, e }) => <IndicatorRow key={def.id} def={def} e={e} reading={latest.get(def.id)} nowTs={nowTs} co2Average={def.id === 'cabin_co2' ? cabinCo2(readings, nowTs).value : undefined} />)}
+            {rows.map(({ def, e }) => <IndicatorRow key={def.id} def={def} e={e} reading={latest.get(def.id)} readings={readings} findings={findings} nowTs={nowTs} co2Average={def.id === 'cabin_co2' ? cabinCo2(readings, nowTs).value : undefined} />)}
           </ul>
 
           <div className="mt-auto grid grid-cols-2 gap-3">
@@ -316,9 +318,16 @@ function Summary({ onAgain }: { onAgain: () => void }) {
   );
 }
 
-function IndicatorRow({ def, e, reading, nowTs, co2Average }: { def: IndicatorDef; e: Evaluation; reading: Reading | undefined; nowTs: number; co2Average?: number | null }) {
+function IndicatorRow({ def, e, reading, readings, findings, nowTs, co2Average }: { def: IndicatorDef; e: Evaluation; reading: Reading | undefined; readings: Reading[]; findings: Finding[]; nowTs: number; co2Average?: number | null }) {
   const lang = useLang();
   const value = co2Average !== undefined ? (co2Average === null ? '–' : dec(Number(co2Average.toFixed(2)), lang)) : !reading ? '–' : def.input === 'boolean' ? (reading.value ? (lang === 'es' ? 'Sí' : 'Yes') : 'No') : dec(String(reading.value), lang);
+  const why = useMemo(() => explainEvaluation({
+    def, evaluation: e, reading, value: co2Average, readings, findings, nowTs, lang,
+    levelNames: ui.status, translate: te,
+  }), [def, e, reading, co2Average, readings, findings, nowTs, lang]);
+  // The name and value are already in the row: keep only the band ("160 or more"), not the whole sentence again.
+  const reason = te(e.reason);
+  const short = (e.status === 'red' || e.status === 'yellow') && reason.includes(': ') ? reason.slice(reason.lastIndexOf(': ') + 2) : reason;
   return (
     <li className={`${PANEL} flex flex-col gap-1`}>
       <div className="flex flex-wrap items-center gap-3">
@@ -327,10 +336,10 @@ function IndicatorRow({ def, e, reading, nowTs, co2Average }: { def: IndicatorDe
         <span className="ml-auto"><StatusBadge status={e.status} size="sm" /></span>
       </div>
       <p className="text-[15px] text-ink-2">
-        {te(e.reason)}
+        {short}
         {reading && ` · ${readingOrigin(reading, lang)} · ${fill(flow.check.ageAgo, { age: ago(nowTs - reading.ts, lang) })}`}
       </p>
-      <SourceList sources={e.sources} />
+      <WhyPanel why={why} />
     </li>
   );
 }
