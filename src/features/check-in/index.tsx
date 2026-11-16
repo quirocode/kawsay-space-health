@@ -16,6 +16,7 @@ import { WhyPanel } from '../../components/WhyPanel';
 import { explainEvaluation } from '../../app/why/explain';
 import { BodyFigure } from '../future-self/BodyFigure';
 import { todayZones } from '../future-self/zones';
+import crewCopy from '../../../content/crew.json';
 
 type Copy = { howToMeasure: string[]; whyItMatters: string; scaleLabels: string[] | null };
 const COPY = indicatorCopy as unknown as Record<string, Copy>;
@@ -25,7 +26,7 @@ type Step =
   | { key: keyof typeof flow.check.steps; kind: 'scale'; fields: [string] }
   | { key: keyof typeof flow.check.steps; kind: 'symptoms'; fields: string[] };
 
-const SYMPTOMS = ['symptom_dizziness', 'symptom_vision', 'symptom_confusion', 'symptom_joint_pain', 'symptom_skin'] as const;
+const SYMPTOMS = ['symptom_dizziness', 'symptom_vision', 'symptom_confusion', 'symptom_joint_pain', 'symptom_skin', 'symptom_neck', 'symptom_flank_pain'] as const;
 
 /** What the watch cannot measure, in under two minutes. One question per screen. */
 const STEPS: Step[] = [
@@ -39,6 +40,22 @@ const STEPS: Step[] = [
 ];
 
 const MAX_DIGITS = 5;
+
+/**
+ * Physically possible values (not health limits): outside them the number is a typing error,
+ * so the check stops and asks again instead of raising a false alarm or hiding a real one.
+ */
+export const PLAUSIBLE: Record<string, [number, number]> = {
+  bp_systolic: [50, 260], bp_diastolic: [25, 160], body_temp: [30, 43.5], glucose: [20, 700],
+  sleep_hours: [0, 24], exercise_min: [0, 600], water_ml: [0, 8000],
+};
+
+export function implausible(id: string, text: string | undefined): boolean {
+  if (text === undefined || text === '') return false;
+  const range = PLAUSIBLE[id];
+  const v = Number(text);
+  return !!range && (!Number.isFinite(v) || v < range[0] || v > range[1]);
+}
 
 /** Keep what a number field accepts: digits, one decimal point when allowed, at most MAX_DIGITS digits. */
 export function cleanNumber(text: string, decimal: boolean): string {
@@ -79,6 +96,7 @@ export function CheckInScreen() {
   const [fresh, setFresh] = useState(true); // the first key replaces a prefilled value
   const [values, setValues] = useState<Record<string, string>>(() => todaysValues(readings, ctx.missionDay));
   const [skipped, setSkipped] = useState<Set<string>>(new Set());
+  const [typo, setTypo] = useState<string | null>(null);
   const defs = useMemo(() => new Map(engine.indicators().map((d) => [d.id, d])), []);
   const inputs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -117,6 +135,16 @@ export function CheckInScreen() {
     setEditing(false);
   };
   const next = (skipStep: boolean) => {
+    if (!skipStep) {
+      const bad = step.fields.find((id) => implausible(id, values[id]));
+      if (bad) {
+        const def = defs.get(bad)!;
+        const [min, max] = PLAUSIBLE[bad];
+        setTypo(fill(crewCopy[lang].check.implausible, { value: values[bad], name: te(def.name), min, max, unit: def.unit }));
+        return;
+      }
+    }
+    setTypo(null);
     const skip = new Set(skipped);
     for (const id of step.fields) (skipStep ? skip.add(id) : skip.delete(id));
     setSkipped(skip);
@@ -180,6 +208,7 @@ export function CheckInScreen() {
           {step.kind === 'pad' && <p className="text-[15px] text-ink-2">{flow.check.typeHint}</p>}
           {step.kind !== 'pad' && <p className="text-[15px] text-ink-2">{flow.check.scaleHint}</p>}
           {prefilled && <p className="text-[15px] text-ink-2">{flow.check.prefilled}</p>}
+          {typo && <p role="alert" className="rounded-card border-2 border-act bg-act-bg p-3 text-[18px] font-bold">{typo}</p>}
 
           <div className={PANEL}>
             <h2 className="font-bold text-brand-ink">{ui.check.howToMeasure}</h2>
@@ -271,6 +300,7 @@ function Summary({ onAgain }: { onAgain: () => void }) {
   const findings = useMemo(() => engine.findCompound(readings, ctx, nowTs), [readings, ctx, nowTs]);
   const zones = useMemo(() => todayZones(evals, defs), [evals, defs]);
   const attention = evals.some((e) => e.status === 'red' || e.status === 'yellow') || findings.length > 0;
+  const redNow = defs.filter((d) => evals.find((x) => x.indicatorId === d.id)?.status === 'red');
   const savedCount = lastCheckTs === null ? 0 : readings.filter((r) => r.ts === lastCheckTs && r.origin === 'manual').length;
 
   const latest = useMemo(() => {
@@ -300,6 +330,13 @@ function Summary({ onAgain }: { onAgain: () => void }) {
           </div>
           {!zone && lastCheckTs !== null && <p className="text-[15px] text-ink-2">{fill(flow.check.savedAt, { time: clock(lastCheckTs), count: savedCount })}</p>}
           {zone && <h2 className="font-bold text-ink-2">{flow.check.feeds}</h2>}
+          {!zone && redNow.length > 0 && (
+            <div role="alert" className="flex flex-col gap-2 rounded-card border-2 border-act bg-act-bg p-4">
+              <div className="flex items-center gap-3"><StatusBadge status="red" label={crewCopy[lang].check.redTitle} /><span className="text-[18px] font-bold">{redNow.map((d) => te(d.name)).join(' · ')}</span></div>
+              <p>{crewCopy[lang].check.redBody}</p>
+              <button type="button" className={BTN_PRIMARY} onClick={onAgain}>{crewCopy[lang].check.remeasure}</button>
+            </div>
+          )}
 
           <ul className="flex flex-col gap-2">
             {rows.length === 0 && <li className={PANEL}>{zone ? flow.check.noIndicators : ui.check.summaryOk}</li>}

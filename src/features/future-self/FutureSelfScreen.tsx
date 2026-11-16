@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { te, ui, useLang } from '../../app/i18n';
 import type { BodyZone, Projection, Reading } from '../../domain/types';
@@ -14,6 +14,7 @@ import anatomyCopy from '../../../content/anatomy.json';
 import { readingOrigin } from '../../components/readingEvidence';
 import { cabinCo2 } from '../../domain/cabinCo2';
 import { ago, dec } from '../../app/format';
+import { SimulatorBanner } from '../simulator';
 
 const METRIC_LABEL: Record<string, string> = {
   bone_density_pct: 'Bone density',
@@ -69,6 +70,22 @@ export function FutureSelfScreen() {
 
   const showDetails = () => document.getElementById('dashboard-details')?.focus();
 
+  // Full screen for the body comparison, so the crew can look at the anatomy closely.
+  const anatomyRef = useRef<HTMLDivElement>(null);
+  const [big, setBig] = useState(false);
+  useEffect(() => {
+    const onChange = () => setBig(document.fullscreenElement === anatomyRef.current);
+    document.addEventListener('fullscreenchange', onChange);
+    return () => document.removeEventListener('fullscreenchange', onChange);
+  }, []);
+  const toggleBig = () => {
+    const el = anatomyRef.current;
+    if (!el) return;
+    if (document.fullscreenElement) void document.exitFullscreen();
+    else if (el.requestFullscreen) void el.requestFullscreen().catch(() => setBig((b) => !b));
+    else setBig((b) => !b);
+  };
+
   return (
     <section className="dashboard">
       <div className="dashboard-heading">
@@ -78,14 +95,22 @@ export function FutureSelfScreen() {
         </div>
         <div className="flex flex-wrap gap-2">
           <Link className="dashboard-secondary !w-auto" href="/check"><Glyph name="check"/>{ui.home.startCheck}</Link>
-          <Link className="dashboard-primary" href="/mission-guide"><Glyph name="missionGuide"/>{es ? 'Iniciar misión' : 'Start mission'}</Link>
+          <Link className="dashboard-secondary !w-auto" href="/mission-guide"><Glyph name="missionGuide"/>{es ? 'Demo guiada' : 'Guided demo'}</Link>
+          <Link className="dashboard-primary" href="/arrival"><Glyph name="arrival"/>{es ? 'Informe de aterrizaje' : 'Landing debrief'}</Link>
         </div>
       </div>
+      <SimulatorBanner />
       <div className="dashboard-grid">
-      <div className="dashboard-anatomy dashboard-card">
+      <div className="dashboard-anatomy dashboard-card" ref={anatomyRef}>
         <header className="dashboard-card-heading">
           <div><h2>{es ? 'Comparación corporal' : 'Body comparison'}</h2><p>{anatomyCopy[lang].gesture}</p></div>
-          <AnatomyModeSwitch />
+          <div className="flex flex-wrap items-center gap-2">
+            <button type="button" onClick={toggleBig} aria-pressed={big}
+              className="flex min-h-11 items-center gap-2 rounded-full border-2 border-brand-ink px-4 font-bold text-brand-ink">
+              <span aria-hidden>{big ? '⤡' : '⤢'}</span>{big ? (es ? 'Reducir' : 'Exit full screen') : (es ? 'Agrandar cuerpo' : 'Enlarge body')}
+            </button>
+            <AnatomyModeSwitch />
+          </div>
         </header>
         <div className="dashboard-timeline">
           <div><strong>{es ? 'Día de proyección' : 'Projection day'}</strong><span>{ui.future.sliderHint}</span></div>

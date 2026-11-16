@@ -1,0 +1,284 @@
+{
+  "en": {
+    "nav": {
+      "simulator": "Mission simulator",
+      "crew": "Crew (medical officer)",
+      "arrival": "Landing debrief"
+    },
+    "switcher": {
+      "label": "Crew member on this device",
+      "title": "Who is using KAWSAY?",
+      "hint": "Each person has their own readings, baselines and alerts.",
+      "cmo": "Medical officer",
+      "seeAll": "See the whole crew"
+    },
+    "crew": {
+      "title": "Crew health",
+      "intro": "All four crew members at a glance. Open a record to act, or respond for someone who cannot.",
+      "open": "Open record",
+      "respondFor": "Respond for {name}",
+      "yourRecord": "Open on this device",
+      "noFindings": "Nothing needs action.",
+      "watchFor": "What KAWSAY watches for {name}",
+      "shared": "Crew-level findings",
+      "sharedHint": "Problems that only show when you look at everyone at once.",
+      "noShared": "No crew-level finding.",
+      "eimo": "Round trip to Earth: {rtt}. The crew handles this on board; the brief goes out with the next downlink.",
+      "eimoNear": "Earth is seconds away: the flight surgeon can join in real time.",
+      "eimoNone": "No contact with Earth (solar conjunction): the crew medical officer decides on board.",
+      "privacy": "Each person sees their own detail. The medical officer sees everyone's status; full detail goes to the flight surgeon.",
+      "lastCheck": "Last check {age} ago",
+      "statusOf": "{n} to act · {m} to watch"
+    },
+    "sim": {
+      "title": "Mission simulator",
+      "badge": "Simulation",
+      "intro": "For judges and training: make one crew member fall ill in three clicks and watch KAWSAY detect, explain, act and escalate. Simulated data only.",
+      "stepA": "1. Who gets sick?",
+      "stepB": "2. Where is the mission?",
+      "stepC": "3. What happens?",
+      "run": "Run simulation",
+      "reset": "Reset all crew to the seeded morning",
+      "banner": "Judge demo: make one of the 4 astronauts fall ill in 3 clicks.",
+      "bannerCta": "Open the mission simulator",
+      "env": {
+        "iss": {
+          "name": "ISS · low Earth orbit",
+          "detail": "0 g · Earth a few seconds away"
+        },
+        "orion": {
+          "name": "Orion · leaving Earth",
+          "detail": "0 g · motion sickness and launch stress · seconds of delay"
+        },
+        "moon": {
+          "name": "Moon surface · Artemis",
+          "detail": "1/6 g · lunar dust · about 1.3 s one way"
+        },
+        "mars_transit": {
+          "name": "Mars transit · day 142",
+          "detail": "0 g for months · 12 min 40 s one way"
+        },
+        "mars_surface": {
+          "name": "Mars surface",
+          "detail": "3/8 g · up to 22 min one way"
+        }
+      },
+      "hazards": {
+        "cardio": {
+          "name": "Neck vein clot risk",
+          "hazard": "Altered gravity",
+          "detail": "Blood pools in the neck veins: neck fullness and a headache, no pain."
+        },
+        "bone": {
+          "name": "Bone loss → kidney stone",
+          "hazard": "Altered gravity",
+          "detail": "Three days of low water and a new flank pain."
+        },
+        "radiation": {
+          "name": "Solar storm + virus wakes up",
+          "hazard": "Space radiation",
+          "detail": "The whole crew takes a high dose; one person gets a cold sore and a fever."
+        },
+        "co2": {
+          "name": "CO₂ build-up + eye pressure",
+          "hazard": "Hostile closed environment",
+          "detail": "Cabin CO₂ climbs; three crew get headaches, one blurred vision."
+        },
+        "isolation": {
+          "name": "Sleep loss + slow reactions",
+          "hazard": "Isolation and confinement",
+          "detail": "Three short nights, low mood and a slow reaction test."
+        }
+      },
+      "done": "Simulation loaded for {name}. KAWSAY is showing the crew screen."
+    },
+    "arrival": {
+      "title": "Landing debrief",
+      "intro": "What {name}'s body will face on arrival, from today's data and the plan. Prototype estimate.",
+      "dest": {
+        "mars": "Mars surface · 0.38 g",
+        "moon": "Moon surface · 0.16 g",
+        "earth": "Earth · 1 g"
+      },
+      "readiness": "Landing readiness",
+      "withPlan": "with the plan",
+      "cleared": "No open red finding: ready for the landing checklist.",
+      "notCleared": "Open red findings: the crew medical officer reviews before landing.",
+      "sections": {
+        "ortho": {
+          "title": "Standing up without fainting",
+          "body": "Gravity pulls blood back to the legs after months without it. Most crew feel light-headed when they first stand; fluid loading, a compression garment and a slow stand reduce it.",
+          "female": "Women faint more often after landing, so {name} starts fluid loading earlier."
+        },
+        "vestibular": {
+          "title": "Balance and hand control",
+          "body": "The inner ear has to relearn \"down\". Expect motion sickness, unsteady walking and less precise hand control in the first hours: no critical manual task until the balance test is passed."
+        },
+        "bone": {
+          "title": "Bones and muscles",
+          "body": "Projected bone density at landing: {bone} % of pre-flight; leg strength: {leg} %. Partial gravity loads a weaker skeleton: avoid jumps and heavy carries until the first strength test."
+        },
+        "meds": {
+          "title": "Medicines before landing",
+          "body": "Any blood thinner must be paused before landing on the flight surgeon's schedule (NASA venous thrombosis guidance), to avoid bleeding if the landing is hard."
+        },
+        "env": {
+          "mars": "Mars dust is fine and toxic: keep suits and airlocks clean, report cough or eye irritation. Moving to lower-pressure suits risks decompression sickness: follow the pre-breathe.",
+          "moon": "Lunar dust is sharp and clings to everything: report cough, eye or skin irritation after each EVA. Follow the pre-breathe before lower-pressure suits.",
+          "earth": "Ground crews help you out of the capsule. Expect several weeks to recover balance, bone and muscle."
+        }
+      },
+      "envTitle": "At the destination",
+      "sources": "Sources",
+      "back": "Back to Future Self",
+      "cta": "End simulation and land"
+    },
+    "check": {
+      "implausible": "{value} looks like a typing error for {name} (expected {min}–{max} {unit}). Check it and type it again.",
+      "redTitle": "Act now",
+      "redBody": "These values are in the Act range. Measure again before anything else; the Why? under each one says what to do.",
+      "remeasure": "Measure again now"
+    }
+  },
+  "es": {
+    "nav": {
+      "simulator": "Simulador de misión",
+      "crew": "Tripulación (oficial médico)",
+      "arrival": "Informe de aterrizaje"
+    },
+    "switcher": {
+      "label": "Tripulante en este dispositivo",
+      "title": "¿Quién usa KAWSAY?",
+      "hint": "Cada persona tiene sus propias lecturas, líneas base y alertas.",
+      "cmo": "Oficial médica",
+      "seeAll": "Ver toda la tripulación"
+    },
+    "crew": {
+      "title": "Salud de la tripulación",
+      "intro": "Los cuatro tripulantes de un vistazo. Abre un registro para actuar, o responde por alguien que no puede.",
+      "open": "Abrir registro",
+      "respondFor": "Responder por {name}",
+      "yourRecord": "Abierto en este dispositivo",
+      "noFindings": "Nada requiere acción.",
+      "watchFor": "Qué vigila KAWSAY en {name}",
+      "shared": "Hallazgos de tripulación",
+      "sharedHint": "Problemas que solo aparecen al mirar a todos a la vez.",
+      "noShared": "Ningún hallazgo de tripulación.",
+      "eimo": "Ida y vuelta con Tierra: {rtt}. La tripulación lo resuelve a bordo; el informe sale con la próxima bajada de datos.",
+      "eimoNear": "La Tierra está a segundos: el médico de vuelo puede unirse en tiempo real.",
+      "eimoNone": "Sin contacto con Tierra (conjunción solar): la oficial médica decide a bordo.",
+      "privacy": "Cada persona ve su propio detalle. La oficial médica ve el estado de todos; el detalle completo va al médico de vuelo.",
+      "lastCheck": "Último chequeo hace {age}",
+      "statusOf": "{n} para actuar · {m} para vigilar"
+    },
+    "sim": {
+      "title": "Simulador de misión",
+      "badge": "Simulación",
+      "intro": "Para jurados y entrenamiento: haz que un tripulante enferme en tres clics y mira cómo KAWSAY detecta, explica, actúa y escala. Solo datos simulados.",
+      "stepA": "1. ¿Quién enferma?",
+      "stepB": "2. ¿Dónde está la misión?",
+      "stepC": "3. ¿Qué ocurre?",
+      "run": "Iniciar simulación",
+      "reset": "Volver a toda la tripulación a la mañana inicial",
+      "banner": "Demo para el jurado: haz que uno de los 4 astronautas enferme en 3 clics.",
+      "bannerCta": "Abrir el simulador de misión",
+      "env": {
+        "iss": {
+          "name": "ISS · órbita baja",
+          "detail": "0 g · la Tierra a pocos segundos"
+        },
+        "orion": {
+          "name": "Orión · saliendo de la Tierra",
+          "detail": "0 g · mareo espacial y estrés del lanzamiento · segundos de retraso"
+        },
+        "moon": {
+          "name": "Superficie lunar · Artemis",
+          "detail": "1/6 g · polvo lunar · unos 1,3 s por trayecto"
+        },
+        "mars_transit": {
+          "name": "Tránsito a Marte · día 142",
+          "detail": "0 g durante meses · 12 min 40 s por trayecto"
+        },
+        "mars_surface": {
+          "name": "Superficie de Marte",
+          "detail": "3/8 g · hasta 22 min por trayecto"
+        }
+      },
+      "hazards": {
+        "cardio": {
+          "name": "Riesgo de coágulo en el cuello",
+          "hazard": "Gravedad alterada",
+          "detail": "La sangre se acumula en las venas del cuello: cuello lleno y dolor de cabeza, sin dolor."
+        },
+        "bone": {
+          "name": "Pérdida ósea → cálculo renal",
+          "hazard": "Gravedad alterada",
+          "detail": "Tres días con poca agua y un dolor nuevo en el costado."
+        },
+        "radiation": {
+          "name": "Tormenta solar + virus que despierta",
+          "hazard": "Radiación espacial",
+          "detail": "Toda la tripulación recibe una dosis alta; una persona tiene herpes labial y fiebre."
+        },
+        "co2": {
+          "name": "Acumulación de CO₂ + presión ocular",
+          "hazard": "Ambiente cerrado hostil",
+          "detail": "Sube el CO₂ de cabina; tres tripulantes con dolor de cabeza, uno con visión borrosa."
+        },
+        "isolation": {
+          "name": "Falta de sueño + reacciones lentas",
+          "hazard": "Aislamiento y confinamiento",
+          "detail": "Tres noches cortas, ánimo bajo y una prueba de reacción lenta."
+        }
+      },
+      "done": "Simulación cargada para {name}. KAWSAY muestra la pantalla de tripulación."
+    },
+    "arrival": {
+      "title": "Informe de aterrizaje",
+      "intro": "Lo que enfrentará el cuerpo de {name} al llegar, según los datos de hoy y el plan. Estimación de prototipo.",
+      "dest": {
+        "mars": "Superficie de Marte · 0,38 g",
+        "moon": "Superficie lunar · 0,16 g",
+        "earth": "Tierra · 1 g"
+      },
+      "readiness": "Aptitud para el aterrizaje",
+      "withPlan": "con el plan",
+      "cleared": "Sin hallazgos rojos abiertos: lista para el checklist de aterrizaje.",
+      "notCleared": "Hay hallazgos rojos abiertos: la oficial médica revisa antes de aterrizar.",
+      "sections": {
+        "ortho": {
+          "title": "Ponerse de pie sin desmayarse",
+          "body": "La gravedad devuelve la sangre a las piernas tras meses sin ella. Casi toda la tripulación se marea al ponerse de pie por primera vez; la carga de líquidos, la prenda de compresión y levantarse despacio lo reducen.",
+          "female": "Las mujeres se desmayan más tras aterrizar, así que {name} empieza antes la carga de líquidos."
+        },
+        "vestibular": {
+          "title": "Equilibrio y control de las manos",
+          "body": "El oído interno tiene que reaprender dónde es «abajo». Espera mareo, marcha inestable y menos precisión con las manos en las primeras horas: ninguna tarea manual crítica hasta pasar la prueba de equilibrio."
+        },
+        "bone": {
+          "title": "Huesos y músculos",
+          "body": "Densidad ósea proyectada al aterrizar: {bone} % de la pre-vuelo; fuerza de piernas: {leg} %. La gravedad parcial carga un esqueleto más débil: evita saltos y cargas pesadas hasta la primera prueba de fuerza."
+        },
+        "meds": {
+          "title": "Medicamentos antes de aterrizar",
+          "body": "Cualquier anticoagulante debe pausarse antes del aterrizaje según el calendario del médico de vuelo (guía de NASA sobre trombosis venosa), para evitar sangrados si el aterrizaje es brusco."
+        },
+        "env": {
+          "mars": "El polvo marciano es fino y tóxico: mantén limpios trajes y esclusas, reporta tos o irritación ocular. Pasar a trajes de menor presión arriesga la enfermedad por descompresión: cumple la prerrespiración.",
+          "moon": "El polvo lunar es cortante y se pega a todo: reporta tos o irritación de ojos o piel tras cada EVA. Cumple la prerrespiración antes de trajes de menor presión.",
+          "earth": "Los equipos de tierra te ayudan a salir de la cápsula. Cuenta con varias semanas para recuperar equilibrio, hueso y músculo."
+        }
+      },
+      "envTitle": "En el destino",
+      "sources": "Fuentes",
+      "back": "Volver a Yo futuro",
+      "cta": "Terminar simulación y aterrizar"
+    },
+    "check": {
+      "implausible": "{value} parece un error de tecleo para {name} (se espera {min}–{max} {unit}). Revísalo y escríbelo otra vez.",
+      "redTitle": "Actúa ahora",
+      "redBody": "Estos valores están en el rango Actuar. Vuelve a medir antes de nada; el ¿Por qué? de cada uno dice qué hacer.",
+      "remeasure": "Medir otra vez ahora"
+    }
+  }
+}

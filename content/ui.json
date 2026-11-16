@@ -22,7 +22,7 @@
   },
   "status": {
     "green": "OK",
-    "yellow": "Watch",
+    "yellow": "Caution",
     "red": "Act",
     "stale": "Old data"
   },

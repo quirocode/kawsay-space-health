@@ -54,6 +54,10 @@ export const RECHECK: Record<string, { red: number | 'next' | 'week'; yellow: nu
   exercise_min: { red: 'next', yellow: 'next' },
   water_ml: { red: 'next', yellow: 'next' },
   strength_self_pct: { red: 'week', yellow: 'week' },
+  symptom_neck: { red: 240, yellow: 240 },
+  symptom_flank_pain: { red: 60, yellow: 60 },
+  radiation_msv: { red: 120, yellow: 'next' },
+  pvt_ms: { red: 720, yellow: 720 },
 };
 
 /** Which compound rule looks at which indicators, so a reading can point to its finding. */
@@ -64,6 +68,10 @@ const RULE_INDICATORS: Record<string, string[]> = {
   kidney_stone: ['water_ml'],
   orthostatic_landing: ['symptom_dizziness', 'exercise_min', 'water_ml'],
   sleep_mood: ['sleep_hours', 'mood'],
+  jugular_stasis: ['symptom_neck', 'headache_score'],
+  kidney_stone_pain: ['symptom_flank_pain', 'water_ml'],
+  radiation_storm: ['radiation_msv'],
+  cognitive_slowing: ['pvt_ms', 'sleep_hours'],
 };
 
 const USUAL_DAYS = 7;

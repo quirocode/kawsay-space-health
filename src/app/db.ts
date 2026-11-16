@@ -99,6 +99,7 @@ export interface Session {
   lastCheckTs: number | null;
   mission?: MissionInfo;                 // optional: saves from before it existed get the demo default
   deviceProfile?: DeviceProfile;         // selected device profile persisted between sessions
+  crewId?: string;                       // crew member whose record is open on this device
 }
 
 /** Who and what is flying. Shown in the header; editable on the Mission screen. */

@@ -158,6 +158,71 @@ export const RULES: RuleDef[] = [
       };
     },
   },
+  {
+    id: 'jugular_stasis',
+    check(readings, ctx) {
+      if (today(readings, 'symptom_neck', ctx) !== 1) return null;
+      const headache = (today(readings, 'headache_score', ctx) ?? 1) >= 3;
+      const because = ['Neck swelling or fullness reported.'];
+      if (headache) because.push('Headache reported at the same time.');
+      because.push(`Mission day ${ctx.missionDay} in weightlessness: blood pools in the neck veins.`);
+      return {
+        ruleId: 'jugular_stasis', title: 'Possible blood flow problem in a neck vein', status: headache ? 'red' : 'yellow', because,
+        risks: ['cardio'], hazards: ['gravity'], zones: ['heart', 'brain'],
+        actions: [primary('jugular_stasis', 'Tell the crew medical officer: a neck vein ultrasound is needed today. Avoid straining until then.', 'symptom_neck', 240, true)],
+        sources: [SRC.cardio, SRC.gravity, P],
+      };
+    },
+  },
+  {
+    id: 'kidney_stone_pain',
+    check(readings, ctx) {
+      if (today(readings, 'symptom_flank_pain', ctx) !== 1) return null;
+      const water3 = lastNDaysAvg(readings, 'water_ml', 3, ctx);
+      const fever = (today(readings, 'body_temp', ctx) ?? 0) >= 37.8;
+      const because = ['Flank or lower back pain reported.'];
+      if (water3 !== undefined && water3 < 2000) because.push(`Water averaged ${fmt(water3 / 1000)} L over 3 days.`);
+      if (fever) because.push('Temperature is raised.');
+      return {
+        ruleId: 'kidney_stone_pain', title: 'Possible kidney stone', status: 'red', because,
+        risks: ['bone', 'nutrition'], hazards: ['gravity'], zones: ['kidneys'],
+        actions: [primary('kidney_stone_pain', 'Tell the crew medical officer now and drink water steadily. A kidney ultrasound confirms it.', 'symptom_flank_pain', 60, true)],
+        sources: [SRC.bone, SRC.nutrition, P],
+      };
+    },
+  },
+  {
+    id: 'radiation_storm',
+    check(readings, ctx) {
+      const dose = today(readings, 'radiation_msv', ctx);
+      if (dose === undefined || dose < 10) return null;
+      return {
+        ruleId: 'radiation_storm', title: 'Solar storm: high radiation dose', status: 'red',
+        because: [`Radiation dose today: ${fmt(dose)} mSv.`, 'This reaches the whole crew, not one person.'],
+        risks: ['radiation_cancer', 'immune'], hazards: ['radiation'], zones: ['skin_immune', 'bones'],
+        actions: [primary('radiation_storm', 'Go to the storm shelter with the whole crew and stay until the dose rate falls.', 'radiation_msv', 120, true)],
+        sources: [SRC.radiation, SRC.radiation_cancer, P],
+      };
+    },
+  },
+  {
+    id: 'cognitive_slowing',
+    check(readings, ctx, nowTs = latestTimestamp(readings)) {
+      const pvt = latest(readings, 'pvt_ms')?.value;
+      if (pvt === undefined || pvt < 350) return null;
+      const sleep3 = lastNDaysAvg(readings, 'sleep_hours', 3, ctx);
+      const co2 = cabinCo2(readings, nowTs).value;
+      const because = [`Reaction time ${fmt(pvt)} ms.`];
+      if (sleep3 !== undefined && sleep3 < 6) because.push(`Sleep averaged ${fmt(sleep3)} h over 3 nights.`);
+      if (co2 !== null && co2 > CABIN_CO2_LIMIT) because.push(`Cabin CO₂ (1-hour average): ${fmt(co2)} mmHg. NASA habitat limit: 3 mmHg.`);
+      return {
+        ruleId: 'cognitive_slowing', title: 'Your reactions are slower than safe', status: pvt >= 450 ? 'red' : 'yellow', because,
+        risks: ['sleep', 'behavioral'], hazards: ['isolation', 'environment'], zones: ['brain'],
+        actions: [primary('cognitive_slowing', 'No critical tasks (piloting, EVA, robotics) until a repeat test is under 350 ms. Sleep first.', 'pvt_ms', 720, pvt >= 450)],
+        sources: [SRC.sleep, SRC.behavioral, P],
+      };
+    },
+  },
 ];
 
 /** Runs every rule, drops nulls, sorts red before yellow, then by rule order. */

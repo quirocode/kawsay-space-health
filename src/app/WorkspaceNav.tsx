@@ -3,6 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { useCopy, useLang } from './i18n';
 import suit from '../../content/suit.json';
 import how from '../../content/how.json';
+import crewCopy from '../../content/crew.json';
 
 const paths: Record<string, ReactNode> = {
   logo: <><circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="10" ry="5" transform="rotate(-35 12 12)"/><path d="M19 3h.01"/></>,
@@ -18,6 +19,9 @@ const paths: Record<string, ReactNode> = {
   project: <path d="M13 5h6v6m0-6-8 8M19 14v5H5V5h5"/>,
   missionGuide: <><circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4Z"/></>,
   menu: <path d="M4 6h16M4 12h16M4 18h16"/>,
+  crew: <><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6m1-5.5c2.6.3 5 2.4 5 5.5"/></>,
+  simulator: <><path d="M12 3v4m0 10v4M3 12h4m10 0h4"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></>,
+  arrival: <><path d="M12 3v12m-5-5 5 5 5-5"/><path d="M4 20h16"/></>,
 };
 export function Glyph({ name, size = 19 }: { name: string; size?: number }) {
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
@@ -29,13 +33,15 @@ export function WorkspaceNav() {
   const es = lang === 'es';
   const { ui, flow } = useCopy();
   const [open, setOpen] = useState(false);
+  const c = crewCopy[lang].nav;
   const groups = [
     { label: es ? 'Salud' : 'Health', links: [
+      ['/simulator', c.simulator, 'simulator'], ['/crew', c.crew, 'crew'],
       ['/', es ? 'Yo futuro' : 'Future Self', 'home'], ['/mission-guide', es ? 'Misión guiada' : 'Guided mission', 'missionGuide'], ['/check', ui.nav.check, 'check'],
       ['/watch', es ? 'Reloj y alertas' : 'Watch & alerts', 'watch'], ['/loop', ui.nav.loop, 'loop'],
     ] },
     { label: es ? 'Operaciones' : 'Operations', links: [
-      ['/suit', suit[lang].nav, 'suit'], ['/brief', es ? 'Informe a Tierra' : 'Earth brief', 'brief'],
+      ['/suit', suit[lang].nav, 'suit'], ['/arrival', c.arrival, 'arrival'], ['/brief', es ? 'Informe a Tierra' : 'Earth brief', 'brief'],
       ['/connect', flow.nav.connect, 'connect'], ['/environment', ui.nav.environment, 'environment'],
     ] },
   ];

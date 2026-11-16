@@ -50,7 +50,9 @@
       "symptom_vision": "Visión borrosa",
       "symptom_confusion": "Confusión",
       "symptom_joint_pain": "Dolor articular",
-      "symptom_skin": "Herida o sarpullido en la piel"
+      "symptom_skin": "Herida o sarpullido en la piel",
+      "symptom_neck": "Cuello hinchado o lleno",
+      "symptom_flank_pain": "Dolor en el costado o la espalda baja"
     },
     "exercise": "Ejercicio",
     "water": "Agua",
@@ -238,7 +240,7 @@
     "backToWatch": "Volver a los datos del reloj"
   },
   "crew": {
-    "name": "A. Quispe"
+    "name": "E. Rostova"
   },
   "connect": {
     "title": "Conecta tu banda",
