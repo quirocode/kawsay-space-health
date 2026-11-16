@@ -7,8 +7,8 @@ NASA Space Apps Challenge 2026 · *Create Health Monitoring Software for Astrona
 
 | Try it | |
 |---|---|
-| 🌐 **Web demo** | https://kawsay-ten.vercel.app (works offline once loaded) |
-| 🪟 **Windows app** | [Latest release](https://github.com/quirocode/kawsay-space-health/releases/latest) → download `UPRIGHT-win32-x64.zip`, unzip, open `UPRIGHT.exe` |
+| 🌐 **Web demo** | https://upright-health.vercel.app (works offline once loaded) |
+| 🪟 **Windows app** | [Latest release](https://github.com/quirocode/upright-space-health/releases/latest) → download `UPRIGHT-win32-x64.zip`, unzip, open `UPRIGHT.exe` |
 | 🧑‍⚖️ **Judges, start here** | Open the app → **Mission simulator** → pick an astronaut, a place and a hazard → **Run simulation** |
 
 ---
@@ -135,7 +135,7 @@ Copy the whole `UPRIGHT-win32-x64` folder, not just the exe. The build downloads
 | [`AGENTS.md`](AGENTS.md) | Rules for every AI assistant and lane ownership |
 | [`docs/02-roles-y-flujo.md`](docs/02-roles-y-flujo.md) | Roles, Git workflow, checkpoints |
 | [`docs/SUBMISSION.md`](docs/SUBMISSION.md) | Space Apps submission checklist |
-| [`design/brand/`](design/brand/README.md) | Brand assets. The repository, package and demo URL keep their original `kawsay` identifiers. |
+| [`design/brand/`](design/brand/README.md) | Brand assets. The npm package keeps its original `kawsay` name; old links (kawsay-ten.vercel.app, github.com/quirocode/kawsay-space-health) redirect or still work. |
 
 ## License
 MIT
