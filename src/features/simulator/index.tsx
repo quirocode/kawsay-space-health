@@ -11,7 +11,7 @@ import { CrewAvatar, useCrewCopy } from '../crew';
 const ENVS: Environment[] = ['iss', 'orion', 'moon', 'mars_transit', 'mars_surface'];
 const HAZARD_ICON: Record<HazardScenario, string> = { cardio: '♥', bone: '⬢', radiation: '☢', co2: '≋', isolation: '☾' };
 
-/** The judges' entry point: pick a person, a place and a hazard; KAWSAY does the rest. */
+/** The judges' entry point: pick a person, a place and a hazard; UPRIGHT does the rest. */
 export function SimulatorScreen() {
   const ctx = useApp((s) => s.context);
   const nowTs = useApp((s) => s.nowTs);

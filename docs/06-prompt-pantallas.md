@@ -6,11 +6,11 @@ Orden de trabajo: las 8 pantallas **P0** primero (son la demo). Las demás, solo
 
 ---
 
-You are designing **KAWSAY**, a desktop health monitor for astronauts on long missions. It is a prototype for NASA Space Apps Challenge 2026 ("Create Health Monitoring Software for Astronauts on Space Missions"). Design the components and the screens listed below, with the real content given. Do not invent other screens.
+You are designing **UPRIGHT**, a desktop health monitor for astronauts on long missions. It is a prototype for NASA Space Apps Challenge 2026 ("Create Health Monitoring Software for Astronauts on Space Missions"). Design the components and the screens listed below, with the real content given. Do not invent other screens.
 
 ## 1. The product
 
-A crew member wears a wrist watch that measures their body every second. KAWSAY watches those readings. When something is wrong, for example the heart rate climbs while the person is resting, it **raises an alarm, shows the person's state, and walks them through what to do**, then checks whether it worked and tells the crew and Earth if it did not.
+A crew member wears a wrist watch that measures their body every second. UPRIGHT watches those readings. When something is wrong, for example the heart rate climbs while the person is resting, it **raises an alarm, shows the person's state, and walks them through what to do**, then checks whether it worked and tells the crew and Earth if it did not.
 
 It answers four questions, in this order: **Am I OK right now? What do I do? Did it work? Who needs to know?**
 
@@ -35,7 +35,7 @@ It answers four questions, in this order: **Am I OK right now? What do I do? Did
 
 ## 4. Visual system (already defined: use these exact values)
 
-KAWSAY means "life" in Quechua. The identity is a warm instrument: natural-dye colours and woven thread, used with restraint. No Inca clichés, no ornamental borders.
+UPRIGHT names the landing-readiness outcome — standing up without fainting on arrival day. The identity is a warm instrument: natural-dye colours and woven thread, used with restraint. No Inca clichés, no ornamental borders.
 
 ### Colour tokens
 
@@ -96,7 +96,7 @@ The knot is the only decorative idea in the product. Use it in two places: the p
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│ KAWSAY  Sol 142 of 180 · Mars transit  (Earth delay 14 min)                    │ 64
+│ UPRIGHT  Sol 142 of 180 · Mars transit  (Earth delay 14 min)                    │ 64
 │                          (Watch · live · 82 %) (Demo) (☾) [Report a symptom] │
 ├──────┬───────────────────────────────────────────────────────────────────────┤
 │ Now  │ ~~~~~~~~~~~~~~~~~~~~ pulse thread ~~~~~~~●~~~~~~~~~   64 bpm · resting │ 48
@@ -109,7 +109,7 @@ The knot is the only decorative idea in the product. Use it in two places: the p
   96
 ```
 
-- **Top bar, 64 px:** wordmark "KAWSAY" in `inti` · "Sol 142 of 180 · Mars transit" · pill "Earth delay 14 min" · on the right: watch pill "Watch · live · 82 %", outlined pill "Demo", day/night button, and an outlined button **"Report a symptom"** with a hand icon.
+- **Top bar, 64 px:** wordmark "UPRIGHT" in `inti` · "Sol 142 of 180 · Mars transit" · pill "Earth delay 14 min" · on the right: watch pill "Watch · live · 82 %", outlined pill "Demo", day/night button, and an outlined button **"Report a symptom"** with a hand icon.
 - **Left rail, 96 px:** six destinations, icon above word, 72 px tall each: "Now", "Watch", "Alerts" (with a count badge), "Body", "Check-in", "Brief". The active one is filled with `inti`.
 - **Pulse thread, 48 px.**
 
@@ -209,7 +209,7 @@ The only screen that fills the whole window: no rail, no top bar, no pulse threa
 ║ │ Skin temp    +0.2 °C  OK           │  [ I'm here. Start the check    ] ║
 ║ │ Movement     Still for 22 min      │  ( Call a crewmate now )         ║
 ║ └────────────────────────────────────┘                                   ║
-║ No answer in 0:48 and KAWSAY alerts the crew.  ▓▓▓▓▓▓░░░░     (Silence)  ║
+║ No answer in 0:48 and UPRIGHT alerts the crew.  ▓▓▓▓▓▓░░░░     (Silence)  ║
 └══════════════════════════════════════════════════════════════════════════┘
 ```
 
@@ -226,7 +226,7 @@ The only screen that fills the whole window: no rail, no top bar, no pulse threa
 - **First step**, in a highlighted box titled "Do this first": "Stop what you are doing. Hold on to a handrail."
 - Primary button, 72 px: **"I'm here. Start the check"**.
 - Secondary button: "Call a crewmate now".
-- A countdown with a thin bar: "No answer in 0:48 and KAWSAY alerts the crew."
+- A countdown with a thin bar: "No answer in 0:48 and UPRIGHT alerts the crew."
 - A small "Silence" button with a speaker icon.
 
 Also draw the **Warning variant**: the same content in a centred sheet 720 px wide, over a dimmed "Now" screen, with no border pulse and no countdown.
@@ -243,7 +243,7 @@ A guided response: one step per screen, with the live state always visible.
 │                                             │  Breathing     19 /min     │
 │ [ Chest pain or pressure          ]         │  Skin temp    +0.2 °C      │
 │ [ Trouble breathing               ]         ├────────────────────────────┤
-│ [ Dizzy or about to faint         ]         │ What KAWSAY thinks         │
+│ [ Dizzy or about to faint         ]         │ What UPRIGHT thinks         │
 │ [ Heart pounding or skipping      ]         │  Likely: dehydration and   │
 │ [ None of these                   ]         │  fatigue.                  │
 │                                             │  · Low water today …       │
@@ -264,7 +264,7 @@ Left side, 60 %. Draw all five steps as separate frames:
 Right side, 40 %, fixed across all steps:
 
 - **"Your state now":** the four signals, compact.
-- **"What KAWSAY thinks":** "Likely: dehydration and fatigue." Reasons, each with a source tag: "Low water today: 1.1 L of 2.5 L", "Short sleep: 5.2 h average over 3 nights", "No fever, oxygen normal". A separate line: "Not ruled out: a rhythm problem. That is why we record it." And a "Why?" link.
+- **"What UPRIGHT thinks":** "Likely: dehydration and fatigue." Reasons, each with a source tag: "Low water today: 1.1 L of 2.5 L", "Short sleep: 5.2 h average over 3 nights", "No fever, oxygen normal". A separate line: "Not ruled out: a rhythm problem. That is why we record it." And a "Why?" link.
 
 Always visible at the bottom: "Call a crewmate now".
 
@@ -284,7 +284,7 @@ Who finds out, and when they can answer.
 - **"On board, now":** a card "M. Huamán · crew medical officer" with "Alert sent 14:44 · seen 14:45".
 - **"Earth":** the delay track with three marks: "Sent 14:44", "Arrives 14:58", "Earliest answer 15:12". Below: "Earth is 14 minutes away. Do not wait for the answer to act."
 - **Brief preview:** headline "Resting heart rate 134 bpm, unchanged after first response"; what changed; what was done and the result; and the decision requested: "Should A. Quispe stay off exercise and EVA prep for 24 hours?"
-- **"While you wait":** "Stay resting", "Keep the watch on", "KAWSAY checks again every 10 minutes", "No exercise or EVA prep".
+- **"While you wait":** "Stay resting", "Keep the watch on", "UPRIGHT checks again every 10 minutes", "No exercise or EVA prep".
 - Primary button **"Send brief"**. Draw the sent state too: "Brief sent · 14:44".
 - Draw the **no-contact state**: no delay track. "No contact with Earth for 9 days. The crew medical officer decides."
 
@@ -335,7 +335,7 @@ Example: heart rate.
 
 - Range selector: "1 h", "24 h", "7 days", "Mission".
 - **Large chart:** the trace, the "your usual" band, labelled threshold lines ("Alert while resting: 110" with a `Prototype` tag), the activity lane under it, and knots at the alerts.
-- Three text blocks: **"How it is measured"** ("A light sensor on the back of the watch. Keep the strap snug, one finger above the wrist bone."), **"Why it matters in space"** ("Your heart and blood vessels adapt to weightlessness. A resting rate far from your usual can mean dehydration, fever, low oxygen or a rhythm problem." with a `NASA` source link) and **"When KAWSAY alerts"** (a small table: "110 or more while resting, for 5 min · Act", "130 or more while resting, for 2 min · Act now", "Below 40 while awake, for 5 min · Act", each with a `Prototype` tag).
+- Three text blocks: **"How it is measured"** ("A light sensor on the back of the watch. Keep the strap snug, one finger above the wrist bone."), **"Why it matters in space"** ("Your heart and blood vessels adapt to weightlessness. A resting rate far from your usual can mean dehydration, fever, low oxygen or a rhythm problem." with a `NASA` source link) and **"When UPRIGHT alerts"** (a small table: "110 or more while resting, for 5 min · Act", "130 or more while resting, for 2 min · Act now", "Below 40 while awake, for 5 min · Act", each with a `Prototype` tag).
 - Note: "Readings during fast movement are less reliable."
 
 ### 09 · Alert report (P1)
@@ -395,7 +395,7 @@ For a hard impact followed by no movement. Two frames.
 
 ### 15 · Watch setup (P2)
 
-Three steps: "Put the watch on", "Pair it", "KAWSAY learns your normal". The third explains: "For 7 days, alerts use general adult limits. After that they use yours." with progress "Day 3 of 7".
+Three steps: "Put the watch on", "Pair it", "UPRIGHT learns your normal". The third explains: "For 7 days, alerts use general adult limits. After that they use yours." with progress "Day 3 of 7".
 
 ### 16 · Settings (P2)
 

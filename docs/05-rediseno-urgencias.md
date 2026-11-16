@@ -1,4 +1,4 @@
-# 05 · Rediseño: KAWSAY centrado en urgencias
+# 05 · Rediseño: UPRIGHT centrado en urgencias
 
 Escrito el sábado 14/11 por P1 con Claude Code. Es **solo diseño y arquitectura**: no cambia el motor (`src/domain/`), ni el contrato (`types.ts`), ni las pantallas actuales. Las pantallas las construye P4 en pen.dev a partir de la sección 4.
 
@@ -14,7 +14,7 @@ Los textos de interfaz van en inglés (regla del reto). Todo umbral numérico de
 | De dónde salen los datos | El tripulante los escribe en el chequeo diario | **El reloj los mide solo, todo el tiempo.** El tripulante escribe solo lo que el reloj no puede medir. |
 | Cómo empieza una alerta | Cuando el tripulante abre la app | **Cuando el reloj detecta algo raro**, aunque la app esté en segundo plano |
 | Qué hace la alerta | Una tarjeta en "Findings" | **Una alarma** con sonido, el estado en vivo y el primer paso a seguir |
-| Dispositivo | Tableta, PWA | **App de escritorio** (`KAWSAY.exe`) que no usa la red; la PWA sigue funcionando |
+| Dispositivo | Tableta, PWA | **App de escritorio** (`UPRIGHT.exe`) que no usa la red; la PWA sigue funcionando |
 
 Lo que **no** cambia: el ciclo Medir → Entender → Actuar → Verificar → Escalar, las fuentes en cada cifra, el dato viejo que nunca se pinta de verde, el modo demo "Sol 142" y el sistema visual de P4 (terracota Inti, Instrument Sans, 5 paletas de noche).
 
@@ -64,7 +64,7 @@ Un reloj de muñeca mide de forma continua seis señales. El resto sigue necesit
 
 **Los primeros 7 días** el reloj aprende la línea base de cada persona. Hasta entonces las reglas usan límites generales de adulto y la app lo avisa: *"Learning your normal: day 3 of 7"*.
 
-Precedentes reales: el estudio **ARCHeR** de Artemis II usa actigrafía de muñeca (movimiento, sueño, luz), y la CSA desarrolló **Bio-Monitor**, una prenda con sensores para signos vitales en la EEI. KAWSAY no es ninguno de los dos; son la prueba de que medir así en vuelo es realista.
+Precedentes reales: el estudio **ARCHeR** de Artemis II usa actigrafía de muñeca (movimiento, sueño, luz), y la CSA desarrolló **Bio-Monitor**, una prenda con sensores para signos vitales en la EEI. UPRIGHT no es ninguno de los dos; son la prueba de que medir así en vuelo es realista.
 
 En la demo los datos del reloj son una **serie simulada con semilla fija** (`origin: 'sensor_sim'`, que ya existe en el contrato). Conectar un reloj real queda para después (sección 6.3).
 
@@ -128,15 +128,15 @@ Completan la lista, con la misma plantilla y sin pantalla propia: hinchazón o d
 | `eva` | `overexertion` encendida. Dolor articular o falta de aire → "End the EVA" |
 | `conjunction` (sin contacto) | *Escalate* no ofrece Tierra: decide el oficial médico de a bordo |
 
-### 3.5 Fuera del alcance de KAWSAY
+### 3.5 Fuera del alcance de UPRIGHT
 
-Fuego, despresurización y atmósfera tóxica son alarmas **de la nave**, no de salud. KAWSAY no las detecta ni las duplica. Lo que sí hace es vigilar el oxígeno de quien estuvo expuesto durante las horas siguientes. La dosis de radiación y el CO₂ de cabina llegan de sensores de la nave, no del reloj: se muestran en *Now* como contexto y entran en las reglas combinadas que ya existen.
+Fuego, despresurización y atmósfera tóxica son alarmas **de la nave**, no de salud. UPRIGHT no las detecta ni las duplica. Lo que sí hace es vigilar el oxígeno de quien estuvo expuesto durante las horas siguientes. La dosis de radiación y el CO₂ de cabina llegan de sensores de la nave, no del reloj: se muestran en *Now* como contexto y entran en las reglas combinadas que ya existen.
 
 ### 3.6 Reglas combinadas
 
 Una alerta del reloj no llega sola a la pantalla: el motor la cruza con lo demás para decir **qué es lo más probable**. Ejemplos para `resting_tachycardia`:
 
-| Además de la taquicardia hay… | KAWSAY dice | Rama |
+| Además de la taquicardia hay… | UPRIGHT dice | Rama |
 |---|---|---|
 | Poca agua hoy y sueño corto | "Likely: dehydration and fatigue" | Agua, respiración lenta, medir de nuevo |
 | SpO2 baja o CO₂ de cabina alto | "Likely: low oxygen" | Revisar aire de cabina, mascarilla |
@@ -160,7 +160,7 @@ Esto lo decide el motor de reglas, con fuente en cada línea. Ningún modelo de 
 
 **Marco común** (todas las pantallas menos la alarma):
 
-- **Barra superior**, 64 px: marca KAWSAY · "Sol 142 of 180 · Mars transit" · píldora "Earth delay 14 min" · a la derecha: píldora del reloj ("Watch · live · 82 %"), píldora "Demo", botón día/noche y botón **"Report a symptom"** con borde.
+- **Barra superior**, 64 px: marca UPRIGHT · "Sol 142 of 180 · Mars transit" · píldora "Earth delay 14 min" · a la derecha: píldora del reloj ("Watch · live · 82 %"), píldora "Demo", botón día/noche y botón **"Report a symptom"** con borde.
 - **Carril izquierdo**, 96 px: *Now*, *Watch*, *Alerts* (con contador), *Body*, *Check-in*, *Brief*. Icono y palabra en cada uno.
 - **Hilo del pulso**, 48 px, bajo la barra superior. Es el elemento propio del rediseño: los últimos 30 minutos de frecuencia cardíaca dibujados como **un solo hilo** sobre una franja tenue que marca el rango habitual de la persona. Cada alerta deja **un nudo** en el hilo, más grande cuanto más grave. A la derecha, el valor en vivo: "64 bpm · resting". Tocar el hilo abre *Watch*; tocar un nudo abre esa alerta. Sin datos, el hilo se corta donde se perdió la señal y sigue rayado con el texto "No signal · 4 min".
 
@@ -238,7 +238,7 @@ La única pantalla que ocupa toda la ventana, sin carril ni barra. Aparece sola 
 - **Primer paso**, en una caja destacada: "Stop what you are doing. Hold on to a handrail."
 - Botón principal, 72 px: **"I'm here. Start the check"**. Al tocarlo se calla el tono.
 - Botón secundario: "Call a crewmate now".
-- Cuenta atrás con barra fina: "No answer in 0:48 and KAWSAY alerts the crew."
+- Cuenta atrás con barra fina: "No answer in 0:48 and UPRIGHT alerts the crew."
 - Botón pequeño "Silence" con icono de altavoz.
 
 Variante **Warning**: el mismo contenido en una hoja centrada de 720 px sobre la pantalla en la que estaba la persona, con fondo atenuado, sin cuenta atrás.
@@ -256,7 +256,7 @@ Respuesta guiada: un paso por pantalla, con el estado en vivo siempre a la vista
 - Botón principal según el paso: "Next", "Start recording", "Save reading", "Done".
 - **Derecha (40 %)**, fija:
   - *Your state now*: las mismas cuatro señales, compactas.
-  - *What KAWSAY thinks*: "Likely: dehydration and fatigue." Motivos, cada uno con su etiqueta de fuente: "Low water today: 1.1 L of 2.5 L", "Short sleep: 5.2 h average over 3 nights", "No fever, oxygen normal". Y una línea aparte: "Not ruled out: a rhythm problem. That is why we record it."
+  - *What UPRIGHT thinks*: "Likely: dehydration and fatigue." Motivos, cada uno con su etiqueta de fuente: "Low water today: 1.1 L of 2.5 L", "Short sleep: 5.2 h average over 3 nights", "No fever, oxygen normal". Y una línea aparte: "Not ruled out: a rhythm problem. That is why we record it."
   - Enlace "Why?" con las reglas y sus fuentes.
 - Siempre visible abajo: "Call a crewmate now".
 
@@ -277,7 +277,7 @@ Quién se entera y cuándo puede contestar.
 - **On board, now:** tarjeta "M. Huamán · crew medical officer" con "Alert sent 14:44 · seen 14:45".
 - **Earth:** pista de retraso con tres marcas: "Sent 14:44", "Arrives 14:58", "Earliest answer 15:12". Debajo: "Earth is 14 minutes away. Do not wait for the answer to act."
 - **Vista previa del informe**: titular, qué cambió, qué se hizo y con qué resultado, y la decisión que se pide: "Should A. Quispe stay off exercise and EVA prep for 24 hours?"
-- **While you wait:** "Stay resting", "Keep the watch on", "KAWSAY checks again every 10 minutes", "No exercise or EVA prep".
+- **While you wait:** "Stay resting", "Keep the watch on", "UPRIGHT checks again every 10 minutes", "No exercise or EVA prep".
 - Botón principal **"Send brief"**; al enviarse pasa a "Brief sent · 14:44".
 - Estado **conjunción**: sin pista de retraso. "No contact with Earth for 9 days. The crew medical officer decides."
 
@@ -297,7 +297,7 @@ Ejemplo: frecuencia cardíaca.
 
 - Selector de rango: "1 h", "24 h", "7 days", "Mission".
 - **Gráfico grande:** trazo, franja "your usual", líneas de umbral rotuladas ("Alert while resting: 110" con `Prototype`), carril de actividad debajo y nudos en las alertas.
-- Tres bloques de texto: **How it is measured** ("A light sensor on the back of the watch. Keep the strap snug, one finger above the wrist bone."), **Why it matters in space** (el corazón se adapta a la ingravidez; con enlace a NASA) y **When KAWSAY alerts** (tabla con las reglas de esa señal y su fuente).
+- Tres bloques de texto: **How it is measured** ("A light sensor on the back of the watch. Keep the strap snug, one finger above the wrist bone."), **Why it matters in space** (el corazón se adapta a la ingravidez; con enlace a NASA) y **When UPRIGHT alerts** (tabla con las reglas de esa señal y su fuente).
 - Nota de calidad: "Readings during fast movement are less reliable."
 
 ### 08 · Alerts — `#/alerts` (P0)
@@ -353,7 +353,7 @@ Para `no_response`. Dos partes:
 
 ### 15 · Watch setup — `#/setup` (P2)
 
-Tres pasos: "Put the watch on", "Pair it", "KAWSAY learns your normal". El tercero explica: "For 7 days, alerts use general adult limits. After that they use yours."
+Tres pasos: "Put the watch on", "Pair it", "UPRIGHT learns your normal". El tercero explica: "For 7 days, alerts use general adult limits. After that they use yours."
 
 ### 16 · Settings — hoja (P2)
 
@@ -365,7 +365,7 @@ Sol 142, 14:28. Quispe descansa después de almorzar. Durmió 5 h 10 min y lleva
 
 1. **14:28** · *Now*, todo en OK. El hilo del pulso empieza a subir. Franja ámbar: 112 bpm en reposo.
 2. **14:32** · 134 bpm. **Alarma**. Tono. Quispe toca "I'm here. Start the check".
-3. **14:33** · *Respond*: sin dolor de pecho, ritmo regular, presión 104/68, dos minutos de respiración, agua. KAWSAY: "Likely: dehydration and fatigue."
+3. **14:33** · *Respond*: sin dolor de pecho, ritmo regular, presión 104/68, dos minutos de respiración, agua. UPRIGHT: "Likely: dehydration and fatigue."
 4. **14:44** · *Recheck*: 88 bpm. "Improved". Se cierra a bordo, sin esperar a Tierra.
 5. Variante para el video: si sigue en 126, *Escalate*. El informe llega a Tierra a las 14:58.
 
@@ -407,7 +407,7 @@ React 19 · Vite 8 · TypeScript estricto · Tailwind 4 · zustand (estado guard
 npm run desktop:build
 ```
 
-Genera `release/KAWSAY-win32-x64/KAWSAY.exe`. Se copia **la carpeta entera**, no solo el `.exe`. Necesita red una vez, para bajar Electron; el resultado ya no la usa.
+Genera `release/UPRIGHT-win32-x64/UPRIGHT.exe`. Se copia **la carpeta entera**, no solo el `.exe`. Necesita red una vez, para bajar Electron; el resultado ya no la usa.
 
 ```bash
 npm run desktop:dev
@@ -415,7 +415,7 @@ npm run desktop:dev
 
 Abre la app de escritorio sin empaquetar (hace falta `npm run build` antes).
 
-**Comprobado el 14/11:** el ejecutable arranca, carga la app desde `kawsay://app`, muestra las 5 pestañas actuales y no intenta ninguna petición de red (0 bloqueadas). `KAWSAY.exe --smoke captura.png` repite esa prueba.
+**Comprobado el 14/11:** el ejecutable arranca, carga la app desde `kawsay://app`, muestra las 5 pestañas actuales y no intenta ninguna petición de red (0 bloqueadas). `UPRIGHT.exe --smoke captura.png` repite esa prueba.
 
 **Pendiente:** icono propio (ahora sale el de Electron), instalador de un solo archivo y firma del ejecutable (Windows avisa de "editor desconocido").
 
@@ -425,7 +425,7 @@ Abre la app de escritorio sin empaquetar (hace falta `npm run build` antes).
 
 ### 6.1 No hay "backend" de red
 
-En KAWSAY el backend es el **motor de reglas** (`src/domain/`, de P3), que corre dentro de la misma app. La interfaz no hace peticiones HTTP: llama funciones. No hay direcciones de API, y por eso no hay nada que falle sin red.
+En UPRIGHT el backend es el **motor de reglas** (`src/domain/`, de P3), que corre dentro de la misma app. La interfaz no hace peticiones HTTP: llama funciones. No hay direcciones de API, y por eso no hay nada que falle sin red.
 
 ```
  Reloj (simulado hoy, Bluetooth después)

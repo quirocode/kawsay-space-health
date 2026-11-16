@@ -1,6 +1,6 @@
 {
-  "pageTitle": "KAWSAY — What body will you land with?",
-  "pageDescription": "KAWSAY — a health copilot that shows astronauts the body they will land with. NASA Space Apps Challenge 2026 prototype, not a medical device.",
+  "pageTitle": "UPRIGHT — Land on your feet.",
+  "pageDescription": "UPRIGHT — a health copilot that shows astronauts the body they will land with. NASA Space Apps Challenge 2026 prototype, not a medical device.",
   "nav": {
     "label": "Main navigation",
     "nightMode": "Night mode",
@@ -8,19 +8,19 @@
     "switchToNight": "Switch to night mode",
     "switchLanguage": "Switch to Spanish",
     "challenge": "Challenge",
-    "advantages": "Why KAWSAY",
+    "advantages": "Why UPRIGHT",
     "technology": "Technology"
   },
   "hero": {
     "badge": "NASA Space Apps Challenge 2026",
-    "title": "KAWSAY",
-    "subtitle": "A health copilot for astronauts on long missions. It answers the one question no dashboard does: what body will you land with?",
+    "title": "UPRIGHT",
+    "subtitle": "Land on your feet. A health copilot that shows astronauts the body they will land with — and what moves it.",
     "primary": "Try the demo",
     "secondary": "Watch the video"
   },
   "tour": {
     "nav": "Explore the demo",
-    "title": "Inside the KAWSAY demo",
+    "title": "Inside the UPRIGHT demo",
     "intro": "You’re on day 142 of a simulated mission. Choose a screen below to see what it does and try it yourself.",
     "tryThis": "Try this",
     "openScreen": "Open in the demo",
@@ -37,7 +37,7 @@
       "check": {
         "tab": "Daily check",
         "title": "Turn a symptom into a next step",
-        "description": "Log how you feel and review the day’s readings. KAWSAY combines symptoms with context such as sleep and cabin CO₂ to explain what it flags.",
+        "description": "Log how you feel and review the day’s readings. UPRIGHT combines symptoms with context such as sleep and cabin CO₂ to explain what it flags.",
         "action": "Open the “Demo” menu and choose the headache scene to see a finding with data already filled in.",
         "imageAlt": "Daily check screen showing the blood pressure fields and the on-screen keypad."
       },
@@ -58,7 +58,7 @@
     }
   },
   "video": {
-    "title": "KAWSAY in",
+    "title": "UPRIGHT in",
     "titleAccent": "30 seconds",
     "subtitle": "A crew member skips exercise for a week, sees their landing-day self decline, and brings it back.",
     "soon": "Video coming soon",
@@ -79,7 +79,7 @@
     "solutions": [
       { "icon": "mirror", "title": "Future Self", "text": "Shows you today next to your projected self on arrival day. Every workout, glass of water and hour of sleep bends the line." },
       { "icon": "rules", "title": "Compound risk engine", "text": "Explainable rules read several indicators together. Each one cites the NASA page behind it." },
-      { "icon": "loop", "title": "Earth-independent loop", "text": "Measure, understand, act, verify, escalate. KAWSAY checks that the fix worked before it asks Earth." },
+      { "icon": "loop", "title": "Earth-independent loop", "text": "Measure, understand, act, verify, escalate. UPRIGHT checks that the fix worked before it asks Earth." },
       { "icon": "watch", "title": "An alarm on your wrist", "text": "The smart band watches six signals around the clock and raises the alarm, even with the app in the background." }
     ]
   },
@@ -135,7 +135,7 @@
     ],
     "connectTitle": "Connect",
     "repoLabel": "GitHub repository",
-    "copyright": "© 2026 KAWSAY. NASA Space Apps Challenge 2026 submission.",
+    "copyright": "© 2026 UPRIGHT. NASA Space Apps Challenge 2026 submission.",
     "disclaimer": "Prototype for a hackathon. Not a medical device."
   },
   "links": {

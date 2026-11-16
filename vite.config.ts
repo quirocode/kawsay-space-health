@@ -21,8 +21,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'KAWSAY — What body will you land with?',
-        short_name: 'KAWSAY',
+        name: 'UPRIGHT — Land on your feet.',
+        short_name: 'UPRIGHT',
         description: 'Health copilot for astronauts on long-duration missions. Prototype, not a medical device.',
         theme_color: '#0B3D91',
         background_color: '#0F1517',

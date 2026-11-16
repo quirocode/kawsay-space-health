@@ -1,7 +1,7 @@
 {
   "app": {
-    "name": "KAWSAY",
-    "tagline": "¿Con qué cuerpo vas a aterrizar?",
+    "name": "UPRIGHT",
+    "tagline": "Aterriza de pie.",
     "disclaimer": "Prototipo para una hackathon. No es un dispositivo médico.",
     "disclaimerOk": "Entendido",
     "offline": "Sin conexión · todos los datos en esta tablet",
@@ -50,7 +50,7 @@
     "today": "Hoy es el día {day} desde el lanzamiento.",
     "landing": "Aterrizas el día {total}, dentro de {days} días. Yo futuro muestra tu cuerpo ese día.",
     "why": "El aterrizaje es el día más exigente de la misión: la gravedad vuelve cuando tu cuerpo está más débil. Cada día hasta entonces cuenta.",
-    "sol": "En Marte, un día se llama sol y dura 24 h 39 min. Mientras viajas, KAWSAY cuenta días normales.",
+    "sol": "En Marte, un día se llama sol y dura 24 h 39 min. Mientras viajas, UPRIGHT cuenta días normales.",
     "close": "Entendido",
     "edit": "Editar misión y días",
     "editTitle": "Tu misión",

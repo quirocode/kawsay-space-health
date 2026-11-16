@@ -3,7 +3,7 @@
 Read this first. It applies to Claude Code, DeepSeek, and any other assistant a teammate pastes it into.
 
 ## What we are building
-**KAWSAY** — a health copilot for astronauts on long-duration missions, built for NASA Space Apps Challenge 2026 ("Create Health Monitoring Software for Astronauts on Space Missions").
+**UPRIGHT** — a health copilot for astronauts on long-duration missions, built for NASA Space Apps Challenge 2026 ("Create Health Monitoring Software for Astronauts on Space Missions").
 
 It answers one question no dashboard answers: **"What body will I land with?"**
 

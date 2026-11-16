@@ -4,7 +4,7 @@
 
 ---
 
-You are writing ONE pure TypeScript module and its unit tests for KAWSAY, a health copilot for astronauts (NASA Space Apps 2026). Follow these rules strictly:
+You are writing ONE pure TypeScript module and its unit tests for UPRIGHT, a health copilot for astronauts (NASA Space Apps 2026). Follow these rules strictly:
 
 - Output exactly two files: `src/domain/indicators.ts` and `src/domain/indicators.test.ts`.
 - Pure TypeScript (strict mode). No React, no browser APIs, no network, no `Math.random`. Import types only from `./types`.
@@ -16,7 +16,7 @@ You are writing ONE pure TypeScript module and its unit tests for KAWSAY, a heal
 
 ```ts
 /**
- * KAWSAY — domain contract (v1, frozen Sat 12:00 Lima).
+ * UPRIGHT — domain contract (v1, frozen Sat 12:00 Lima).
  * Single source of truth shared by the science engine (P3) and the UI (P1/P2).
  * Only P1 edits this file. Everything in src/domain must stay pure TypeScript:
  * no React, no browser APIs, no network, no unseeded randomness.
@@ -275,7 +275,7 @@ export const SRC = {
   environment: nasa('NASA HRP — Hazard: Hostile and Closed Environments', 'https://www.nasa.gov/hrp/hazard-hostile-closed-environments/'),
   co2: nasa('NASA-STD-3001 Technical Brief OCHMO-TB-004 — Carbon Dioxide', 'https://www.nasa.gov/ochmo-tb-004-carbon-dioxide-2/'),
   prototype: {
-    label: 'KAWSAY prototype value (general adult reference, not a NASA figure)',
+    label: 'UPRIGHT prototype value (general adult reference, not a NASA figure)',
     url: 'https://github.com/quirocode/kawsay-space-health/blob/main/docs/04-recursos-nasa.md',
     official: false,
   },

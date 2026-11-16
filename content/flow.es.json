@@ -81,7 +81,7 @@
     "compound": "Hallazgo compuesto · {time}",
     "watchAlert": "Alerta del reloj · {time}",
     "none": "Nada necesita tu atención ahora.",
-    "noneHint": "KAWSAY cruza tus mediciones cada vez que llega una.",
+    "noneHint": "UPRIGHT cruza tus mediciones cada vez que llega una.",
     "onBoard": "Resuelto a bordo — no hace falta esperar a la Tierra.",
     "escalates": "Este también va al médico de vuelo.",
     "gotIt": "Entendido, lo hago hoy",
@@ -94,7 +94,7 @@
     "later": "{time} · {min} min después",
     "ifNot": "Si no hubiera funcionado",
     "noBetter": "Sin mejora",
-    "ifNotText": "KAWSAY lo agrega al informe del médico de vuelo y sigue atento.",
+    "ifNotText": "UPRIGHT lo agrega al informe del médico de vuelo y sigue atento.",
     "notImproved": "Lo enviamos a la Tierra",
     "history": "Más temprano hoy",
     "open": "Abrir",
@@ -121,7 +121,7 @@
     "queuedText": "Nada nuevo desde {time}. Se arma un nuevo informe cuando algo cambie.",
     "noContact": "Sin contacto",
     "conjunctionTitle": "Conjunción solar",
-    "conjunctionText": "Informe guardado en este dispositivo. KAWSAY mantiene el ciclo funcionando a bordo.",
+    "conjunctionText": "Informe guardado en este dispositivo. UPRIGHT mantiene el ciclo funcionando a bordo.",
     "readiness": "Aptitud para el aterrizaje",
     "withPlan": "con plan",
     "nothingDone": "Aún no hay acciones registradas.",
@@ -170,7 +170,7 @@
     "cannot": "El reloj no puede medir esto",
     "cannotHint": "Vienen de tu chequeo diario.",
     "startCheck": "Empezar chequeo",
-    "rulesTitle": "Cuándo alerta KAWSAY",
+    "rulesTitle": "Cuándo alerta UPRIGHT",
     "rules": [
       "Frecuencia cardíaca de 110 o más en reposo, por 1 min · Vigilar",
       "Frecuencia cardíaca de 110 o más en reposo, por 5 min · Actuar",
@@ -194,7 +194,7 @@
     "imHere": "Estoy aquí. Empezar el chequeo",
     "callCrew": "Llamar a un compañero de tripulación ahora",
     "crewCalled": "Tripulación alertada a las {time}",
-    "countdown": "Sin respuesta en {time} y KAWSAY alerta a la tripulación.",
+    "countdown": "Sin respuesta en {time} y UPRIGHT alerta a la tripulación.",
     "silence": "Silencio",
     "silenced": "Silenciado",
     "usual": "Tu frecuencia en reposo habitual es de {low} a {high}.",
@@ -206,7 +206,7 @@
     "next": "Siguiente",
     "done": "Listo",
     "save": "Guardar medición",
-    "thinks": "Lo que piensa KAWSAY",
+    "thinks": "Lo que piensa UPRIGHT",
     "notRuledOut": "No descartado: un problema de ritmo. Si no se estabiliza, se avisa al médico de la tripulación y a la Tierra.",
     "timerStart": "Iniciar los 2 minutos",
     "timerRunning": "Sigue · {time}",
@@ -234,7 +234,7 @@
       "Sigue en reposo.",
       "Mantén el reloj puesto.",
       "Nada de ejercicio ni preparación de EVA.",
-      "KAWSAY sigue revisando cada 5 segundos."
+      "UPRIGHT sigue revisando cada 5 segundos."
     ],
     "nothing": "No hay ninguna alerta del reloj abierta.",
     "backToWatch": "Volver a los datos del reloj"
@@ -259,11 +259,11 @@
     "unsupported": {
       "no-api": {
         "title": "Bluetooth no está disponible aquí",
-        "hint": "Abre KAWSAY en Chrome o Edge, o usa la app de escritorio."
+        "hint": "Abre UPRIGHT en Chrome o Edge, o usa la app de escritorio."
       },
       "insecure": {
         "title": "Bluetooth necesita una página segura",
-        "hint": "Abre KAWSAY desde su dirección https o desde la app de escritorio."
+        "hint": "Abre UPRIGHT desde su dirección https o desde la app de escritorio."
       },
       "off": {
         "title": "Bluetooth está apagado",
@@ -275,7 +275,7 @@
       "El Bluetooth de esta computadora está encendido.",
       "La banda está cargada, en tu muñeca y a menos de 1 m.",
       "Apaga el Bluetooth de tu celular. La banda mantiene un solo enlace Bluetooth a la vez, y la app del celular lo ocupa.",
-      "Xiaomi Mi Band 4, 5 o 6: ten a mano la clave de la banda. La Xiaomi Smart Band 7 y posteriores usan otra verificación que KAWSAY aún no soporta."
+      "Xiaomi Mi Band 4, 5 o 6: ten a mano la clave de la banda. La Xiaomi Smart Band 7 y posteriores usan otra verificación que UPRIGHT aún no soporta."
     ],
     "readyNote": "Ahora se abre una lista de dispositivos cercanos. Elige tu banda.",
     "openList": "Abrir lista de dispositivos",
@@ -343,7 +343,7 @@
     ],
     "keyHelpTitle": "Otras formas de obtener la clave",
     "keyHelp": [
-      "La banda nunca envía su clave por Bluetooth, así que se obtiene una vez desde tu cuenta; después KAWSAY solo necesita Bluetooth.",
+      "La banda nunca envía su clave por Bluetooth, así que se obtiene una vez desde tu cuenta; después UPRIGHT solo necesita Bluetooth.",
       "En una computadora con Node: ejecuta  node tools/get-band-key.mjs  e inicia sesión con la cuenta de la banda; imprime una clave 0x….",
       "Los pasos completos y una opción de banda de pecho que no necesita clave están en tools/README-band-key.md.",
       "No reinicies ni vuelvas a vincular la banda después: eso cambia la clave y tendrías que obtenerla de nuevo."

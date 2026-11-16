@@ -31,9 +31,9 @@ const KEY_SNIPPET =
   "if(!items){alert('Signed in, but no band on this account. Use the account your Mi Fitness app uses.');return;}" +
   "const K=[];for(const d of items){let k=null;try{k=JSON.parse(d.additionalInfo||'{}').auth_key||null;}catch(e){}if(k&&/^[0-9a-f]{32}$/i.test(k))K.push('0x'+k.toLowerCase());}" +
   "if(!K.length){alert('Found a device but no usable key (it may be a newer watch).');return;}" +
-  "console.log('KAWSAY band key:',K[0]);" +
-  "try{await navigator.clipboard.writeText(K[0]);alert('Band key copied to the clipboard:  '+K[0]+'   — go back to KAWSAY and paste it.');}" +
-  "catch(e){alert('Your band key is:  '+K[0]+'   — copy it into KAWSAY.');}})();";
+  "console.log('UPRIGHT band key:',K[0]);" +
+  "try{await navigator.clipboard.writeText(K[0]);alert('Band key copied to the clipboard:  '+K[0]+'   — go back to UPRIGHT and paste it.');}" +
+  "catch(e){alert('Your band key is:  '+K[0]+'   — copy it into UPRIGHT.');}})();";
 
 /** Wall-clock "now", once a second: band readings carry real time, not ship time. */
 export function useWallClock(): number {

@@ -22,7 +22,7 @@ export interface CrewProfile {
   role: Bi;
   /** Crew medical officer: sees everyone's status on the crew screen. */
   cmo: boolean;
-  /** What KAWSAY watches more closely for this person, and why. */
+  /** What UPRIGHT watches more closely for this person, and why. */
   notes: { text: Bi; source: Source }[];
 }
 

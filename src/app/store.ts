@@ -293,7 +293,7 @@ export function briefInput(s: Pick<AppState, 'cases' | 'briefs' | 'readings' | '
 // ── Store ─────────────────────────────────────────────────────────────────────
 let database: Database = memoryDatabase();
 const persist = (write: (db: Database) => Promise<void>) => {
-  void write(database).catch((err) => console.error('KAWSAY could not save to the local database:', err));
+  void write(database).catch((err) => console.error('UPRIGHT could not save to the local database:', err));
 };
 
 export const useApp = create<AppState>()((set, get) => {
@@ -356,12 +356,12 @@ export const useApp = create<AppState>()((set, get) => {
       try {
         snap = await database.load();
       } catch (err) {
-        console.error('KAWSAY could not open the local database; running in memory for this session:', err);
+        console.error('UPRIGHT could not open the local database; running in memory for this session:', err);
         database = memoryDatabase();
       }
       if (!snap || snap.session.demoVersion !== DEMO_VERSION) {
         snap = seedSnapshot();
-        await database.replace(snap).catch((err) => console.error('KAWSAY could not seed the local database:', err));
+        await database.replace(snap).catch((err) => console.error('UPRIGHT could not seed the local database:', err));
       }
       set({ ...fromSnapshot(snap), hydrated: true });
     },

@@ -25,7 +25,7 @@ Datos clave verificados:
 - **Pantalla "Traje y fases" (`/suit`)**: línea de tiempo de 5 fases (lanzamiento → crucero → EVA → reentrada → en tierra). Para cada una muestra *qué llevas puesto, qué le pasa al cuerpo y qué se mide*. Eliges una situación de demo (normal / vigilar / actuar), pulsas **Hacer chequeo** y se simula la medición con un generador con semilla (determinista para la demo).
 - **Motor puro `src/domain/suit.ts`** (+ 11 pruebas): 17 señales con umbrales y fuentes, reglas por fase y pasos ordenados por urgencia (máx. 5). Ejemplos: síntomas de descompresión → "termina la EVA y vuelve a presión"; sin sal+agua antes de la reentrada → tomarlas; prueba de pie en rojo → acostarse, nada de tareas críticas.
 - **Explicabilidad**: cada lectura muestra una regla visual (franjas bien/vigilar/actuar con marcador) y la traza *Medido → Comparado con → Entonces*, más *cómo se mide en el traje* y *por qué importa en esta fase*, con etiquetas NASA / Prototipo. Cada paso dice *porque:* qué lecturas lo activaron.
-- **Pantalla "Cómo funciona" (`/how`)**, botón **?** en la barra superior: el ciclo Medir → Entender → Actuar → Verificar → Escalar, qué significa cada color, de dónde salen los números y lo que KAWSAY no hace.
+- **Pantalla "Cómo funciona" (`/how`)**, botón **?** en la barra superior: el ciclo Medir → Entender → Actuar → Verificar → Escalar, qué significa cada color, de dónde salen los números y lo que UPRIGHT no hace.
 
 Todo el texto está en `content/suit.json` y `content/how.json` (EN + ES).
 

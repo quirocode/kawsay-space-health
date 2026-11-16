@@ -7,7 +7,7 @@
     },
     "switcher": {
       "label": "Crew member on this device",
-      "title": "Who is using KAWSAY?",
+      "title": "Who is using UPRIGHT?",
       "hint": "Each person has their own readings, baselines and alerts.",
       "cmo": "Medical officer",
       "seeAll": "See the whole crew"
@@ -19,7 +19,7 @@
       "respondFor": "Respond for {name}",
       "yourRecord": "Open on this device",
       "noFindings": "Nothing needs action.",
-      "watchFor": "What KAWSAY watches for {name}",
+      "watchFor": "What UPRIGHT watches for {name}",
       "shared": "Crew-level findings",
       "sharedHint": "Problems that only show when you look at everyone at once.",
       "noShared": "No crew-level finding.",
@@ -33,7 +33,7 @@
     "sim": {
       "title": "Mission simulator",
       "badge": "Simulation",
-      "intro": "For judges and training: make one crew member fall ill in three clicks and watch KAWSAY detect, explain, act and escalate. Simulated data only.",
+      "intro": "For judges and training: make one crew member fall ill in three clicks and watch UPRIGHT detect, explain, act and escalate. Simulated data only.",
       "stepA": "1. Who gets sick?",
       "stepB": "2. Where is the mission?",
       "stepC": "3. What happens?",
@@ -90,7 +90,7 @@
           "detail": "Three short nights, low mood and a slow reaction test."
         }
       },
-      "done": "Simulation loaded for {name}. KAWSAY is showing the crew screen."
+      "done": "Simulation loaded for {name}. UPRIGHT is showing the crew screen."
     },
     "arrival": {
       "title": "Landing debrief",
@@ -148,7 +148,7 @@
     },
     "switcher": {
       "label": "Tripulante en este dispositivo",
-      "title": "¿Quién usa KAWSAY?",
+      "title": "¿Quién usa UPRIGHT?",
       "hint": "Cada persona tiene sus propias lecturas, líneas base y alertas.",
       "cmo": "Oficial médica",
       "seeAll": "Ver toda la tripulación"
@@ -160,7 +160,7 @@
       "respondFor": "Responder por {name}",
       "yourRecord": "Abierto en este dispositivo",
       "noFindings": "Nada requiere acción.",
-      "watchFor": "Qué vigila KAWSAY en {name}",
+      "watchFor": "Qué vigila UPRIGHT en {name}",
       "shared": "Hallazgos de tripulación",
       "sharedHint": "Problemas que solo aparecen al mirar a todos a la vez.",
       "noShared": "Ningún hallazgo de tripulación.",
@@ -174,7 +174,7 @@
     "sim": {
       "title": "Simulador de misión",
       "badge": "Simulación",
-      "intro": "Para jurados y entrenamiento: haz que un tripulante enferme en tres clics y mira cómo KAWSAY detecta, explica, actúa y escala. Solo datos simulados.",
+      "intro": "Para jurados y entrenamiento: haz que un tripulante enferme en tres clics y mira cómo UPRIGHT detecta, explica, actúa y escala. Solo datos simulados.",
       "stepA": "1. ¿Quién enferma?",
       "stepB": "2. ¿Dónde está la misión?",
       "stepC": "3. ¿Qué ocurre?",
@@ -231,7 +231,7 @@
           "detail": "Tres noches cortas, ánimo bajo y una prueba de reacción lenta."
         }
       },
-      "done": "Simulación cargada para {name}. KAWSAY muestra la pantalla de tripulación."
+      "done": "Simulación cargada para {name}. UPRIGHT muestra la pantalla de tripulación."
     },
     "arrival": {
       "title": "Informe de aterrizaje",
