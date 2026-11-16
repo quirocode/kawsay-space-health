@@ -1,6 +1,6 @@
 # design/ — owner: P4
 
-- `kawsay.pen` — pen.dev file (encrypted; open it with the pen.dev app). Contains:
+- `kawsay.pen` — pen.dev document (plain JSON; open it with the pen.dev app; the file name keeps the old project identifier). Contains:
   - the **design system** (variables: light + night palettes Mars, JWST, Lunar, Aurora, Earthrise);
   - **Components**: status badges (OK / Watch / Act / Old data), NASA / Prototype tags, primary and secondary buttons, top bar, nav bar, body figure with one shape per zone;
   - **8 screens** (1194 × 834, tablet landscape) with the Sol 142 content: 01 Home · Future Self, 02 Daily check, 03 Zone detail, 04 Finding and action, 05 Verification, 06 Flight surgeon brief, 07 Environment, 08 Home at night (Mars palette).
