@@ -339,6 +339,7 @@ function Technology({ copy }: { copy: Copy }) {
               <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-l-accent-soft text-l-accent"><Icon name={item.icon} className="h-5 w-5" /></span>
               <h3 className="mt-5 text-xl font-semibold">{item.title}</h3>
               <p className="mt-2 text-l-muted">{item.text}</p>
+              {item.icon === 'watch' && <BiometricPulse />}
             </li>
           ))}
         </ul>
@@ -453,7 +454,6 @@ export function Landing() {
       />
       <main>
         <Hero copy={copy} language={language} />
-        <BiometricPulse />
         <DemoTour copy={copy.tour} language={language} linkTo={(path) => demoLink(path, language)} />
         <Video copy={copy} language={language} />
         <Challenge copy={copy} />

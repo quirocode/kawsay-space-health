@@ -272,26 +272,60 @@ body {
   body:has(.k-cursor-root), body:has(.k-cursor-root) a, body:has(.k-cursor-root) button { cursor:none; }
 }
 @media(hover:none),(pointer:coarse) { .k-cursor-root { display:none; } }
-.k-pulse-section { position:relative; padding:96px 20px; background:radial-gradient(ellipse at 50% 10%,#17305644,transparent 65%),var(--l-bg); isolation:isolate; }
-.k-pulse-container { width:100%; max-width:1050px; margin:auto; }
-.k-pulse-card { display:grid;grid-template-columns:minmax(220px,.95fr) minmax(300px,1.25fr); gap:22px;align-items:center; min-height:190px;padding:35px 34px;
-  overflow:hidden;border-radius:20px;border:1px solid #36547a; background:linear-gradient(110deg,#15233c,#101d35);box-shadow:0 25px 75px #02060f5e; }
-.k-pulse-copy { position:relative; z-index:1; }
-.k-pulse-eyebrow { color:#75E6F0; font-size:13px;font-weight:700;letter-spacing:.19em; }
-.k-pulse-copy h2 { color:#F4FAFF; font-size:clamp(21px,2.2vw,28px);font-weight:700;margin:12px 0 14px; }
-.k-pulse-copy > p:last-child { color:#afbdd0;font-size:16px;line-height:1.5; }
-.k-pulse-visual {height:130px;position:relative;overflow:hidden;pointer-events:none;mask-image:linear-gradient(to right,transparent,black 7%,black 92%,transparent); }
-.k-pulse-visual svg { width:100%;height:100%;overflow:hidden; }
-.k-pulse-baseline { stroke:#75E6F055; stroke-width:1.5; }
-.k-pulse-path { fill:none; stroke:#75E6F0; stroke-width:2.7;stroke-linejoin:round;stroke-linecap:round; }
-.k-pulse-glow { stroke-width:10; opacity:.35;filter:blur(6px); }
-.k-pulse-beat { animation:k-pulse-travel 5s linear infinite; }
-@keyframes k-pulse-travel { from {transform:translateX(-270px)} to{transform:translateX(810px)} }
-[data-landing-theme='day'] .k-pulse-section { background:var(--l-bg); }
-@media(max-width:680px){ .k-pulse-section{padding:64px 16px} .k-pulse-card{grid-template-columns:1fr;padding:26px 22px;gap:10px}.k-pulse-visual{height:100px} .k-nebula{filter:blur(22px)} }
 @media(prefers-reduced-motion:reduce){
  .k-nebula,.k-ambient-star,.k-pulse-beat { animation:none !important; }
- .k-pulse-beat{transform:translateX(220px)}
+ .k-pulse-beat{transform:translateX(135px)}
  .k-cursor-root{display:none}
  body:has(.k-cursor-root),body:has(.k-cursor-root) a,body:has(.k-cursor-root) button{cursor:auto}
 }
+
+
+/* Deep-space palette: ambient light only; preserve existing star, reveal and cursor motion. */
+:root:not([data-landing-theme='day']) #top {
+  background:
+    radial-gradient(ellipse 40% 52% at 4% 36%, rgb(101 69 160 / 0.24), transparent 85%),
+    radial-gradient(ellipse 37% 52% at 97% 38%, rgb(35 109 163 / 0.23), transparent 84%),
+    radial-gradient(ellipse 44% 38% at 50% 57%, rgb(25 65 135 / 0.19), transparent 88%),
+    linear-gradient(180deg, #080E1D 0%, #0B1630 78%, #080E1D 100%);
+}
+:root:not([data-landing-theme='day']) .k-nebula {
+  filter: blur(32px);
+  opacity: .84;
+}
+:root:not([data-landing-theme='day']) .k-nebula-violet {
+  background: radial-gradient(ellipse 40% 48% at 14% 39%, rgb(101 69 160 / .46), transparent 82%);
+}
+:root:not([data-landing-theme='day']) .k-nebula-cyan {
+  background: radial-gradient(ellipse 39% 49% at 88% 40%, rgb(35 109 163 / .45), transparent 81%);
+}
+:root:not([data-landing-theme='day']) .k-nebula-center {
+  background: radial-gradient(ellipse 30% 29% at 50% 54%, rgb(35 109 163 / .26), transparent 83%);
+}
+:root:not([data-landing-theme='day']) .planet {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgb(42 137 217 / .48), transparent 24%),
+    radial-gradient(circle at 50% 40%, #102b4b 0%, #0a1b33 48%, #080E1D 78%);
+  box-shadow:
+    0 -2px 0 0 rgb(117 230 240 / .75),
+    0 -12px 42px 4px rgb(35 109 163 / .7),
+    0 -54px 120px 15px rgb(19 77 156 / .36);
+}
+:root:not([data-landing-theme='day']) #technology {
+  background: radial-gradient(ellipse 60% 30% at 50% 0%, rgb(35 109 163 / .12), transparent 83%), var(--l-bg);
+}
+/* The ECG stays a purely decorative motif inside the existing smart-band feature. */
+.k-pulse-visual {
+  height: 78px;
+  width: 100%;
+  margin-top: 18px;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+}
+.k-pulse-visual svg { display: block; height: 100%; width: 100%; overflow: hidden; }
+.k-pulse-baseline { stroke: #75E6F0; stroke-width: 1.1; opacity: .23; }
+.k-pulse-path { fill: none; stroke: #75E6F0; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+.k-pulse-glow { stroke-width: 8; opacity: .38; filter: blur(5px); }
+.k-pulse-beat { animation: k-pulse-travel 4.6s linear infinite; }
+@keyframes k-pulse-travel { from { transform: translateX(-260px); } to { transform: translateX(400px); } }
+@media (prefers-reduced-motion: reduce) { .k-pulse-beat { animation: none; transform: translateX(130px); } }
