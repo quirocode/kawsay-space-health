@@ -17,6 +17,9 @@ import { SuitScreen } from '../features/suit';
 import { MissionGuide } from '../features/mission-guide/MissionGuide';
 import { HowScreen } from '../features/how';
 import { Glyph, WorkspaceNav } from './WorkspaceNav';
+import { CrewScreen, CrewSwitcher } from '../features/crew';
+import { SimulatorScreen } from '../features/simulator';
+import { ArrivalScreen } from '../features/arrival';
 
 function useOnline() {
   const [online, setOnline] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine));
@@ -43,6 +46,7 @@ function TopBar() {
     <header className="mission-header">
       <div className="mission-context">
         <MissionName />
+        <CrewSwitcher />
         <span className="mission-divider" aria-hidden="true" />
         <Link href="/environment" aria-label={`${ui.nav.environment}: ${env}`} className="mission-environment">
           <Glyph name="environment" size={16} />{env}
@@ -111,7 +115,7 @@ function DisplayPreferences() {
   );
 }
 
-/** "Inti-1 · A. Quispe": the mission and the crew member using this device. Opens the Mission screen. */
+/** "Inti-1 · E. Rostova": the mission and the crew member using this device. Opens the Mission screen. */
 function MissionName() {
   const mission = useApp((s) => s.mission);
   const { ui } = useCopy();
@@ -273,6 +277,9 @@ export function App() {
                 <Route path="/suit" component={SuitScreen} />
                 <Route path="/how" component={HowScreen} />
                 <Route path="/mission-guide" component={MissionGuide} />
+                <Route path="/crew" component={CrewScreen} />
+                <Route path="/simulator" component={SimulatorScreen} />
+                <Route path="/arrival" component={ArrivalScreen} />
                 <Route>
                   <p className="p-8">{lang === 'es' ? 'Pantalla no encontrada.' : 'Not found.'}</p>
                 </Route>

@@ -12,11 +12,12 @@ import { engine, loadDemoMission, watchEngine } from './engine';
 import { indexedDatabase, loadDeviceProfile, memoryDatabase, saveDeviceProfile, type AlertRecord, type CaseRecord, type Database, type DeviceProfile, type LoggedVerification, type MissionInfo, type PendingRecheck, type Session, type Snapshot } from './db';
 import { sampleAt, windowOf } from '../data/watchSeries';
 import { cabinSamples, tsOf } from '../data/sol142';
+import { CREW, CREW_IDS, DEFAULT_CREW, crewHistory, type CrewId } from '../data/crew';
 
 export type { AlertRecord, CaseRecord, DeviceProfile, MissionInfo, PendingRecheck } from './db';
 
 /** The seeded demo mission. Fictional name; the crew name matches the brief. */
-export const DEFAULT_MISSION: MissionInfo = { name: 'Inti-1', crew: 'A. Quispe' };
+export const DEFAULT_MISSION: MissionInfo = { name: 'Inti-1', crew: CREW[DEFAULT_CREW].short };
 /** Longest mission the editor accepts, in days (a Mars round trip is under 1,000). */
 export const MAX_MISSION_DAYS = 1000;
 
@@ -42,7 +43,7 @@ export function normalizeMission(edit: MissionEdit, current: MissionInfo): Missi
 }
 
 /** Bump when the demo data or the stored shape changes, so returning devices reload the seeded mission. */
-export const DEMO_VERSION = 3;
+export const DEMO_VERSION = 4;
 /** Seconds of watch history the rules look at. */
 const DETECT_WINDOW_SEC = 360;
 /** An unanswered emergency goes to the crew after this long. */
@@ -53,6 +54,41 @@ const COOLDOWN_MS = 45 * 60_000;
 export type Scene = 'morning' | 'headache' | 'watch';
 
 export type Lang = 'en' | 'es';
+
+/** One crew member's health record. The open one lives in the top-level fields of the store. */
+export interface CrewSlice {
+  readings: Reading[];
+  cases: CaseRecord[];
+  alerts: AlertRecord[];
+  pending: PendingRecheck | null;
+  acknowledged: Record<string, number>;
+  recoveryStartTs: number | null;
+  lastCheckTs: number | null;
+  plan: CountermeasurePlan;
+  planAccepted: boolean;
+}
+
+const seeds = new Map<CrewId, Reading[]>();
+/** Seeded history per crew member, built once. */
+export function crewSeed(id: CrewId): Reading[] {
+  if (!seeds.has(id)) seeds.set(id, crewHistory(id));
+  return seeds.get(id)!;
+}
+function seedSlice(id: CrewId): CrewSlice {
+  return {
+    readings: crewSeed(id), cases: [], alerts: [], pending: null, acknowledged: {}, recoveryStartTs: null, lastCheckTs: null,
+    plan: loadDemoMission().defaultPlan, planAccepted: false,
+  };
+}
+const sliceOf = (s: AppState): CrewSlice => ({
+  readings: s.readings, cases: s.cases, alerts: s.alerts, pending: s.pending, acknowledged: s.acknowledged,
+  recoveryStartTs: s.recoveryStartTs, lastCheckTs: s.lastCheckTs, plan: s.plan, planAccepted: s.planAccepted,
+});
+
+/** Every crew member's readings, the open one included. */
+export function crewReadings(s: Pick<AppState, 'crewId' | 'readings' | 'crewSlices'>): Record<CrewId, Reading[]> {
+  return Object.fromEntries(CREW_IDS.map((id) => [id, id === s.crewId ? s.readings : s.crewSlices[id]?.readings ?? crewSeed(id)])) as Record<CrewId, Reading[]>;
+}
 
 interface Prefs {
   disclaimerSeen: boolean;
@@ -77,6 +113,9 @@ export interface AppState extends Prefs {
   lastCheckTs: number | null;
   mission: MissionInfo;
   deviceProfile: DeviceProfile;
+  /** Whose record is open. The other three are kept in crewSlices. */
+  crewId: CrewId;
+  crewSlices: Partial<Record<CrewId, CrewSlice>>;
 
   hydrate(db?: Database): Promise<void>;
   addReadings(rs: Reading[]): void;
@@ -87,6 +126,9 @@ export interface AppState extends Prefs {
   setEnvironment(env: Environment, commDelayMin: number): void;
   setMission(edit: MissionEdit): void;
   setDeviceProfile(profile: DeviceProfile): void;
+  selectCrew(id: CrewId): void;
+  /** Simulator: add readings to several crew members at once, then open one of them. */
+  applyScenario(input: { add: Partial<Record<CrewId, Reading[]>>; focus: CrewId; nowTs?: number; environment?: Environment; commDelayMin?: number; phase?: MissionContext['phase'] }): void;
 
   startRecheck(finding: Finding): void;
   acknowledge(ruleId: string): void;
@@ -159,6 +201,7 @@ export function seedSnapshot(): Snapshot {
       lastCheckTs: null,
       mission: DEFAULT_MISSION,
       deviceProfile: loadDeviceProfile(),
+      crewId: DEFAULT_CREW,
     },
     readings: demo.history,
     cases: [],
@@ -170,7 +213,7 @@ export function seedSnapshot(): Snapshot {
 const sessionOf = (s: AppState): Session => ({
   demoVersion: DEMO_VERSION, context: s.context, nowTs: s.nowTs, plan: s.plan, planAccepted: s.planAccepted, viewDay: s.viewDay,
   pending: s.pending, acknowledged: s.acknowledged, recoveryStartTs: s.recoveryStartTs, lastCheckTs: s.lastCheckTs,
-  mission: s.mission, deviceProfile: s.deviceProfile,
+  mission: s.mission, deviceProfile: s.deviceProfile, crewId: s.crewId,
 });
 
 const fromSnapshot = (snap: Snapshot) => ({
@@ -179,6 +222,8 @@ const fromSnapshot = (snap: Snapshot) => ({
   recoveryStartTs: snap.session.recoveryStartTs, lastCheckTs: snap.session.lastCheckTs,
   mission: snap.session.mission ?? DEFAULT_MISSION,
   deviceProfile: snap.session.deviceProfile ?? loadDeviceProfile(),
+  crewId: (CREW_IDS as readonly string[]).includes(snap.session.crewId ?? '') ? snap.session.crewId as CrewId : DEFAULT_CREW,
+  crewSlices: {},
   readings: snap.readings, cases: snap.cases, alerts: snap.alerts, briefs: snap.briefs,
 });
 
@@ -342,6 +387,39 @@ export const useApp = create<AppState>()((set, get) => {
       saveDeviceProfile(deviceProfile);
       commit({ deviceProfile });
     },
+    selectCrew: (id) => {
+      const s = get();
+      if (id === s.crewId) return;
+      const crewSlices = { ...s.crewSlices, [s.crewId]: sliceOf(s) };
+      const next = crewSlices[id] ?? seedSlice(id);
+      set({ ...next, crewId: id, crewSlices, mission: { ...s.mission, crew: CREW[id].short } });
+      const snap = snapshotOf(get());
+      persist((db) => db.replace(snap));
+    },
+    applyScenario: ({ add, focus, nowTs, environment, commDelayMin, phase }) => {
+      const s = get();
+      const crewSlices = { ...s.crewSlices };
+      let active: Partial<AppState> = {};
+      for (const id of CREW_IDS) {
+        const rs = add[id];
+        if (!rs?.length) continue;
+        if (id === s.crewId) active = { readings: mergeReadings(s.readings, rs), lastCheckTs: nowTs ?? s.nowTs };
+        else {
+          const cur = crewSlices[id] ?? seedSlice(id);
+          crewSlices[id] = { ...cur, readings: mergeReadings(cur.readings, rs), lastCheckTs: nowTs ?? s.nowTs };
+        }
+      }
+      const context = {
+        ...s.context,
+        ...(environment ? { environment } : {}),
+        ...(commDelayMin !== undefined ? { commDelayMin } : {}),
+        ...(phase ? { phase } : {}),
+      };
+      set({ ...active, crewSlices, context, ...(nowTs !== undefined ? { nowTs } : {}) });
+      get().selectCrew(focus);
+      const snap = snapshotOf(get());
+      persist((db) => db.replace(snap));
+    },
 
     startRecheck: (finding) => {
       const s = get();
@@ -485,7 +563,7 @@ export const useApp = create<AppState>()((set, get) => {
     },
     resetDemo: () => {
       const snap = seedSnapshot();
-      set(fromSnapshot(snap));
+      set({ ...fromSnapshot(snap), crewId: DEFAULT_CREW, crewSlices: {} });
       persist((db) => db.replace(snap));
     },
 

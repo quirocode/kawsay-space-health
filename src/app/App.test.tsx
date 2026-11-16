@@ -38,7 +38,7 @@ describe('App shell', () => {
   it('edits the mission name, crew and days, and shows them in the header', () => {
     window.location.hash = '#/environment';
     render(<App />);
-    expect(screen.getByRole('link', { name: 'Mission Inti-1, crew member A. Quispe' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Mission Inti-1, crew member E. Rostova' })).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('Mission name'), { target: { value: 'Artemis Base' } });
     fireEvent.change(screen.getByLabelText('Crew member'), { target: { value: 'R. Quiroga' } });
     fireEvent.change(screen.getByLabelText('Today is mission day'), { target: { value: '30' } });

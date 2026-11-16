@@ -189,3 +189,8 @@ body { font-size:16px; }
 .mission-co2-control > small { color:var(--ink-2); }
 .mission-co2-control output { color:var(--brand-ink); font-weight:700; }
 .mission-co2-control input { width:100%; min-height:32px; accent-color:var(--future); cursor:ew-resize; }
+
+/* Enlarged body comparison (Future Self → "Enlarge body"): full screen, scrollable, figures taller. */
+.dashboard-anatomy:fullscreen { overflow: auto; background: var(--bg); padding: 24px; }
+.dashboard-anatomy:fullscreen .dashboard-figures { min-height: calc(100vh - 220px); }
+.dashboard-anatomy:fullscreen .dashboard-figure canvas { min-height: calc(100vh - 320px); }

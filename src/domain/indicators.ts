@@ -1,6 +1,6 @@
 // src/domain/indicators.ts
 /**
- * UPRIGHT — indicator catalog (P3-01). 18 indicators, the challenge's six first.
+ * UPRIGHT — indicator catalog (P3-01). 22 indicators, the challenge's six first.
  * Integrated by P1 from P3's DeepSeek draft (src/data/indicators.ts): ids, paths and
  * thresholds aligned with docs/tasks/P3-01-indicators.md; P3's copy kept where it fit.
  * Official numbers used here: CO₂ 3 mmHg (SRC.co2) and exercise 90 min/day (SRC.fitness). Everything else is a prototype value.
@@ -193,6 +193,39 @@ export const INDICATORS: IndicatorDef[] = [
     howToMeasure: 'Do the weekly strength routine · Compare with your pre-flight result · Enter the percentage',
     whyItMatters: 'Fitness drops 10–12 % on average in space, and some crew lose more than 20 %. Weekly checks catch it early.',
     sources: [SRC.fitness, P],
+  },
+  // ── Silent conditions (added 15 Nov): things a crew member would not notice alone ─────
+  {
+    id: 'symptom_neck', name: 'Neck swelling or fullness', unit: 'yes/no', zone: 'heart',
+    risks: ['cardio'], hazards: ['gravity'], input: 'boolean', cadence: 'per_event', staleAfterHours: 48,
+    thresholds: reported,
+    howToMeasure: 'Feel both sides of your neck · Tap yes if one side feels full, swollen or tender',
+    whyItMatters: 'In weightlessness blood pools in the neck veins. On the ISS a clot in a neck vein was found only by a planned ultrasound, with no symptoms.',
+    sources: [SRC.cardio, P],
+  },
+  {
+    id: 'symptom_flank_pain', name: 'Flank or lower back pain', unit: 'yes/no', zone: 'kidneys',
+    risks: ['bone', 'nutrition'], hazards: ['gravity'], input: 'boolean', cadence: 'per_event', staleAfterHours: 24,
+    thresholds: reported,
+    howToMeasure: 'Tap yes for a new, cramping pain in the side or lower back, with or without pain when you pass urine',
+    whyItMatters: 'Bone releases calcium in weightlessness; with little water it can form a kidney stone.',
+    sources: [SRC.bone, SRC.nutrition, P],
+  },
+  {
+    id: 'radiation_msv', name: 'Radiation dose today', unit: 'mSv', zone: 'skin_immune',
+    risks: ['radiation_cancer', 'immune'], hazards: ['radiation'], input: 'number', cadence: 'daily', staleAfterHours: 36,
+    thresholds: [red('10 mSv or more in a day', { min: 10 }), yellow('1 mSv or more in a day', { min: 1 })],
+    howToMeasure: 'Read your personal dosimeter, or the cabin radiation monitor · Enter today\'s dose',
+    whyItMatters: 'Outside Earth\'s magnetic field, a solar storm can deliver a large dose in hours. NASA caps a career at 600 mSv.',
+    sources: [SRC.radiation, SRC.radiation_cancer, P],
+  },
+  {
+    id: 'pvt_ms', name: 'Reaction time test', unit: 'ms', zone: 'brain',
+    risks: ['sleep', 'behavioral', 'hypoxia'], hazards: ['isolation', 'environment'], input: 'test', cadence: 'weekly', staleAfterHours: 24 * 8,
+    thresholds: [red('450 ms or slower', { min: 450 }), yellow('350–449 ms', { min: 350, max: 450 })],
+    howToMeasure: 'Run the 3-minute reaction test · Tap as soon as the light appears · Enter the average time',
+    whyItMatters: 'Short sleep, CO₂ and low oxygen slow the brain before you notice it. A timed test sees it first.',
+    sources: [SRC.sleep, SRC.behavioral, P],
   },
 ];
 

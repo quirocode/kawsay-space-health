@@ -9,6 +9,7 @@ import { StatusBadge } from '../../components/StatusBadge';
 import { BTN_PRIMARY, BTN_SECONDARY, Thread } from '../../components/ui';
 import { WhyPanel } from '../../components/WhyPanel';
 import { explainAlert } from '../../app/why/explain';
+import { CREW } from '../../data/crew';
 import { activityMinutes, RESTING_BAND } from './WatchScreen';
 import { startAlarm, stopAlarm } from './alarmSound';
 
@@ -53,6 +54,7 @@ export function StateNow({ compact = false }: { compact?: boolean }) {
 
 function AlarmBody({ record }: { record: AlertRecord }) {
   const lang = useLang();
+  const crewId = useApp((s) => s.crewId);
   const nowTs = useApp((s) => s.nowTs);
   const ack = useApp((s) => s.ackAlert);
   const silence = useApp((s) => s.silenceAlert);
@@ -68,7 +70,10 @@ function AlarmBody({ record }: { record: AlertRecord }) {
   return (
     <div className="flex h-full flex-col gap-4 overflow-auto p-8">
       <div className="flex items-center justify-between">
-        <StatusBadge status="red" label={flow.level[alert.level]} />
+        <span className="flex items-center gap-3">
+          <StatusBadge status="red" label={flow.level[alert.level]} />
+          <span className="text-[22px] font-bold">{CREW[crewId].name}</span>
+        </span>
         <span className="tabular text-ink-2">{clock(alert.detectedTs)}</span>
       </div>
       <h1 id="alarm-title" className="max-w-[22ch] text-[48px] font-bold leading-[1.05]">{te(headline)}</h1>

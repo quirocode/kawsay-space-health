@@ -7,10 +7,11 @@ const EXPECTED = [
   'bp_systolic', 'bp_diastolic', 'heart_rate', 'glucose', 'body_temp', 'sleep_hours', 'mood',
   'headache_score', 'symptom_dizziness', 'symptom_vision', 'symptom_confusion', 'symptom_joint_pain', 'symptom_skin',
   'spo2', 'cabin_co2', 'exercise_min', 'water_ml', 'strength_self_pct',
+  'symptom_neck', 'symptom_flank_pain', 'radiation_msv', 'pvt_ms',
 ];
 
 describe('indicator catalog (P3-01)', () => {
-  it('has exactly the 18 ids, in order, no duplicates', () => {
+  it('has exactly the 22 ids, in order, no duplicates', () => {
     expect(INDICATOR_IDS).toEqual(EXPECTED);
     expect(new Set(INDICATOR_IDS).size).toBe(EXPECTED.length);
   });
