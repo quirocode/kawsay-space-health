@@ -3,8 +3,10 @@ import { create } from 'zustand';
 import type { BodyZone, Status } from '../../domain/types';
 import { BODY_ZONES } from '../../domain/types';
 import { te, ui, useLang } from '../../app/i18n';
+import { useApp } from '../../app/store';
+import { CREW } from '../../data/crew';
 import copy from '../../../content/anatomy.json';
-import { MUSCLE_GROUPS, ORGAN_GROUPS, regionZone, type AnatomyMode, type AnatomyRegion } from './anatomyRegions';
+import { MUSCLE_GROUPS, ORGAN_GROUPS, regionZone, type AnatomyMode, type AnatomyRegion, type AnatomySex } from './anatomyRegions';
 const AnatomyCanvas = lazy(() => import('./AnatomyCanvas'));
 export type ZoneFill = Status | 'none';
 export const ZONE_LABEL: Record<BodyZone, string> = {
@@ -46,6 +48,8 @@ export function BodyFigure({ zones, variant, title, selected, onSelect, sharedCo
 }) {
   const lang = useLang();
   const t = copy[lang];
+  const crewId = useApp((s) => s.crewId);
+  const sex: AnatomySex = CREW[crewId]?.sex ?? 'female';
   const { mode, setMode } = useAnatomy();
   const [region, setRegion] = useState<AnatomyRegion | null>(null);
   const [hover, setHover] = useState<AnatomyRegion | null>(null);
@@ -65,7 +69,7 @@ export function BodyFigure({ zones, variant, title, selected, onSelect, sharedCo
     return status === 'none' ? t.noData : ui.status[status];
   };
   return (
-    <div className="flex h-full w-full flex-col gap-2" data-anatomy={variant}>
+    <div className="flex h-full w-full flex-col gap-2" data-anatomy={variant} data-anatomy-sex={sex}>
       <div className="flex flex-wrap justify-center gap-2">
         {!sharedControls && <button type="button" onClick={() => { setRegion(null); setHover(null); setIsolate(false); setMode(mode === 'muscles' ? 'organs' : 'muscles'); }} className="min-h-10 rounded-full border border-line bg-surface-2 px-3 text-sm font-bold">
           {mode === 'muscles' ? t.toOrgans : t.toMuscles}
@@ -75,7 +79,7 @@ export function BodyFigure({ zones, variant, title, selected, onSelect, sharedCo
       {!sharedControls && <p className="text-center text-xs text-ink-2">{t.gesture}</p>}
       <div className="relative min-h-[300px] flex-1 overflow-hidden rounded-card bg-surface-2">
         <Suspense fallback={<p className="p-4 text-sm">{t.loading}</p>}>
-          <AnatomyCanvas key={retry} mode={mode} zones={zones} selected={selected}
+          <AnatomyCanvas key={retry} mode={mode} sex={sex} zones={zones} selected={selected}
             region={active} hover={preview} title={title} reset={reset} isolate={isolate}
             onHover={setHover} onPick={pick} onReady={setState} />
         </Suspense>
@@ -118,7 +122,9 @@ export function BodyFigure({ zones, variant, title, selected, onSelect, sharedCo
             className="min-h-9 rounded border border-line px-2" aria-pressed={selected === zone}>{te(ZONE_LABEL[zone])}: {word(zone)}</button>)}
         </div>
       </details>
-      <a href="/anatomy/ATTRIBUTION.md" target="_blank" rel="noreferrer" className="text-center text-[11px] text-ink-2 underline">Z-Anatomy / BodyParts3D · CC BY-SA 4.0</a>
+      <a href="/anatomy/ATTRIBUTION.md" target="_blank" rel="noreferrer" className="text-center text-[11px] text-ink-2 underline">
+        {sex === 'female' ? 'HuBMAP HRA (Visible Human Female) · Z-Anatomy · CC BY 4.0 / CC BY-SA 4.0' : 'Z-Anatomy / BodyParts3D · CC BY-SA 4.0'}
+      </a>
     </div>
   );
 }
