@@ -1,0 +1,264 @@
+{
+  "en": {
+    "labels": {
+      "title": "Why?",
+      "meaning": "What it means",
+      "yourCase": "In your case",
+      "doNow": "Do this now",
+      "recheck": "When we check again",
+      "evidence": "Evidence ({n})",
+      "sources": "Sources",
+      "readAloud": "Read aloud",
+      "stopReading": "Stop reading",
+      "offlineLinks": "Links open only when there is a connection. The label is enough to find the source."
+    },
+    "ai": {
+      "simplify": "Say it simply (local AI)",
+      "showRules": "Show the exact rules text",
+      "offerTitle": "Turn on the local AI?",
+      "offerBody": "It downloads a small language model once (about 1 GB). After that it runs on this device with no internet. It only rewrites this explanation in plainer words: the rules still decide every colour and every step.",
+      "download": "Download once",
+      "notNow": "Not now",
+      "loading": "Loading the local AI… {pct} %",
+      "thinking": "Rewriting on this device…",
+      "badge": "Rewritten by local AI · the rules decided",
+      "rejected": "The local AI answer did not pass the safety check, so you see the rules text.",
+      "failed": "The local AI is not available on this device. The rules text is complete on its own."
+    },
+    "facts": {
+      "readingNoAge": "Your reading: {value}.",
+      "band": "“{level}” range: {band} ({kind}).",
+      "kindNasa": "NASA limit",
+      "kindPrototype": "prototype value",
+      "usual": "Your usual: {low}–{high} {unit} over the last {days} days.",
+      "usualPoint": "Your usual: about {value} {unit} over the last {days} days.",
+      "sudden": "That is a sudden change from your usual. Measure again to rule out a measuring error.",
+      "steady": "This is in line with your recent days, but it is still outside the safe range.",
+      "noUsual": "There are not enough past readings to know your usual yet.",
+      "unusual": "It is unusual for you: more than 2 standard deviations from your recent days.",
+      "partOf": "It is also part of: {title}.",
+      "stale": "Last reading: {age} ago.",
+      "never": "No reading yet."
+    },
+    "recheck": {
+      "minutes": "Measure again in {n} minutes.",
+      "hours": "Measure again in {n} hours.",
+      "nextCheck": "In tomorrow's daily check.",
+      "nextWeek": "In next week's test.",
+      "escalate": "If it does not get better, or you feel worse, call the crew medical officer.",
+      "escalateNow": "This goes into the brief for the flight surgeon on Earth. Tell a crewmate now too.",
+      "none": "Keep your routine. KAWSAY looks again at your next check."
+    },
+    "generic": {
+      "green": { "meaning": "{name} is inside the expected range.", "doNow": "Nothing to do. Keep your routine." },
+      "stale": { "meaning": "KAWSAY cannot judge this: the reading is too old or missing. Old data is never shown as OK.", "doNow": "Measure it in your next check." },
+      "unusual": { "meaning": "This value is inside the general range, but unusual for you.", "doNow": "Measure again later today to see if it repeats." }
+    },
+    "indicators": {
+      "bp_systolic": {
+        "high": { "meaning": "Your blood pressure is above the safe range. The higher it goes, the harder your heart and blood vessels have to work.", "red": "Sit still for 5 minutes with the cuff at heart level, then measure again. Note any headache or blurred vision.", "yellow": "Rest quietly for 5 minutes and measure again." },
+        "low": { "meaning": "Your blood pressure is low. Low pressure can make you light-headed, and it matters most when gravity returns.", "red": "Stay still, drink 250 ml of water and measure again.", "yellow": "Drink a glass of water and measure again." }
+      },
+      "bp_diastolic": {
+        "high": { "meaning": "The lower number of your blood pressure is high: your vessels stay under pressure even between heartbeats.", "red": "Sit still for 5 minutes with the cuff at heart level, then measure again. Note any headache or blurred vision.", "yellow": "Rest quietly for 5 minutes and measure again." },
+        "low": { "meaning": "The lower number of your blood pressure is low. Together with dizziness, it can mean you are short of fluid.", "red": "Stay still, drink 250 ml of water and measure again.", "yellow": "Drink a glass of water and measure again." }
+      },
+      "heart_rate": {
+        "high": { "meaning": "Your resting heart rate is higher than it should be. Common causes are dehydration, short sleep, stress or a starting infection.", "red": "Stop, sit still for 5 minutes and measure again. If your heart feels irregular, call a crewmate.", "yellow": "Drink water, rest for 10 minutes and measure again." },
+        "low": { "meaning": "Your resting heart rate is very low. A fit heart can beat slowly, but with dizziness or tiredness it needs a look.", "red": "Stay still and measure again. If you feel dizzy or faint, call a crewmate now.", "yellow": "Measure again after you have been awake and moving for a while." }
+      },
+      "glucose": {
+        "high": { "meaning": "Your blood sugar is high. A recent meal, stress, illness or some medicines can raise it.", "red": "Measure again before eating. Tell the crew medical officer if it stays this high.", "yellow": "Measure again tomorrow before your first meal." },
+        "low": { "meaning": "Your blood sugar is low. You may feel shaky, sweaty or have trouble thinking.", "red": "Eat or drink something with sugar now, then measure again.", "yellow": "Have a snack and measure again before your next meal." }
+      },
+      "body_temp": {
+        "high": { "meaning": "You have a fever. In space the immune system is weaker, and germs spread easily in a closed cabin.", "red": "Rest, drink water, keep your distance from the crew and measure again.", "yellow": "Drink water, rest and measure again." },
+        "low": { "meaning": "Your temperature reads low. Check the measurement first: a cold or damp forehead reads low.", "red": "Measure again with the sensor flush on dry skin, put on a warm layer and tell a crewmate.", "yellow": "Measure again with the sensor flush on dry skin." }
+      },
+      "sleep_hours": {
+        "low": { "meaning": "You slept too little. Short sleep slows thinking and reaction time and weakens your defences.", "red": "Avoid critical tasks today if you can, and plan an early night with the lights dimmed.", "yellow": "Protect tonight's sleep: dim the lights an hour before and keep your sleep slot." }
+      },
+      "mood": {
+        "low": { "meaning": "Your mood is low. On a long mission, isolation, short sleep and workload add up.", "red": "Talk to a crewmate today, or book a private call with the psychologist on Earth.", "yellow": "Do one thing you enjoy today and write three lines in your journal." }
+      },
+      "headache_score": {
+        "high": { "meaning": "You have a strong headache. On a spacecraft it can come from high cabin CO₂, short sleep, too little water, or fluid shifting toward the head.", "red": "Stop, tell a crewmate now and check the cabin CO₂ reading.", "yellow": "Drink 250 ml of water, move to a well-ventilated module and rate it again." }
+      },
+      "symptom_dizziness": {
+        "reported": { "meaning": "You feel dizzy. Changes in gravity disturb both your balance and your blood pressure.", "doNow": "Hold on to a handrail, stay still and measure your blood pressure." }
+      },
+      "symptom_vision": {
+        "reported": { "meaning": "Your vision is blurry. Fluid moving toward the head can press on the eyes, and low oxygen can blur vision too.", "doNow": "Check your blood oxygen now, repeat the near and far vision check, and tell the crew medical officer." }
+      },
+      "symptom_confusion": {
+        "reported": { "meaning": "You feel confused. Together with a headache, it can be a sign of low oxygen or high CO₂.", "doNow": "Tell a crewmate now and check your blood oxygen." }
+      },
+      "symptom_joint_pain": {
+        "reported": { "meaning": "You have new joint pain. Around a spacewalk, it can be decompression sickness.", "doNow": "If you are in or near a spacewalk, tell the crew now. Otherwise, note where it hurts and rate it again." }
+      },
+      "symptom_skin": {
+        "reported": { "meaning": "You have a rash or a cold sore. Stress and immune changes in space can wake up viruses that sleep in the body.", "doNow": "Keep it clean, do not share towels or food, and tell the crew medical officer." }
+      },
+      "spo2": {
+        "low": { "meaning": "Your blood oxygen is low. Your brain needs oxygen first, so low oxygen causes headache, confusion and poor judgement.", "red": "Put on the oxygen mask now and tell the crew.", "yellow": "Sit upright, breathe slowly and measure again." }
+      },
+      "cabin_co2": {
+        "high": { "meaning": "The cabin air has too much CO₂. It causes headaches and poor focus for everyone on board, not only you.", "red": "Move to a better-ventilated module and ask the crew to check the CO₂ scrubber now.", "yellow": "Tell the crew so they can check the CO₂ scrubber, and take breaks in a well-ventilated module." }
+      },
+      "exercise_min": {
+        "low": { "meaning": "You exercised less than your plan. In weightlessness, bone and muscle are lost every day they are not loaded.", "red": "Book a session today, even a short one: resistive exercise protects bone the most.", "yellow": "Add the missing minutes this week. Future Self shows how many you need." }
+      },
+      "water_ml": {
+        "low": { "meaning": "You drank too little. Too little water lowers your blood pressure and, with the calcium your bones release, raises the risk of kidney stones.", "red": "Drink 500 ml now and keep a bottle in sight for the rest of the day.", "yellow": "Drink one more bag of water before your next meal." }
+      },
+      "strength_self_pct": {
+        "low": { "meaning": "Your strength is dropping compared with before the flight. Weaker legs make standing and walking at landing harder.", "red": "Talk to the crew medical officer about your exercise plan and add resistive sessions.", "yellow": "Add resistive exercise this week and repeat the test next week." }
+      }
+    },
+    "findings": {
+      "co2_headache": { "meaning": "Your headache likely has a cause on board, so it can be fixed.", "together": "High CO₂ and short sleep both cause headaches, and together they make each other worse." },
+      "hypoxia_signs": { "meaning": "Your oxygen is low and your brain is already showing it.", "together": "Low oxygen alone can go unnoticed. With a headache, confusion or blurred vision, it needs action now." },
+      "dcs_eva": { "meaning": "Joint pain around a spacewalk can be decompression sickness: gas bubbles forming in the body when pressure drops.", "together": "Joint pain alone is common. Next to a spacewalk, it is treated as an emergency until it is ruled out." },
+      "kidney_stone": { "meaning": "Drinking little while your bones release calcium makes kidney stones more likely.", "together": "In weightlessness, bone releases calcium into the urine, and too little water concentrates it. A stone in space is very painful and hard to treat." },
+      "orthostatic_landing": { "meaning": "When gravity returns, blood pools in your legs and you may faint when you stand up.", "together": "Little exercise, little water and dizziness each lower how well you tolerate standing. Together they add up." },
+      "sleep_mood": { "meaning": "Short sleep is probably pulling your mood down.", "together": "Sleep and mood feed each other: poor sleep lowers mood, and low mood makes sleep worse." }
+    },
+    "alerts": {
+      "resting_tachycardia": "Your heart is beating fast while you rest. Too little water, short sleep, stress, fever or a heart rhythm problem can cause it.",
+      "resting_bradycardia": "Your heart is beating very slowly while you are awake. With dizziness or tiredness, it needs a check.",
+      "low_spo2": "Your blood oxygen is low. Your brain needs oxygen first, so low oxygen causes headache, confusion and poor judgement.",
+      "watch_stale": "The watch stopped sending data. KAWSAY cannot look after you until it is back, so this shows as old data, never as OK."
+    }
+  },
+  "es": {
+    "labels": {
+      "title": "¿Por qué?",
+      "meaning": "Qué significa",
+      "yourCase": "En tu caso",
+      "doNow": "Haz esto ahora",
+      "recheck": "Cuándo lo revisamos",
+      "evidence": "Evidencia ({n})",
+      "sources": "Fuentes",
+      "readAloud": "Leer en voz alta",
+      "stopReading": "Dejar de leer",
+      "offlineLinks": "Los enlaces solo abren con conexión. El nombre basta para encontrar la fuente."
+    },
+    "ai": {
+      "simplify": "Dímelo más simple (IA local)",
+      "showRules": "Ver el texto exacto de las reglas",
+      "offerTitle": "¿Activar la IA local?",
+      "offerBody": "Descarga una sola vez un modelo de lenguaje pequeño (cerca de 1 GB). Después funciona en este dispositivo sin internet. Solo reescribe esta explicación con palabras más simples: las reglas siguen decidiendo cada color y cada paso.",
+      "download": "Descargar una vez",
+      "notNow": "Ahora no",
+      "loading": "Cargando la IA local… {pct} %",
+      "thinking": "Reescribiendo en este dispositivo…",
+      "badge": "Reescrito por IA local · decidieron las reglas",
+      "rejected": "La respuesta de la IA local no pasó el control de seguridad; ves el texto de las reglas.",
+      "failed": "La IA local no está disponible en este dispositivo. El texto de las reglas está completo por sí solo."
+    },
+    "facts": {
+      "readingNoAge": "Tu lectura: {value}.",
+      "band": "Rango «{level}»: {band} ({kind}).",
+      "kindNasa": "límite de NASA",
+      "kindPrototype": "valor de prototipo",
+      "usual": "Lo habitual en ti: {low}–{high} {unit} en los últimos {days} días.",
+      "usualPoint": "Lo habitual en ti: unos {value} {unit} en los últimos {days} días.",
+      "sudden": "Es un cambio brusco respecto a lo habitual en ti. Mide otra vez para descartar un error de medición.",
+      "steady": "Va en línea con tus últimos días, pero sigue fuera del rango seguro.",
+      "noUsual": "Aún no hay suficientes lecturas para saber lo habitual en ti.",
+      "unusual": "Es inusual en ti: a más de 2 desviaciones estándar de tus últimos días.",
+      "partOf": "También forma parte de: {title}.",
+      "stale": "Última lectura: hace {age}.",
+      "never": "Aún no hay lecturas."
+    },
+    "recheck": {
+      "minutes": "Mide otra vez en {n} minutos.",
+      "hours": "Mide otra vez en {n} horas.",
+      "nextCheck": "En el chequeo diario de mañana.",
+      "nextWeek": "En la prueba de la próxima semana.",
+      "escalate": "Si no mejora, o te sientes peor, llama al oficial médico de la tripulación.",
+      "escalateNow": "Esto va al informe para el médico de vuelo en Tierra. Avisa también ahora a un compañero.",
+      "none": "Sigue con tu rutina. KAWSAY lo vuelve a mirar en tu próximo chequeo."
+    },
+    "generic": {
+      "green": { "meaning": "{name} está dentro del rango esperado.", "doNow": "Nada que hacer. Sigue con tu rutina." },
+      "stale": { "meaning": "KAWSAY no puede juzgarlo: la lectura es demasiado antigua o falta. Un dato viejo nunca se muestra como OK.", "doNow": "Mídelo en tu próximo chequeo." },
+      "unusual": { "meaning": "Este valor está dentro del rango general, pero es inusual en ti.", "doNow": "Mide otra vez más tarde hoy para ver si se repite." }
+    },
+    "indicators": {
+      "bp_systolic": {
+        "high": { "meaning": "Tu presión está por encima del rango seguro. Cuanto más sube, más tienen que trabajar el corazón y los vasos sanguíneos.", "red": "Siéntate quieto 5 minutos con el manguito a la altura del corazón y mide otra vez. Anota si tienes dolor de cabeza o visión borrosa.", "yellow": "Descansa tranquilo 5 minutos y mide otra vez." },
+        "low": { "meaning": "Tu presión está baja. La presión baja puede marearte, y pesa más cuando vuelve la gravedad.", "red": "Quédate quieto, bebe 250 ml de agua y mide otra vez.", "yellow": "Bebe un vaso de agua y mide otra vez." }
+      },
+      "bp_diastolic": {
+        "high": { "meaning": "El número bajo de tu presión está alto: tus vasos siguen bajo presión incluso entre latidos.", "red": "Siéntate quieto 5 minutos con el manguito a la altura del corazón y mide otra vez. Anota si tienes dolor de cabeza o visión borrosa.", "yellow": "Descansa tranquilo 5 minutos y mide otra vez." },
+        "low": { "meaning": "El número bajo de tu presión está bajo. Junto con mareo, puede indicar que te falta líquido.", "red": "Quédate quieto, bebe 250 ml de agua y mide otra vez.", "yellow": "Bebe un vaso de agua y mide otra vez." }
+      },
+      "heart_rate": {
+        "high": { "meaning": "Tu pulso en reposo está más alto de lo debido. Causas frecuentes: poca agua, poco sueño, estrés o una infección que empieza.", "red": "Para, siéntate quieto 5 minutos y mide otra vez. Si sientes el corazón irregular, llama a un compañero.", "yellow": "Bebe agua, descansa 10 minutos y mide otra vez." },
+        "low": { "meaning": "Tu pulso en reposo está muy bajo. Un corazón entrenado puede latir lento, pero con mareo o cansancio hay que revisarlo.", "red": "Quédate quieto y mide otra vez. Si te mareas o sientes que te vas a desmayar, llama a un compañero ahora.", "yellow": "Mide otra vez cuando lleves un rato despierto y en movimiento." }
+      },
+      "glucose": {
+        "high": { "meaning": "Tu azúcar en sangre está alto. Una comida reciente, el estrés, una enfermedad o algunos medicamentos pueden subirlo.", "red": "Mide otra vez antes de comer. Avisa al oficial médico si sigue así de alto.", "yellow": "Mide otra vez mañana antes de tu primera comida." },
+        "low": { "meaning": "Tu azúcar en sangre está bajo. Puedes sentir temblor, sudor o dificultad para pensar.", "red": "Come o bebe algo con azúcar ahora y luego mide otra vez.", "yellow": "Toma un tentempié y mide otra vez antes de tu próxima comida." }
+      },
+      "body_temp": {
+        "high": { "meaning": "Tienes fiebre. En el espacio el sistema inmune está más débil y los gérmenes se contagian fácilmente en una cabina cerrada.", "red": "Descansa, bebe agua, mantén distancia de la tripulación y mide otra vez.", "yellow": "Bebe agua, descansa y mide otra vez." },
+        "low": { "meaning": "Tu temperatura sale baja. Revisa primero la medición: una frente fría o húmeda marca bajo.", "red": "Mide otra vez con el sensor bien apoyado sobre piel seca, ponte una capa de abrigo y avisa a un compañero.", "yellow": "Mide otra vez con el sensor bien apoyado sobre piel seca." }
+      },
+      "sleep_hours": {
+        "low": { "meaning": "Dormiste muy poco. Dormir poco enlentece el pensamiento y los reflejos y debilita tus defensas.", "red": "Si puedes, evita tareas críticas hoy y planea acostarte temprano con luz tenue.", "yellow": "Protege el sueño de esta noche: baja la luz una hora antes y respeta tu horario de dormir." }
+      },
+      "mood": {
+        "low": { "meaning": "Tu ánimo está bajo. En una misión larga, el aislamiento, el poco sueño y la carga de trabajo se suman.", "red": "Habla hoy con un compañero o reserva una llamada privada con el psicólogo en Tierra.", "yellow": "Haz hoy algo que disfrutes y escribe tres líneas en tu diario." }
+      },
+      "headache_score": {
+        "high": { "meaning": "Tienes un dolor de cabeza fuerte. En una nave puede venir de CO₂ alto en la cabina, poco sueño, poca agua o líquido que se desplaza hacia la cabeza.", "red": "Para, avisa a un compañero ahora y revisa la lectura de CO₂ de la cabina.", "yellow": "Bebe 250 ml de agua, ve a un módulo bien ventilado y vuelve a puntuarlo." }
+      },
+      "symptom_dizziness": {
+        "reported": { "meaning": "Sientes mareo. Los cambios de gravedad alteran tanto el equilibrio como la presión arterial.", "doNow": "Sujétate a un pasamanos, quédate quieto y mide tu presión." }
+      },
+      "symptom_vision": {
+        "reported": { "meaning": "Ves borroso. El líquido que sube a la cabeza puede presionar los ojos, y la falta de oxígeno también nubla la vista.", "doNow": "Mide ahora tu oxígeno, repite la prueba de visión de cerca y de lejos, y avisa al oficial médico." }
+      },
+      "symptom_confusion": {
+        "reported": { "meaning": "Te sientes confundido. Junto con dolor de cabeza, puede ser señal de poco oxígeno o CO₂ alto.", "doNow": "Avisa a un compañero ahora y mide tu oxígeno." }
+      },
+      "symptom_joint_pain": {
+        "reported": { "meaning": "Tienes un dolor nuevo en una articulación. Alrededor de una caminata espacial, puede ser enfermedad por descompresión.", "doNow": "Si estás en una caminata espacial o cerca de una, avisa ahora a la tripulación. Si no, anota dónde duele y vuelve a puntuarlo." }
+      },
+      "symptom_skin": {
+        "reported": { "meaning": "Tienes un sarpullido o un herpes labial. El estrés y los cambios inmunes en el espacio pueden despertar virus dormidos en el cuerpo.", "doNow": "Mantenlo limpio, no compartas toallas ni comida, y avisa al oficial médico." }
+      },
+      "spo2": {
+        "low": { "meaning": "Tu oxígeno en sangre está bajo. El cerebro es el primero que lo necesita: la falta de oxígeno causa dolor de cabeza, confusión y malas decisiones.", "red": "Ponte la mascarilla de oxígeno ahora y avisa a la tripulación.", "yellow": "Siéntate erguido, respira despacio y mide otra vez." }
+      },
+      "cabin_co2": {
+        "high": { "meaning": "El aire de la cabina tiene demasiado CO₂. Causa dolor de cabeza y falta de concentración a todos a bordo, no solo a ti.", "red": "Ve a un módulo mejor ventilado y pide a la tripulación que revise ahora el depurador de CO₂.", "yellow": "Avisa a la tripulación para que revise el depurador de CO₂ y haz pausas en un módulo bien ventilado." }
+      },
+      "exercise_min": {
+        "low": { "meaning": "Hiciste menos ejercicio que tu plan. En ingravidez se pierde hueso y músculo cada día que no reciben carga.", "red": "Reserva una sesión hoy, aunque sea corta: el ejercicio de resistencia es el que más protege el hueso.", "yellow": "Recupera los minutos que faltan esta semana. Yo futuro te muestra cuántos necesitas." }
+      },
+      "water_ml": {
+        "low": { "meaning": "Bebiste muy poca agua. La falta de agua baja la presión y, con el calcio que liberan tus huesos, aumenta el riesgo de cálculos renales.", "red": "Bebe 500 ml ahora y ten una botella a la vista el resto del día.", "yellow": "Bebe una bolsa más de agua antes de tu próxima comida." }
+      },
+      "strength_self_pct": {
+        "low": { "meaning": "Tu fuerza está bajando respecto a antes del vuelo. Con piernas más débiles es más difícil ponerte de pie y caminar al aterrizar.", "red": "Habla con el oficial médico sobre tu plan de ejercicio y añade sesiones de resistencia.", "yellow": "Añade ejercicio de resistencia esta semana y repite la prueba la próxima." }
+      }
+    },
+    "findings": {
+      "co2_headache": { "meaning": "Tu dolor de cabeza probablemente tiene una causa a bordo, así que se puede corregir.", "together": "El CO₂ alto y el poco sueño causan dolor de cabeza, y juntos se empeoran el uno al otro." },
+      "hypoxia_signs": { "meaning": "Tu oxígeno está bajo y tu cerebro ya lo está notando.", "together": "El oxígeno bajo solo puede pasar desapercibido. Con dolor de cabeza, confusión o visión borrosa, hay que actuar ahora." },
+      "dcs_eva": { "meaning": "El dolor articular alrededor de una caminata espacial puede ser enfermedad por descompresión: burbujas de gas que se forman en el cuerpo cuando baja la presión.", "together": "El dolor articular solo es común. Junto a una caminata espacial, se trata como emergencia hasta descartarlo." },
+      "kidney_stone": { "meaning": "Beber poco mientras tus huesos liberan calcio hace más probables los cálculos renales.", "together": "En ingravidez, el hueso libera calcio a la orina, y beber poco lo concentra. Un cálculo en el espacio es muy doloroso y difícil de tratar." },
+      "orthostatic_landing": { "meaning": "Cuando vuelve la gravedad, la sangre se acumula en las piernas y puedes desmayarte al ponerte de pie.", "together": "Poco ejercicio, poca agua y mareo reducen cada uno tu tolerancia a estar de pie. Juntos se suman." },
+      "sleep_mood": { "meaning": "Es probable que dormir poco esté bajando tu ánimo.", "together": "El sueño y el ánimo se alimentan entre sí: dormir mal baja el ánimo, y el ánimo bajo empeora el sueño." }
+    },
+    "alerts": {
+      "resting_tachycardia": "Tu corazón late rápido mientras descansas. Puede deberse a poca agua, poco sueño, estrés, fiebre o un problema de ritmo cardíaco.",
+      "resting_bradycardia": "Tu corazón late muy lento estando despierto. Con mareo o cansancio, hay que revisarlo.",
+      "low_spo2": "Tu oxígeno en sangre está bajo. El cerebro es el primero que lo necesita: la falta de oxígeno causa dolor de cabeza, confusión y malas decisiones.",
+      "watch_stale": "El reloj dejó de enviar datos. KAWSAY no puede cuidarte hasta que vuelva, así que se muestra como dato viejo, nunca como OK."
+    }
+  }
+}

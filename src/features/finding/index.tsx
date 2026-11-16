@@ -8,7 +8,9 @@ import { isOpen, useApp, type AlertRecord, type CaseRecord } from '../../app/sto
 import { clock, countdown, dec, fill } from '../../app/format';
 import { CabinEvidence } from '../mission-guide/CabinEvidence';
 import { StatusBadge, StatusIcon } from '../../components/StatusBadge';
-import { BTN_PRIMARY, BTN_SECONDARY, CARD, PANEL, Screen, SourceList, SourceTag } from '../../components/ui';
+import { BTN_PRIMARY, BTN_SECONDARY, CARD, PANEL, Screen, SourceTag } from '../../components/ui';
+import { WhyPanel } from '../../components/WhyPanel';
+import { explainFinding } from '../../app/why/explain';
 
 const HAZARD: Record<HazardId, string> = {
   radiation: 'Space radiation', isolation: 'Isolation', distance: 'Distance from Earth', gravity: 'Gravity fields', environment: 'Hostile environment',
@@ -69,6 +71,7 @@ export function LoopScreen() {
 }
 
 function Because({ finding, at }: { finding: Finding; at?: number }) {
+  const lang = useLang();
   const readings = useApp((s) => s.readings);
   const context = useApp((s) => s.context);
   const nowTs = useApp((s) => s.nowTs);
@@ -89,7 +92,7 @@ function Because({ finding, at }: { finding: Finding; at?: number }) {
         {finding.hazards.map((h) => <span key={h} className="rounded-full bg-surface-3 px-3 py-1 font-bold text-ink">{te(HAZARD[h])}</span>)}
       </div>
       {finding.ruleId === 'co2_headache' && <CabinEvidence readings={readings} nowTs={at ?? nowTs} context={context} />}
-      <SourceList sources={finding.sources} />
+      <WhyPanel why={explainFinding(finding, lang, te, false)} hideDoNow />
     </>
   );
 }

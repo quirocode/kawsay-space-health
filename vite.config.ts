@@ -36,6 +36,13 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,webp,glb,woff,woff2,json}'],
         navigateFallback: 'app/index.html',
         navigateFallbackAllowlist: [/^\/app\//],
+        // The local AI library is large and optional: cache it the first time it is used, not on install.
+        globIgnores: ['**/webllm-*.js'],
+        runtimeCaching: [{
+          urlPattern: /\/assets\/webllm-[^/]+\.js$/,
+          handler: 'CacheFirst',
+          options: { cacheName: 'kawsay-local-ai-lib', expiration: { maxEntries: 4 } },
+        }],
       },
     }),
   ],
