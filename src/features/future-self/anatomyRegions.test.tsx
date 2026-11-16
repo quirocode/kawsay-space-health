@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen } from '@testing-library/react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
@@ -11,13 +11,12 @@ import {
   muscleRegion,
   regionZone,
 } from './anatomyRegions';
-import { AnatomyModeSwitch, BodyFigure, useAnatomy } from './BodyFigure';
+import { AnatomyModeSwitch, BodyFigure } from './BodyFigure';
 import { useApp } from '../../app/store';
 
 afterEach(() => {
   cleanup();
   useApp.getState().selectCrew('elena');
-  useAnatomy.setState({ mode: 'muscles', sex: 'female' });
 });
 
 async function loadPublicGlb(fileName: string): Promise<THREE.Group> {
@@ -115,7 +114,7 @@ describe('Female and male 3D anatomy models', () => {
     }
   });
 
-  it('switches between female and male 3D models via the UI and syncs with crew member sex', () => {
+  it('automatically displays the 3D body matching the selected crew member sex without manual sex buttons', () => {
     render(
       <div>
         <AnatomyModeSwitch />
@@ -123,25 +122,28 @@ describe('Female and male 3D anatomy models', () => {
       </div>,
     );
 
-    const femaleBtn = screen.getByRole('button', { name: 'Female' });
-    const maleBtn = screen.getByRole('button', { name: 'Male' });
-    expect(femaleBtn).toHaveAttribute('aria-pressed', 'true');
-    expect(maleBtn).toHaveAttribute('aria-pressed', 'false');
+    // No manual Female / Male buttons are rendered in Future Self
+    expect(screen.queryByRole('button', { name: /female/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /male/i })).not.toBeInTheDocument();
+
+    // Default crew member is Elena (female)
     expect(document.querySelector('[data-anatomy="today"]')).toHaveAttribute('data-anatomy-sex', 'female');
 
-    fireEvent.click(maleBtn);
-    expect(maleBtn).toHaveAttribute('aria-pressed', 'true');
+    // Switching crew member to Mateo (male) updates the 3D body to male
+    act(() => {
+      useApp.getState().selectCrew('mateo');
+    });
     expect(document.querySelector('[data-anatomy="today"]')).toHaveAttribute('data-anatomy-sex', 'male');
 
-    // Switching crew member to Amara (female) updates the model back to female
+    // Switching crew member to Amara (female) updates the 3D body to female
     act(() => {
       useApp.getState().selectCrew('amara');
     });
     expect(document.querySelector('[data-anatomy="today"]')).toHaveAttribute('data-anatomy-sex', 'female');
 
-    // Switching crew member to Mateo (male) updates the model to male
+    // Switching crew member to Kenji (male) updates the 3D body to male
     act(() => {
-      useApp.getState().selectCrew('mateo');
+      useApp.getState().selectCrew('kenji');
     });
     expect(document.querySelector('[data-anatomy="today"]')).toHaveAttribute('data-anatomy-sex', 'male');
   });
