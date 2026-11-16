@@ -38,7 +38,12 @@ export function landingLabel(ctx: MissionContext, lang: Lang = 'en'): string {
 
 export function delayLabel(min: number, lang: Lang = 'en'): string {
   if (!Number.isFinite(min)) return lang === 'es' ? 'Sin contacto con Tierra (conjunción)' : 'No contact with Earth (conjunction)';
-  if (min < 1) return lang === 'es' ? 'Retraso con Tierra: segundos' : 'Earth delay: seconds';
+  if (min < 1) {
+    // Under a minute: show the real seconds (ISS ≈ 0.1 s plus relays, Moon ≈ 1.3 s).
+    const sec = Math.round(min * 600) / 10;
+    const v = sec < 0.5 ? '< 1' : String(sec).replace('.', lang === 'es' ? ',' : '.');
+    return lang === 'es' ? `Retraso con Tierra ${v} s` : `Earth delay ${v} s`;
+  }
   return lang === 'es' ? `Retraso con Tierra ${Math.round(min)} min` : `Earth delay ${Math.round(min)} min`;
 }
 
