@@ -5,10 +5,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import type { BodyZone } from '../../domain/types';
 import type { ZoneFill } from './BodyFigure';
-import { muscleRegion, regionZone, type AnatomyMode, type AnatomyRegion } from './anatomyRegions';
+import { assetKeysForSex, muscleRegion, regionZone, type AnatomyMode, type AnatomyRegion, type AnatomySex } from './anatomyRegions';
 
 type Props = {
   mode: AnatomyMode;
+  sex?: AnatomySex;
   zones: Partial<Record<BodyZone, ZoneFill>>;
   selected?: BodyZone | null;
   region: AnatomyRegion | null;
@@ -197,7 +198,9 @@ export default function AnatomyCanvas(props: Props) {
     for (const [event, handler] of Object.entries(interactions)) renderer.domElement.addEventListener(event, handler as EventListener);
     const lost = (event: Event) => { event.preventDefault(); latest.current.onReady('error'); };
     renderer.domElement.addEventListener('webglcontextlost', lost);
-    Promise.all([loadModel(props.mode), loadModel('skin')]).then(([source, skinSource]) => {
+    const sex: AnatomySex = props.sex ?? 'female';
+    const { layer, skin: skinKey } = assetKeysForSex(props.mode, sex);
+    Promise.all([loadModel(layer), loadModel(skinKey)]).then(([source, skinSource]) => {
       if (disposed) return;
       const group = source.clone(true);
       group.updateMatrixWorld(true);
@@ -254,7 +257,7 @@ export default function AnatomyCanvas(props: Props) {
       renderer.forceContextLoss();
       renderer.domElement.remove();
     };
-  }, [props.mode]);
+  }, [props.mode, props.sex]);
 
   useEffect(() => {
     const scene = sceneRef.current;

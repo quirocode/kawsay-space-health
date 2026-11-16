@@ -1,10 +1,12 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { create } from 'zustand';
 import type { BodyZone, Status } from '../../domain/types';
 import { BODY_ZONES } from '../../domain/types';
 import { te, ui, useLang } from '../../app/i18n';
+import { useApp } from '../../app/store';
+import { CREW } from '../../data/crew';
 import copy from '../../../content/anatomy.json';
-import { MUSCLE_GROUPS, ORGAN_GROUPS, regionZone, type AnatomyMode, type AnatomyRegion } from './anatomyRegions';
+import { MUSCLE_GROUPS, ORGAN_GROUPS, regionZone, type AnatomyMode, type AnatomyRegion, type AnatomySex } from './anatomyRegions';
 const AnatomyCanvas = lazy(() => import('./AnatomyCanvas'));
 export type ZoneFill = Status | 'none';
 export const ZONE_LABEL: Record<BodyZone, string> = {
@@ -21,18 +23,40 @@ export const ZONE_LABEL: Record<BodyZone, string> = {
 };
 
 
-const useAnatomy = create<{ mode: AnatomyMode; setMode: (mode: AnatomyMode) => void }>((set) => ({
+export const useAnatomy = create<{
+  mode: AnatomyMode;
+  sex: AnatomySex;
+  setMode: (mode: AnatomyMode) => void;
+  setSex: (sex: AnatomySex) => void;
+}>((set) => ({
   mode: 'muscles',
+  sex: CREW[useApp.getState().crewId]?.sex ?? 'female',
   setMode: (mode) => set({ mode }),
+  setSex: (sex) => set({ sex }),
 }));
+
+useApp.subscribe((state, prev) => {
+  if (state.crewId !== prev.crewId) {
+    const nextSex = CREW[state.crewId]?.sex;
+    if (nextSex) useAnatomy.setState({ sex: nextSex });
+  }
+});
 
 export function AnatomyModeSwitch() {
   const t = copy[useLang()];
-  const { mode, setMode } = useAnatomy();
-  return <div className="workspace-segmented" role="group" aria-label={t.select}>
-    <button type="button" aria-pressed={mode === 'muscles'} onClick={() => setMode('muscles')}>{t.muscles}</button>
-    <button type="button" aria-pressed={mode === 'organs'} onClick={() => setMode('organs')}>{t.organs}</button>
-  </div>;
+  const { mode, sex, setMode, setSex } = useAnatomy();
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <div className="workspace-segmented" role="group" aria-label={t.bodySex}>
+        <button type="button" aria-pressed={sex === 'female'} onClick={() => setSex('female')}>{t.female}</button>
+        <button type="button" aria-pressed={sex === 'male'} onClick={() => setSex('male')}>{t.male}</button>
+      </div>
+      <div className="workspace-segmented" role="group" aria-label={t.select}>
+        <button type="button" aria-pressed={mode === 'muscles'} onClick={() => setMode('muscles')}>{t.muscles}</button>
+        <button type="button" aria-pressed={mode === 'organs'} onClick={() => setMode('organs')}>{t.organs}</button>
+      </div>
+    </div>
+  );
 }
 
 export function BodyFigure({ zones, variant, title, selected, onSelect, sharedControls = false, onShowDetails }: {
@@ -46,13 +70,20 @@ export function BodyFigure({ zones, variant, title, selected, onSelect, sharedCo
 }) {
   const lang = useLang();
   const t = copy[lang];
-  const { mode, setMode } = useAnatomy();
+  const crewId = useApp((s) => s.crewId);
+  const { mode, sex, setMode, setSex } = useAnatomy();
   const [region, setRegion] = useState<AnatomyRegion | null>(null);
   const [hover, setHover] = useState<AnatomyRegion | null>(null);
   const [isolate, setIsolate] = useState(false);
   const [reset, setReset] = useState(0);
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [retry, setRetry] = useState(0);
+
+  useEffect(() => {
+    const crewSex = CREW[crewId]?.sex;
+    if (crewSex) setSex(crewSex);
+  }, [crewId, setSex]);
+
   const regions: readonly AnatomyRegion[] = mode === 'muscles' ? MUSCLE_GROUPS : ORGAN_GROUPS;
   const active = region && regions.includes(region) && regionZone(mode, region) === selected ? region : null;
   const preview = hover && regions.includes(hover) ? hover : null;
@@ -65,17 +96,24 @@ export function BodyFigure({ zones, variant, title, selected, onSelect, sharedCo
     return status === 'none' ? t.noData : ui.status[status];
   };
   return (
-    <div className="flex h-full w-full flex-col gap-2" data-anatomy={variant}>
+    <div className="flex h-full w-full flex-col gap-2" data-anatomy={variant} data-anatomy-sex={sex}>
       <div className="flex flex-wrap justify-center gap-2">
-        {!sharedControls && <button type="button" onClick={() => { setRegion(null); setHover(null); setIsolate(false); setMode(mode === 'muscles' ? 'organs' : 'muscles'); }} className="min-h-10 rounded-full border border-line bg-surface-2 px-3 text-sm font-bold">
-          {mode === 'muscles' ? t.toOrgans : t.toMuscles}
-        </button>}
+        {!sharedControls && (
+          <>
+            <button type="button" onClick={() => { setRegion(null); setHover(null); setIsolate(false); setSex(sex === 'female' ? 'male' : 'female'); }} className="min-h-10 rounded-full border border-line bg-surface-2 px-3 text-sm font-bold">
+              {sex === 'female' ? t.toMale : t.toFemale}
+            </button>
+            <button type="button" onClick={() => { setRegion(null); setHover(null); setIsolate(false); setMode(mode === 'muscles' ? 'organs' : 'muscles'); }} className="min-h-10 rounded-full border border-line bg-surface-2 px-3 text-sm font-bold">
+              {mode === 'muscles' ? t.toOrgans : t.toMuscles}
+            </button>
+          </>
+        )}
         <button type="button" onClick={() => { setIsolate(false); setReset((n) => n + 1); }} className="min-h-9 rounded-lg border border-line px-3 text-xs text-ink-2 hover:text-ink">{t.reset}</button>
       </div>
       {!sharedControls && <p className="text-center text-xs text-ink-2">{t.gesture}</p>}
       <div className="relative min-h-[300px] flex-1 overflow-hidden rounded-card bg-surface-2">
         <Suspense fallback={<p className="p-4 text-sm">{t.loading}</p>}>
-          <AnatomyCanvas key={retry} mode={mode} zones={zones} selected={selected}
+          <AnatomyCanvas key={retry} mode={mode} sex={sex} zones={zones} selected={selected}
             region={active} hover={preview} title={title} reset={reset} isolate={isolate}
             onHover={setHover} onPick={pick} onReady={setState} />
         </Suspense>
@@ -118,7 +156,9 @@ export function BodyFigure({ zones, variant, title, selected, onSelect, sharedCo
             className="min-h-9 rounded border border-line px-2" aria-pressed={selected === zone}>{te(ZONE_LABEL[zone])}: {word(zone)}</button>)}
         </div>
       </details>
-      <a href="/anatomy/ATTRIBUTION.md" target="_blank" rel="noreferrer" className="text-center text-[11px] text-ink-2 underline">Z-Anatomy / BodyParts3D · CC BY-SA 4.0</a>
+      <a href="/anatomy/ATTRIBUTION.md" target="_blank" rel="noreferrer" className="text-center text-[11px] text-ink-2 underline">
+        {sex === 'female' ? 'HuBMAP HRA (Visible Human Female) · Z-Anatomy · CC BY 4.0 / CC BY-SA 4.0' : 'Z-Anatomy / BodyParts3D · CC BY-SA 4.0'}
+      </a>
     </div>
   );
 }
