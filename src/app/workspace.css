@@ -189,3 +189,87 @@ body { font-size:16px; }
 .mission-co2-control > small { color:var(--ink-2); }
 .mission-co2-control output { color:var(--brand-ink); font-weight:700; }
 .mission-co2-control input { width:100%; min-height:32px; accent-color:var(--future); cursor:ew-resize; }
+
+
+/* KAWSAY space dashboard preview — scoped to the night theme.
+   The landing's deep-space palette is reused without touching the science engine. */
+:root[data-theme='night'] {
+  --bg:#080e1d;
+  --surface:#101c31;
+  --surface-2:#152640;
+  --surface-3:#1d3552;
+  --ink:#f4f8ff;
+  --ink-2:#a8bfd8;
+  --line:#2b4669;
+  --brand:#0b3d91;
+  --brand-bg:#193b66;
+  --brand-ink:#9fcaff;
+  --future:#bba5ff;
+  --rail:#090f20;
+  --accent:#75e6f0;
+  --card-shadow:0 12px 35px #02071180;
+}
+:root[data-theme='night'] .workspace-shell {
+  background:radial-gradient(ellipse at 82% 0%,#236da326,transparent 50%),#080e1d;
+}
+:root[data-theme='night'] .workspace-sidebar {
+  background:linear-gradient(170deg,#0b1428,#080e1d 75%);
+  border-right-color:#28466c;
+}
+:root[data-theme='night'] .workspace-logo {
+  color:#f5f9ff;
+}
+:root[data-theme='night'] .workspace-mark {
+  background:radial-gradient(circle at 35% 25%,#2a6388,#10213b);
+  border-color:#4977a4;
+  box-shadow:0 0 20px #236da345;
+}
+:root[data-theme='night'] .workspace-nav a[aria-current='page'] {
+  background:linear-gradient(110deg,#153d72,#0e284b);
+  color:#d7f5ff;
+  border-color:#3285c2;
+  box-shadow:inset 0 0 16px #2e94d122,0 0 18px #236da32d;
+}
+:root[data-theme='night'] .mission-header {
+  background:#0c162bdc;
+  border-bottom-color:#2c4c73;
+  backdrop-filter:blur(18px);
+}
+:root[data-theme='night'] .workspace-main {
+  background:
+    radial-gradient(ellipse at 84% 0%,#236da32c,transparent 38%),
+    radial-gradient(ellipse at 22% 32%,#6545a01c,transparent 45%),
+    radial-gradient(1px 1px at 20px 30px,#ffffff80,transparent),
+    radial-gradient(1px 1px at 120px 80px,#ffffff60,transparent),
+    radial-gradient(1px 1px at 200px 160px,#a4dfff80,transparent),
+    #080e1d;
+  background-size:auto,auto,320px 220px,320px 220px,320px 220px,auto;
+}
+:root[data-theme='night'] .dashboard-card {
+  background:linear-gradient(155deg,#142740eb,#0c192ce8);
+  border-color:#3b6084;
+  box-shadow:inset 0 1px #ffffff0c,0 12px 34px #02071175;
+}
+:root[data-theme='night'] .dashboard-card-heading h2 {
+  color:#f4f8ff;
+}
+:root[data-theme='night'] .dashboard-primary {
+  background:linear-gradient(110deg,#0b3d91,#2169c6);
+  box-shadow:0 0 24px #236da34d;
+}
+:root[data-theme='night'] .dashboard-figure [role='img'] {
+  background:radial-gradient(ellipse at center,#194e7266,transparent 72%);
+}
+:root[data-theme='night'] .dashboard-score-mark {
+  background:#153e5c;
+  color:#75e6f0;
+}
+:root[data-theme='night'] .dashboard-meter {
+  background:#284563;
+}
+:root[data-theme='night'] .workspace-segmented {
+  background:#0a1629;
+}
+@media (prefers-reduced-motion:reduce) {
+  :root[data-theme='night'] .dashboard-primary {transition:none}
+}
