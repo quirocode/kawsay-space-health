@@ -2,7 +2,7 @@
  * Packages the built web app (dist/) and the desktop shell (desktop/) into a
  * Windows executable. Run through `npm run desktop:build`, which builds dist/ first.
  *
- * Output: release/KAWSAY-win32-x64/KAWSAY.exe (copy the whole folder, not just the exe).
+ * Output: release/UPRIGHT-win32-x64/UPRIGHT.exe (copy the whole folder, not just the exe).
  * Needs the network once, to download the Electron runtime; the result runs offline.
  */
 import { existsSync } from 'node:fs';
@@ -23,7 +23,7 @@ const SHIPPED = ['/dist', '/desktop', '/package.json'];
 
 const [appPath] = await packager({
   dir: root,
-  name: 'KAWSAY',
+  name: 'UPRIGHT',
   platform: 'win32',
   arch: 'x64',
   electronVersion: ELECTRON_VERSION,
@@ -33,4 +33,4 @@ const [appPath] = await packager({
   ignore: (file) => file !== '' && !SHIPPED.some((keep) => file === keep || file.startsWith(`${keep}/`)),
 });
 
-console.log(`Built ${join(appPath, 'KAWSAY.exe')}`);
+console.log(`Built ${join(appPath, 'UPRIGHT.exe')}`);

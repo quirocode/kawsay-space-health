@@ -1,7 +1,7 @@
 {
   "app": {
-    "name": "KAWSAY",
-    "tagline": "What body will you land with?",
+    "name": "UPRIGHT",
+    "tagline": "Land on your feet.",
     "disclaimer": "Prototype for a hackathon. Not a medical device.",
     "disclaimerOk": "Got it",
     "offline": "Offline · all data on this tablet",
@@ -50,7 +50,7 @@
     "today": "Today is day {day} since launch.",
     "landing": "Landing is on day {total}, in {days} days. Future Self shows your body on that day.",
     "why": "Landing is the hardest day of the mission: gravity returns when your body is weakest. Every day until then still counts.",
-    "sol": "On Mars, a day is called a sol and lasts 24 h 39 min. While you travel, KAWSAY counts ordinary days.",
+    "sol": "On Mars, a day is called a sol and lasts 24 h 39 min. While you travel, UPRIGHT counts ordinary days.",
     "close": "Got it",
     "edit": "Edit mission and days",
     "editTitle": "Your mission",

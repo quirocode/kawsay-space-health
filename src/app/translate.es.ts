@@ -34,7 +34,7 @@ export const TR: Record<string, string> = {
   "Isolation, short sleep and heavy workload can lower mood. Noticing it early lets you act.": "El aislamiento, el sueño corto y la carga de trabajo alta pueden bajar el ánimo. Detectarlo a tiempo te permite actuar.",
   "Moderate to strong": "Moderado a fuerte",
   "Rate it from 1 (none) to 5 (severe)": "Califícalo de 1 (nada) a 5 (severo)",
-  "A headache can come from short sleep, high cabin CO₂ or low oxygen. KAWSAY checks them together.": "Un dolor de cabeza puede venir del sueño corto, el CO₂ de la cabina alto o el oxígeno bajo. KAWSAY los revisa en conjunto.",
+  "A headache can come from short sleep, high cabin CO₂ or low oxygen. UPRIGHT checks them together.": "Un dolor de cabeza puede venir del sueño corto, el CO₂ de la cabina alto o el oxígeno bajo. UPRIGHT los revisa en conjunto.",
   "Tap yes if the room spins or you feel light-headed": "Toca sí si la habitación gira o te sientes mareado",
   "Balance and blood pressure are disturbed during gravity transitions.": "El equilibrio y la presión arterial se alteran durante las transiciones de gravedad.",
   "Blurred vision": "Visión borrosa",

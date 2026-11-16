@@ -1,13 +1,16 @@
-# KAWSAY — What body will you land with?
+# UPRIGHT — Land on your feet.
 
 A health copilot for astronauts on long-duration missions.
 NASA Space Apps Challenge 2026 · *Create Health Monitoring Software for Astronauts on Space Missions*.
 
-Spaceflight damage is slow, silent and cumulative: bone loses 1–1.5% of its density every month and no single day feels different. KAWSAY shows crew members their projected self on landing day, connects indicators the way NASA's five hazards compound each other, and closes the loop — measure, understand, act, verify, escalate — when Earth is 20 minutes away.
+UPRIGHT answers the one question no dashboard does: **what body will you land with?**
+Spaceflight damage is slow, silent and cumulative: bone loses 1–1.5% of its density every month and no single day feels different. UPRIGHT shows crew members their projected self on landing day, connects indicators the way NASA's five hazards compound each other, and closes the loop — measure, understand, act, verify, escalate — when Earth is 20 minutes away.
 
 > Prototype for a hackathon. Not a medical device.
 >
 > **Live demo:** https://kawsay-ten.vercel.app · works offline once loaded.
+
+Brand assets and rules live in [`design/brand/`](design/brand/README.md). The repository, package and demo URL keep their original `kawsay` identifiers until the deployment is renamed.
 
 ## For the team
 | Read | Why |
@@ -28,9 +31,9 @@ npm run check    # types + tests + build (same as CI)
 
 ## Desktop app (Windows, no network)
 ```bash
-npm run desktop:build   # writes release/KAWSAY-win32-x64/KAWSAY.exe
+npm run desktop:build   # writes release/UPRIGHT-win32-x64/UPRIGHT.exe
 ```
-Copy the whole `KAWSAY-win32-x64` folder, not just the exe. The build downloads the Electron runtime once; the app itself never opens a connection: it serves `dist/` from disk and cancels every other request (`desktop/main.cjs`).
+Copy the whole `UPRIGHT-win32-x64` folder, not just the exe. The build downloads the Electron runtime once; the app itself never opens a connection: it serves `dist/` from disk and cancels every other request (`desktop/main.cjs`).
 
 ## Layout
 ```

@@ -4,7 +4,7 @@
 
 ---
 
-You are writing ONE pure TypeScript module and its unit tests for KAWSAY (astronaut health copilot, NASA Space Apps 2026). It closes the loop **Act → Verify → Escalate**: after an action, a new measurement says whether it worked; if needed, a one-screen brief goes to the flight surgeon on Earth, aware of the communication delay.
+You are writing ONE pure TypeScript module and its unit tests for UPRIGHT (astronaut health copilot, NASA Space Apps 2026). It closes the loop **Act → Verify → Escalate**: after an action, a new measurement says whether it worked; if needed, a one-screen brief goes to the flight surgeon on Earth, aware of the communication delay.
 
 - Output exactly two files: `src/domain/loop.ts` and `src/domain/loop.test.ts`.
 - Pure TypeScript (strict). No React, no browser APIs, no network, no `Math.random`, no `Date.now()` (time comes as `nowTs`).
@@ -14,7 +14,7 @@ You are writing ONE pure TypeScript module and its unit tests for KAWSAY (astron
 
 ```ts
 /**
- * KAWSAY — domain contract (v1, frozen Sat 12:00 Lima).
+ * UPRIGHT — domain contract (v1, frozen Sat 12:00 Lima).
  * Single source of truth shared by the science engine (P3) and the UI (P1/P2).
  * Only P1 edits this file. Everything in src/domain must stay pure TypeScript:
  * no React, no browser APIs, no network, no unseeded randomness.

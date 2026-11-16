@@ -8,7 +8,7 @@
 ## Prompt de P1 (líder técnico)
 
 ```text
-Eres el ingeniero principal de KAWSAY, nuestro proyecto para NASA Space Apps Challenge 2026
+Eres el ingeniero principal de UPRIGHT, nuestro proyecto para NASA Space Apps Challenge 2026
 (reto "Create Health Monitoring Software for Astronauts on Space Missions"). Trabajas conmigo,
 el líder técnico (P1), en un equipo de 5. La hackathon ya empezó: se dejan de agregar funciones
 el domingo 15/11 a las 14:00 y se envía a las 21:00, hora de Lima.
@@ -77,8 +77,8 @@ ahí para generar el diseño de la aplicación. Debe estar en inglés e incluir:
 - Principios: una decisión por pantalla, estado legible de un vistazo, color nunca solo,
   calma antes que alarma, nada de estética de "panel de ciencia ficción" recargado.
 - Dirección visual con personalidad propia. Evita el cliché de azul neón sobre negro. Propón
-  una identidad que se distinga de los otros equipos y explícala. El nombre viene del quechua:
-  úsalo con criterio si aporta.
+  una identidad que se distinga de los otros equipos y explícala. El nombre nombra el resultado,
+  no la tecnología: "UPRIGHT — land on your feet".
 - Sistema visual: colores con nombre y uso (incluidos los 4 estados y "dato vencido"),
   tipografía, espaciado, radios, iconos, movimiento.
 - Lista de pantallas con el contenido real de cada una, usando los datos de la escena
@@ -122,7 +122,7 @@ Empieza leyendo los archivos y preséntame las ideas y el plan.
 Úsalo cuando P1 ya haya publicado la base.
 
 ```text
-Trabajas conmigo (P2) en KAWSAY, proyecto de NASA Space Apps 2026. Lee AGENTS.md,
+Trabajas conmigo (P2) en UPRIGHT, proyecto de NASA Space Apps 2026. Lee AGENTS.md,
 docs/01-problema-y-usuarios.md, docs/DECISIONS.md y src/domain/types.ts antes de empezar.
 
 Mi carril es la experiencia del tripulante: src/features/ (menos future-self/) y

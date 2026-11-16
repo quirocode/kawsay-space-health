@@ -4,7 +4,7 @@
 
 ---
 
-Write the user-facing English copy for 18 health indicators of KAWSAY, a tablet app for astronauts on a Mars transit. The reader is a crew member who is **not a physician**, is tired, may be wearing gloves, and has **under 3 minutes a day** for this.
+Write the user-facing English copy for 18 health indicators of UPRIGHT, a tablet app for astronauts on a Mars transit. The reader is a crew member who is **not a physician**, is tired, may be wearing gloves, and has **under 3 minutes a day** for this.
 
 ## Rules
 - Plain English, short sentences, imperative for steps. No jargon without a 3-word explanation.

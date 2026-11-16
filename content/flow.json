@@ -79,7 +79,7 @@
     "compound": "Compound finding · {time}",
     "watchAlert": "Watch alert · {time}",
     "none": "Nothing needs your attention right now.",
-    "noneHint": "KAWSAY cross-checks your readings every time one comes in.",
+    "noneHint": "UPRIGHT cross-checks your readings every time one comes in.",
     "onBoard": "Resolved on board — no need to wait for Earth.",
     "escalates": "This one also goes to the flight surgeon.",
     "gotIt": "Got it, I'll do it today",
@@ -92,7 +92,7 @@
     "later": "{time} · {min} min later",
     "ifNot": "If it had not worked",
     "noBetter": "No better",
-    "ifNotText": "KAWSAY adds this to the flight surgeon brief and keeps watching.",
+    "ifNotText": "UPRIGHT adds this to the flight surgeon brief and keeps watching.",
     "notImproved": "We'll send this to Earth",
     "history": "Earlier today",
     "open": "Open",
@@ -119,7 +119,7 @@
     "queuedText": "Nothing new since {time}. A new brief is built when something changes.",
     "noContact": "No contact",
     "conjunctionTitle": "Solar conjunction",
-    "conjunctionText": "Brief stored on this device. KAWSAY keeps the loop running on board.",
+    "conjunctionText": "Brief stored on this device. UPRIGHT keeps the loop running on board.",
     "readiness": "Landing readiness",
     "withPlan": "with plan",
     "nothingDone": "No action recorded yet.",
@@ -168,7 +168,7 @@
     "cannot": "The watch cannot measure these",
     "cannotHint": "They come from your daily check.",
     "startCheck": "Start check-in",
-    "rulesTitle": "When KAWSAY alerts",
+    "rulesTitle": "When UPRIGHT alerts",
     "rules": [
       "Heart rate 110 or more while resting, for 1 min · Watch",
       "Heart rate 110 or more while resting, for 5 min · Act",
@@ -192,7 +192,7 @@
     "imHere": "I'm here. Start the check",
     "callCrew": "Call a crewmate now",
     "crewCalled": "Crew alerted at {time}",
-    "countdown": "No answer in {time} and KAWSAY alerts the crew.",
+    "countdown": "No answer in {time} and UPRIGHT alerts the crew.",
     "silence": "Silence",
     "silenced": "Silenced",
     "usual": "Your usual resting rate is {low} to {high}.",
@@ -204,7 +204,7 @@
     "next": "Next",
     "done": "Done",
     "save": "Save reading",
-    "thinks": "What KAWSAY thinks",
+    "thinks": "What UPRIGHT thinks",
     "notRuledOut": "Not ruled out: a rhythm problem. If it does not settle, the crew medical officer and Earth are told.",
     "timerStart": "Start the 2 minutes",
     "timerRunning": "Keep going · {time}",
@@ -232,7 +232,7 @@
       "Stay resting.",
       "Keep the watch on.",
       "No exercise or EVA prep.",
-      "KAWSAY keeps checking every 5 seconds."
+      "UPRIGHT keeps checking every 5 seconds."
     ],
     "nothing": "No watch alert is open.",
     "backToWatch": "Back to watch data"
@@ -257,11 +257,11 @@
     "unsupported": {
       "no-api": {
         "title": "Bluetooth is not available here",
-        "hint": "Open KAWSAY in Chrome or Edge, or use the desktop app."
+        "hint": "Open UPRIGHT in Chrome or Edge, or use the desktop app."
       },
       "insecure": {
         "title": "Bluetooth needs a secure page",
-        "hint": "Open KAWSAY from its https address or from the desktop app."
+        "hint": "Open UPRIGHT from its https address or from the desktop app."
       },
       "off": {
         "title": "Bluetooth is off",
@@ -273,7 +273,7 @@
       "Bluetooth is on on this computer.",
       "The band is charged, on your wrist and within 1 m.",
       "Turn off Bluetooth on your phone. The band keeps one Bluetooth link at a time, and the phone app takes it.",
-      "Xiaomi Mi Band 4, 5 or 6: have the band key ready. Xiaomi Smart Band 7 and newer use a different key check that KAWSAY does not support yet."
+      "Xiaomi Mi Band 4, 5 or 6: have the band key ready. Xiaomi Smart Band 7 and newer use a different key check that UPRIGHT does not support yet."
     ],
     "readyNote": "Next, a list of nearby devices opens. Pick your band.",
     "openList": "Open device list",
@@ -341,7 +341,7 @@
     ],
     "keyHelpTitle": "Other ways to get the key",
     "keyHelp": [
-      "The band never sends its key over Bluetooth, so it is fetched once from your account; after that KAWSAY needs only Bluetooth.",
+      "The band never sends its key over Bluetooth, so it is fetched once from your account; after that UPRIGHT needs only Bluetooth.",
       "On a computer with Node: run  node tools/get-band-key.mjs  and sign in with the band's account; it prints a 0x… key.",
       "Full steps and a chest-strap option that needs no key at all are in tools/README-band-key.md.",
       "Do not reset or re-pair the band afterwards: that changes the key and you would fetch it again."

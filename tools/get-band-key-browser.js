@@ -1,5 +1,5 @@
 /*
- * KAWSAY — band key via the browser (no install), for bands on a Xiaomi / phone-number
+ * UPRIGHT — band key via the browser (no install), for bands on a Xiaomi / phone-number
  * account that the Node tool can't sign into.
  *
  * HOW TO USE:
@@ -8,12 +8,12 @@
  *   2. Open the browser console: press F12 (or Ctrl+Shift+I) and click "Console".
  *   3. Paste this whole file and press Enter.
  *   4. It prints your band's key as 0x... and copies the first one to the clipboard.
- *      Paste it into KAWSAY -> Connect -> Band key.
+ *      Paste it into UPRIGHT -> Connect -> Band key.
  *
  * This runs inside your logged-in Zepp session and only calls Zepp's own servers, using
  * the login you already made. It reuses the Gadgetbridge community approach
  * (https://gadgetbridge.org/basics/pairing/huami-xiaomi-server/) and adds key extraction.
- * Nothing is sent anywhere else; KAWSAY never sees your password.
+ * Nothing is sent anywhere else; UPRIGHT never sees your password.
  */
 (async () => {
   const cookie = (name) => document.cookie.match(new RegExp(`${name}=(.*?)(;|$)`))?.[1];
@@ -79,12 +79,12 @@
     return;
   }
 
-  console.log('%cYour KAWSAY band key(s):', 'font-size:14px;font-weight:bold');
+  console.log('%cYour UPRIGHT band key(s):', 'font-size:14px;font-weight:bold');
   for (const k of keys) console.log(`${k.mac}:  ${k.key}`);
   try {
     await navigator.clipboard.writeText(keys[0].key);
-    alert(`Band key copied to the clipboard:\n\n${keys[0].key}\n\nPaste it into KAWSAY -> Connect -> Band key. Save it somewhere safe too.`);
+    alert(`Band key copied to the clipboard:\n\n${keys[0].key}\n\nPaste it into UPRIGHT -> Connect -> Band key. Save it somewhere safe too.`);
   } catch {
-    alert(`Your band key is:\n\n${keys[0].key}\n\nCopy it into KAWSAY -> Connect -> Band key, and save it somewhere safe.`);
+    alert(`Your band key is:\n\n${keys[0].key}\n\nCopy it into UPRIGHT -> Connect -> Band key, and save it somewhere safe.`);
   }
 })();

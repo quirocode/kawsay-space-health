@@ -5,10 +5,10 @@
 
 ---
 
-You are designing **KAWSAY**, a tablet app for astronauts on long-duration missions. It is a prototype for NASA Space Apps Challenge 2026 ("Create Health Monitoring Software for Astronauts on Space Missions"). Design the visual system and the 7 screens listed below, with real content.
+You are designing **UPRIGHT**, a tablet app for astronauts on long-duration missions. It is a prototype for NASA Space Apps Challenge 2026 ("Create Health Monitoring Software for Astronauts on Space Missions"). Design the visual system and the 7 screens listed below, with real content.
 
 ## 1. Product in one sentence
-KAWSAY answers the question no health dashboard answers: **"What body will I land with?"** It shows the crew member today next to their projected self on arrival day, connects symptoms the way spaceflight hazards compound each other, and closes the loop (measure → understand → act → verify → escalate) when Earth is 14–20 minutes away.
+UPRIGHT answers the question no health dashboard answers: **"What body will I land with?"** It shows the crew member today next to their projected self on arrival day, connects symptoms the way spaceflight hazards compound each other, and closes the loop (measure → understand → act → verify → escalate) when Earth is 14–20 minutes away.
 
 ## 2. User and context of use
 - **Crew member on a Mars transit**, not a physician (engineer, pilot or scientist with basic medical training).
@@ -29,7 +29,7 @@ KAWSAY answers the question no health dashboard answers: **"What body will I lan
 7. **Honest numbers.** Every figure shows a small source tag: `NASA` (official) or `Prototype` (our value). Tapping "Why?" shows the source.
 
 ## 4. Visual direction — "Warm instrument"
-KAWSAY means **"life"** in Quechua, the language of the Andes. Use it with restraint: **no** Inca clichés, no fake ruins, no llamas, no ornamental "ethnic" borders. Borrow two things only:
+UPRIGHT names the landing-readiness test every crew member faces on arrival day: **standing up without fainting**. The mark is a body on a horizon, crossed by an orbit. The palette keeps the warm, earthy tones of the earlier Andean direction — use them with restraint: **no** Inca clichés, no fake ruins, no llamas, no ornamental "ethnic" borders. Borrow two things only:
 
 - **Natural-dye palette.** Andean weavers dye wool with cochineal (red), q'olle (yellow), and plant greens and indigos. These pigments are earthy, warm and calm, which is exactly what a stressed person in a metal tube needs and the opposite of every other team's neon-on-black.
 - **The woven line as a metaphor for time.** A textile is built one row at a time, like a mission is built one day at a time. Use a **thin horizontal woven band** (simple stepped/striped geometry, 1–2 colours, very subtle) as the mission timeline and as the track of the time slider. Each day = one "row". Missed exercise days show as thinner, lighter threads. This is our signature element; use it in 2–3 places only.

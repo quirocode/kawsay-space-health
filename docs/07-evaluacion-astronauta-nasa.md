@@ -1,4 +1,4 @@
-# 07 — Evaluación de KAWSAY: astronauta + evaluador NASA
+# 07 — Evaluación de UPRIGHT: astronauta + evaluador NASA
 
 > Revisión hecha sobre `origin/main` @ `d2d02e1` y la demo publicada (`kawsay-ten.vercel.app/app/`), el 15-nov-2026.
 > Escenario imaginado: **tránsito a Marte, día 142 de 180, tripulación de 4**, retraso de 14 min con la Tierra.
@@ -17,7 +17,7 @@
 | 5 | **"Watch" significa dos cosas**: el estado amarillo y el reloj. "Stand up without fainting — Watch" no se entiende. | Ambigüedad en una etiqueta de seguridad. | Muy bajo (copy) |
 | 6 | **El control "Demo" convive con los datos reales** en la barra superior. | En operación real, mezclar simulación y datos médicos es un error de seguridad clásico. | Bajo |
 | 7 | **Faltan indicadores que salvan vidas y que nadie notaría solo**: dosis de radiación / tormenta solar, ritmo cardíaco (ECG), trombosis venosa yugular, test cognitivo, visión estructurada (SANS), anemia espacial. | Ver sección 4. | Variable |
-| 8 | **"KAWSAY alerta a la tripulación"… ¿cómo?** No hay red ni destinatarios. | Si estoy inconsciente, la promesa no se cumple. | Medio |
+| 8 | **"UPRIGHT alerta a la tripulación"… ¿cómo?** No hay red ni destinatarios. | Si estoy inconsciente, la promesa no se cumple. | Medio |
 | 9 | **Alertas de cabina (CO₂) se tratan como individuales.** Si 3 de 4 tienen dolor de cabeza, es la nave, no la persona. | Regla de tripulación = detección temprana de fallos ambientales. | Bajo–medio |
 | 10 | **Future Self sobreestimula**: dos cuerpos 3D, línea de tiempo, puntuación, 4 tareas, plan e historial en una pantalla. Rotar 3D con guantes en microgravedad no es práctico. | El usuario tiene < 3 min al día. | Medio (diseño) |
 
@@ -50,7 +50,7 @@
 ### 1.4 Daily check (check diario) — *la captura que enviaste*
 - 🧑‍🚀 7 pasos, un dato por pantalla, teclado grande (88 px) para guantes: **muy bien**.
 - 🧑‍🚀 En el resumen, el texto se repite: "Blood pressure (systolic) **200 mmHg**" y debajo "Blood pressure (systolic) 200 mmHg: 160 or more." No me dice **qué significa ni qué hacer**.
-- 🧑‍🚀 "Why?" abre "Prototype — KAWSAY prototype value…" y "NASA — Risk of Cardiovascular Adaptations". **Eso no es un por qué**, es una bibliografía. Y sin internet, los enlaces no abren.
+- 🧑‍🚀 "Why?" abre "Prototype — UPRIGHT prototype value…" y "NASA — Risk of Cardiovascular Adaptations". **Eso no es un por qué**, es una bibliografía. Y sin internet, los enlaces no abren.
 - 🛰️ **200/100 no dispara nada.** El reloj, ante 135 lpm, abre una alarma a pantalla completa con protocolo de 4 pasos; el check manual, ante 200 mmHg, solo muestra una etiqueta roja. **Cualquier valor rojo debe entrar al mismo flujo Respond** (re-medir en 5 min → síntomas → acción → escalar).
 - 🛰️ Solo hay dos niveles (amarillo/rojo). 165 y 200 son ambos "Act", pero 200 con dolor de cabeza o visión borrosa es una **urgencia** (regla compuesta faltante: PA ≥ 180 + cefalea/visión/confusión → rojo, escalar).
 - 🛰️ Sin **validación de plausibilidad**: aceptar 1200 o 0 sin preguntar "¿Seguro? Mide otra vez".
@@ -64,10 +64,10 @@
 - 🛰️ **Inconsistencia**: en la alarma "Breathing 19/min" es **Watch** (amarillo); en la pantalla del reloj, al mismo tiempo, el mismo 19/min es **OK**.
 - 🛰️ La HRV cae de 40 a 18 ms y sigue en **OK**: la HRV no tiene umbrales ni compara con la línea base.
 - 🛰️ "Not ruled out: a rhythm problem" — correcto, pero la app **no puede** descartarlo: falta ECG (ver 4).
-- 🛰️ "No answer in 9:52 and KAWSAY alerts the crew": no hay mecanismo para avisar a otro dispositivo, al CMO ni a otro reloj.
+- 🛰️ "No answer in 9:52 and UPRIGHT alerts the crew": no hay mecanismo para avisar a otro dispositivo, al CMO ni a otro reloj.
 
 ### 1.6 Respond (protocolo tras la alarma)
-- 🧑‍🚀 "**What KAWSAY thinks — Likely: dehydration and fatigue. Low water today 1.1 L of 2.5 L. Short sleep 5.2 h…**". **Esto es exactamente lo que quiero ver en cada "Why?"**. Es la prueba de que el motor ya sabe explicar; solo falta usarlo en todas partes.
+- 🧑‍🚀 "**What UPRIGHT thinks — Likely: dehydration and fatigue. Low water today 1.1 L of 2.5 L. Short sleep 5.2 h…**". **Esto es exactamente lo que quiero ver en cada "Why?"**. Es la prueba de que el motor ya sabe explicar; solo falta usarlo en todas partes.
 - 🛰️ "Chest pain or pressure" → escalar. Bien. Falta "¿Quién responde?": si estoy incapacitado, un compañero debe poder responder **en mi nombre** ("Respondiendo por A. Quispe").
 
 ### 1.7 Findings (hallazgos compuestos)
@@ -166,7 +166,7 @@ Prioridad = cuánto puede salvar una vida que **de otra forma jamás notarías**
 ## 5. "Why?" con IA local: diseño propuesto
 
 ### El problema
-Hoy `SourceList` (`src/components/ui.tsx`) pinta "Why?" como una lista de enlaces. Para un astronauta no-médico **no explica nada**, y en vuelo **los enlaces no abren** (la app es offline). Pero la pantalla *Respond* ya demuestra que el motor sabe explicar ("What KAWSAY thinks…").
+Hoy `SourceList` (`src/components/ui.tsx`) pinta "Why?" como una lista de enlaces. Para un astronauta no-médico **no explica nada**, y en vuelo **los enlaces no abren** (la app es offline). Pero la pantalla *Respond* ya demuestra que el motor sabe explicar ("What UPRIGHT thinks…").
 
 ### Estructura del nuevo "Why?" (siempre igual, en este orden)
 1. **Qué significa** — una frase sin jerga.
@@ -179,7 +179,7 @@ Hoy `SourceList` (`src/components/ui.tsx`) pinta "Why?" como una lista de enlace
 > **Qué significa:** tu presión está muy por encima de lo normal (200/100). A este nivel el corazón y los vasos trabajan con mucha carga.
 > **Por qué en tu caso:** tu media de los últimos días es 118/76; esto es un salto brusco, así que primero descartemos un error de medición.
 > **Qué hacer ahora:** quédate sentado 5 min, brazo a la altura del corazón, y mide otra vez.
-> **Si sigue ≥ 180** o tienes dolor de cabeza, visión borrosa o confusión: avisa al CMO ahora; KAWSAY prepara el informe para Tierra.
+> **Si sigue ≥ 180** o tienes dolor de cabeza, visión borrosa o confusión: avisa al CMO ahora; UPRIGHT prepara el informe para Tierra.
 > ▸ Evidencia: NASA — Risk of Cardiovascular Adaptations · Umbral 160: valor prototipo.
 
 ### Cómo se genera (respetando AGENTS.md: las reglas deciden, la IA solo redacta)
@@ -195,20 +195,20 @@ Hoy `SourceList` (`src/components/ui.tsx`) pinta "Why?" como una lista de enlace
 
 ---
 
-## 6. ¿En qué dispositivos debería vivir KAWSAY?
+## 6. ¿En qué dispositivos debería vivir UPRIGHT?
 
 Lo que hoy usan los astronautas (referencias públicas): **portátiles a bordo de la ISS** para procedimientos y datos, **tabletas comerciales** (iPad) para procedimientos y fotos, **wearables biomédicos** como el **Bio-Monitor de la CSA** (camiseta Astroskin: ECG, respiración, SpO₂, temperatura, actividad) y relojes de actigrafía para estudios de sueño, **asistentes de voz** experimentales (CIMON en la ISS, Callisto en Artemis I) y, en EVA, el **display y alertas sonoras del traje**.
 
 Arquitectura recomendada para 4 astronautas:
 
-| Capa | Dispositivo | Qué hace KAWSAY ahí |
+| Capa | Dispositivo | Qué hace UPRIGHT ahí |
 |---|---|---|
 | **Sensores pasivos (24/7)** | Camiseta biométrica tipo Bio-Monitor + reloj/banda por persona | Ritmo, ECG, respiración, SpO₂, temperatura, sueño, actividad. Sin pantalla. |
 | **Alerta personal** | Reloj en la muñeca | Vibración + 1 línea + 1 acción. Avisa también cuando otro tripulante tiene una emergencia. |
 | **Check diario (2 min)** | **Tableta personal robusta** (una por astronauta) | Check, Future Self simplificado, "Why?". Teclado grande para guantes, modo noche. |
 | **Panel de tripulación / CMO** | Portátil o pantalla fija del hábitat (la app de escritorio `.exe` ya existe) | Vista de 4 tarjetas, ambiente de cabina, inventario médico, informe a Tierra. |
 | **Traje (EVA, lanzamiento, reentrada)** | Display del traje / HUD + audio | Solo alertas críticas y una acción ("Termina la EVA, vuelve a presión"). Nada de navegar. |
-| **Voz** | Altavoz/micrófono del módulo | "KAWSAY, ¿cómo estoy?" — respuesta corta generada por las reglas; manos libres. |
+| **Voz** | Altavoz/micrófono del módulo | "UPRIGHT, ¿cómo estoy?" — respuesta corta generada por las reglas; manos libres. |
 | **Tierra** | Consola del flight surgeon | Recibe el informe con retraso, responde, y la respuesta vuelve al lazo. |
 
 Requisitos de hardware de vuelo: funcionar sin red, sincronizar entre dispositivos por la red local de la nave, **copias de seguridad** (hoy todo vive en el almacenamiento del navegador de un solo equipo y se pierde si se borra), registro de auditoría, tolerancia a reinicios y a errores de memoria por radiación, consumo bajo (evitar 3D permanente).
@@ -217,7 +217,7 @@ Requisitos de hardware de vuelo: funcionar sin red, sincronizar entre dispositiv
 
 ## 7. Debilidades frente a un entorno real
 
-| Entorno | Debilidad de KAWSAY hoy |
+| Entorno | Debilidad de UPRIGHT hoy |
 |---|---|
 | **ISS (LEO)** | El valor diferencial baja: la Tierra está a segundos. Aun así, la falta de perfiles y privacidad lo bloquea. |
 | **Luna (Artemis)** | Retraso ~1,3 s pero EVAs frecuentes: el traje y el polvo importan más que el check diario. Faltan carga de EVA, polvo y lesiones de mano. |
@@ -254,7 +254,7 @@ Debilidades transversales:
 
 ## 9. Lo que ya está muy bien (no tocar)
 - La pregunta central "¿con qué cuerpo aterrizarás?" y el "66 → 89 con tu plan".
-- La alarma del reloj y el flujo *Respond* con "What KAWSAY thinks".
+- La alarma del reloj y el flujo *Respond* con "What UPRIGHT thinks".
 - Datos viejos nunca en verde; NASA vs Prototype en cada valor.
 - Informe a Tierra con hora de llegada y de respuesta.
 - Offline real, modo noche, teclado para guantes, bilingüe.

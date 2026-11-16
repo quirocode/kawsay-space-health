@@ -4,7 +4,7 @@
 
 ---
 
-Extend the JSON of UI strings for KAWSAY, a tablet health copilot for astronauts. Keep every existing key and value shape; you may improve existing English values and **add** the sections below.
+Extend the JSON of UI strings for UPRIGHT, a tablet health copilot for astronauts. Keep every existing key and value shape; you may improve existing English values and **add** the sections below.
 
 ## Voice
 - Calm, warm, short. A good flight controller, not an alarm.
