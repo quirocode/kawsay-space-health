@@ -60,9 +60,12 @@
   "video": {
     "title": "UPRIGHT in",
     "titleAccent": "30 seconds",
-    "subtitle": "A crew member skips exercise for a week, sees their landing-day self decline, and brings it back.",
-    "soon": "Video coming soon",
-    "soonHint": "Meanwhile, the demo plays the full story of mission day 142 with no data entry."
+    "subtitle": "Recorded from the real app: the body you will land with, a finding that crosses headache, sleep and cabin CO₂, one action, its verification and a brief for Earth.",
+    "play": "Play the UPRIGHT demo video",
+    "poster": "UPRIGHT demo: today versus landing-day body comparison",
+    "youtube": "Watch on YouTube",
+    "privacy": "The player loads from YouTube when you press play. English voice (synthetic) and subtitles.",
+    "iframeTitle": "UPRIGHT demo video"
   },
   "challenge": {
     "title": "The Challenge We're",
@@ -141,6 +144,7 @@
   "links": {
     "app": "/app/",
     "download": "https://github.com/quirocode/kawsay-space-health/releases/latest",
-    "repo": "https://github.com/quirocode/kawsay-space-health"
+    "repo": "https://github.com/quirocode/kawsay-space-health",
+    "youtube": "https://www.youtube.com/watch?v=YVjr5qVNuqQ"
   }
 }

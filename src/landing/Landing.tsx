@@ -211,22 +211,58 @@ function Hero({ copy, language }: { copy: Copy; language: Language }) {
   );
 }
 
+/** YouTube id of the 29 s demo (content/landing.json → links.youtube). */
+const YOUTUBE_ID = new URL(L.youtube).searchParams.get('v') ?? '';
+
+/**
+ * Click-to-play: a local poster until the visitor presses play, then the privacy-enhanced
+ * YouTube player. Nothing loads from YouTube before that, and the poster works offline.
+ */
 function Video({ copy, language }: { copy: Copy; language: Language }) {
+  const [playing, setPlaying] = useState(false);
+  const v = copy.video;
   return (
     <section id="video" className="bg-l-bg px-4 py-20 md:py-24">
       <div className="mx-auto max-w-5xl">
-        <SectionTitle title={copy.video.title} accent={copy.video.titleAccent} subtitle={copy.video.subtitle} />
-        <div className="reveal relative flex aspect-video flex-col items-center justify-center gap-4 overflow-hidden rounded-2xl border border-l-line bg-l-bg-2 text-center">
-          <div className="grid-glow absolute inset-0" aria-hidden />
-          <span className="relative flex h-20 w-20 items-center justify-center rounded-full bg-l-accent-soft text-l-accent">
-            <Icon name="play" className="h-10 w-10" />
-          </span>
-          <p className="relative text-2xl font-semibold">{copy.video.soon}</p>
-          <p className="relative max-w-md px-4 text-l-muted">{copy.video.soonHint}</p>
-          <a href={demoLink(L.app, language)} lang="en" className="relative mt-2 inline-flex items-center gap-2 font-medium text-l-accent hover:underline">
-            {DEMO_LABEL}
-            <Icon name="arrow" className="h-4 w-4" />
-          </a>
+        <SectionTitle title={v.title} accent={v.titleAccent} subtitle={v.subtitle} />
+        <div className="reveal relative aspect-video overflow-hidden rounded-2xl border border-l-line bg-l-bg-2">
+          {playing ? (
+            <iframe
+              className="absolute inset-0 h-full w-full"
+              src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_ID}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+              title={v.iframeTitle}
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={() => setPlaying(true)}
+              aria-label={v.play}
+              className="group absolute inset-0 flex h-full w-full items-center justify-center"
+            >
+              <img src="/video/upright-demo-poster.webp" alt={v.poster} width={1280} height={720} loading="lazy" decoding="async"
+                className="absolute inset-0 h-full w-full object-cover opacity-90 transition-opacity group-hover:opacity-100" />
+              <span className="absolute inset-0 bg-gradient-to-t from-l-bg/60 via-transparent to-transparent" aria-hidden />
+              <span className="relative flex h-20 w-20 items-center justify-center rounded-full bg-l-accent text-l-bg shadow-lg transition-transform group-hover:scale-105 group-focus-visible:scale-105 md:h-24 md:w-24">
+                <svg viewBox="0 0 24 24" className="ml-1 h-10 w-10 md:h-12 md:w-12" fill="currentColor" aria-hidden><path d="M8 5.5v13l11-6.5z" /></svg>
+              </span>
+            </button>
+          )}
+        </div>
+        <div className="mt-4 flex flex-col items-start justify-between gap-3 text-sm text-l-muted sm:flex-row sm:items-center">
+          <p>{v.privacy}</p>
+          <div className="flex shrink-0 flex-wrap gap-x-6 gap-y-2">
+            <a href={L.youtube} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 font-medium text-l-accent hover:underline">
+              {v.youtube}
+              <Icon name="arrow" className="h-4 w-4" />
+            </a>
+            <a href={demoLink(L.app, language)} lang="en" className="inline-flex min-h-11 items-center gap-2 font-medium text-l-accent hover:underline">
+              {DEMO_LABEL}
+              <Icon name="arrow" className="h-4 w-4" />
+            </a>
+          </div>
         </div>
       </div>
     </section>

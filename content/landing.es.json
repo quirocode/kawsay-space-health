@@ -60,9 +60,12 @@
   "video": {
     "title": "UPRIGHT en",
     "titleAccent": "30 segundos",
-    "subtitle": "Un tripulante deja de entrenar durante una semana, ve cómo empeora su proyección para el aterrizaje y toma medidas para recuperarse.",
-    "soon": "Video disponible próximamente",
-    "soonHint": "Mientras tanto, recorre la historia completa del día 142 de la misión en la demo sin ingresar datos."
+    "subtitle": "Grabado en la app real: el cuerpo con el que aterrizarás, un hallazgo que cruza dolor de cabeza, sueño y CO₂ de cabina, una acción, su verificación y un informe para la Tierra.",
+    "play": "Reproducir el video demo de UPRIGHT",
+    "poster": "Demo de UPRIGHT: comparación del cuerpo hoy y el día del aterrizaje",
+    "youtube": "Ver en YouTube",
+    "privacy": "El reproductor se carga desde YouTube al pulsar reproducir. Voz (sintética) y subtítulos en inglés.",
+    "iframeTitle": "Video demo de UPRIGHT"
   },
   "challenge": {
     "title": "El reto que",
@@ -271,6 +274,7 @@
   "links": {
     "app": "/app/",
     "download": "https://github.com/quirocode/kawsay-space-health/releases/latest",
-    "repo": "https://github.com/quirocode/kawsay-space-health"
+    "repo": "https://github.com/quirocode/kawsay-space-health",
+    "youtube": "https://www.youtube.com/watch?v=YVjr5qVNuqQ"
   }
 }
