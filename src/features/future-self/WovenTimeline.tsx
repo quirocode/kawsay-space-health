@@ -53,6 +53,7 @@ export function WovenTimeline({
     <div className="projection-slider">
       <label className="sr-only" htmlFor={id}>{lang === 'es' ? 'Día a previsualizar' : 'Day to preview'}</label>
       <input id={id} type="range" min={today} max={arrival} step={1} value={value}
+        className="woven-range"
         disabled={today === arrival} onChange={(e) => onChange(Number(e.target.value))} aria-valuetext={selectedDay} />
       <div className="projection-slider-labels">
         <span>{ui.future.today} · {dayLabel(today)}</span>

@@ -9,6 +9,7 @@ import type {
   CountermeasurePlan, Environment, Finding, FlightSurgeonBrief, MissionContext, Reading, WatchAlert, WatchSample,
 } from '../domain/types';
 import { engine, loadDemoMission, watchEngine } from './engine';
+import { buildCrewReadings, getCrewMember } from '../domain/crew';
 import { indexedDatabase, loadDeviceProfile, memoryDatabase, saveDeviceProfile, type AlertRecord, type CaseRecord, type Database, type DeviceProfile, type LoggedVerification, type MissionInfo, type PendingRecheck, type Session, type Snapshot } from './db';
 import { sampleAt, windowOf } from '../data/watchSeries';
 import { cabinSamples, tsOf } from '../data/sol142';
@@ -77,6 +78,7 @@ export interface AppState extends Prefs {
   lastCheckTs: number | null;
   mission: MissionInfo;
   deviceProfile: DeviceProfile;
+  activeCrewId: string;
 
   hydrate(db?: Database): Promise<void>;
   addReadings(rs: Reading[]): void;
@@ -85,8 +87,10 @@ export interface AppState extends Prefs {
   acceptPlan(): void;
   setViewDay(d: number): void;
   setEnvironment(env: Environment, commDelayMin: number): void;
+  setPhase(phase: MissionContext['phase']): void;
   setMission(edit: MissionEdit): void;
   setDeviceProfile(profile: DeviceProfile): void;
+  selectCrewMember(crewId: string): void;
 
   startRecheck(finding: Finding): void;
   acknowledge(ruleId: string): void;
@@ -179,6 +183,7 @@ const fromSnapshot = (snap: Snapshot) => ({
   recoveryStartTs: snap.session.recoveryStartTs, lastCheckTs: snap.session.lastCheckTs,
   mission: snap.session.mission ?? DEFAULT_MISSION,
   deviceProfile: snap.session.deviceProfile ?? loadDeviceProfile(),
+  activeCrewId: getCrewMember((snap.session.mission ?? DEFAULT_MISSION).crew).id,
   readings: snap.readings, cases: snap.cases, alerts: snap.alerts, briefs: snap.briefs,
 });
 
@@ -247,6 +252,7 @@ export function briefInput(s: Pick<AppState, 'cases' | 'briefs' | 'readings' | '
 
 // ── Store ─────────────────────────────────────────────────────────────────────
 let database: Database = memoryDatabase();
+const crewReadingsCache = new Map<string, Reading[]>();
 const persist = (write: (db: Database) => Promise<void>) => {
   void write(database).catch((err) => console.error('KAWSAY could not save to the local database:', err));
 };
@@ -331,16 +337,36 @@ export const useApp = create<AppState>()((set, get) => {
       const phase = !Number.isFinite(commDelayMin) ? 'conjunction' : c.phase === 'conjunction' ? 'cruise' : c.phase;
       commit({ context: { ...c, environment, commDelayMin, phase } });
     },
+    setPhase: (phase) => {
+      const c = get().context;
+      commit({ context: { ...c, phase } });
+    },
     setMission: (edit) => {
       const s = get();
       const m = normalizeMission(edit, s.mission);
       // Future Self keeps looking at landing day when that was where it stood.
       const viewDay = s.viewDay >= s.context.arrivalDay ? m.arrivalDay : Math.min(m.arrivalDay, Math.max(m.missionDay, s.viewDay));
-      commit({ mission: { name: m.name, crew: m.crew }, context: { ...s.context, missionDay: m.missionDay, arrivalDay: m.arrivalDay }, viewDay });
+      commit({ mission: { name: m.name, crew: m.crew }, activeCrewId: getCrewMember(m.crew).id, context: { ...s.context, missionDay: m.missionDay, arrivalDay: m.arrivalDay }, viewDay });
     },
     setDeviceProfile: (deviceProfile) => {
       saveDeviceProfile(deviceProfile);
       commit({ deviceProfile });
+    },
+    selectCrewMember: (crewId) => {
+      const s = get();
+      const profile = getCrewMember(crewId);
+      crewReadingsCache.set(s.activeCrewId, s.readings);
+      const base = loadDemoMission().history;
+      const nextReadings = crewReadingsCache.get(profile.id) ?? buildCrewReadings(base, profile);
+      crewReadingsCache.set(profile.id, nextReadings);
+      commit(
+        {
+          activeCrewId: profile.id,
+          mission: { ...s.mission, crew: profile.name },
+          readings: nextReadings,
+        },
+        (db) => db.putReadings(nextReadings),
+      );
     },
 
     startRecheck: (finding) => {

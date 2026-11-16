@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'wouter';
 import suitCopy from '../../../content/suit.json';
 import { useLang } from '../../app/i18n';
 import { dec, fill, landingLabel, missionLabel } from '../../app/format';
 import { useApp } from '../../app/store';
+import { getCrewMember } from '../../domain/crew';
+import { speakCopilot, stopCopilotVoice } from '../../domain/localAi';
+import type { MissionPhase, Reading } from '../../domain/types';
 import { adviseSuit, evaluateSuit, FLIGHT_PHASES, SCENARIOS, simulate, type FlightPhase, type Scenario, type SuitEvaluation } from '../../domain/suit';
 import { StatusBadge, StatusIcon } from '../../components/StatusBadge';
 import { CARD, PANEL, BTN_PRIMARY, BTN_SECONDARY, Screen, SourceList } from '../../components/ui';
@@ -82,8 +86,14 @@ function SignalRow({ e, t, lang, open }: { e: SuitEvaluation; t: SuitCopy; lang:
 /** Suit & flight-phase check: a simulated measurement, explained reading by reading. */
 export function SuitScreen() {
   const lang = useLang();
+  const es = lang === 'es';
   const t: SuitCopy = suitCopy[lang] as SuitCopy;
   const ctx = useApp((s) => s.context);
+  const nowTs = useApp((s) => s.nowTs);
+  const activeCrewId = useApp((s) => s.activeCrewId);
+  const addReadings = useApp((s) => s.addReadings);
+  const setMissionPhase = useApp((s) => s.setPhase);
+  const crew = getCrewMember(activeCrewId);
   // Open on the phase the mission is in now; cruise days default to the spacewalk demo.
   const [phase, setPhase] = useState<FlightPhase>(() =>
     ctx.phase === 'pre_landing' ? 'entry' : ctx.phase === 'surface' ? 'post_landing' : 'eva');
@@ -91,20 +101,67 @@ export function SuitScreen() {
   const [run, setRun] = useState(0);
   const [measuring, setMeasuring] = useState(false);
   const [shown, setShown] = useState(false);
+  const [voiceCopilot, setVoiceCopilot] = useState(false);
+  const [loggedToMission, setLoggedToMission] = useState(false);
 
   const evals = useMemo(() => evaluateSuit(simulate(phase, scenario, run)), [phase, scenario, run]);
   const verdict = useMemo(() => adviseSuit(phase, evals), [phase, evals]);
 
-  useEffect(() => { setShown(false); }, [phase, scenario]);
+  useEffect(() => { setShown(false); setLoggedToMission(false); }, [phase, scenario]);
   useEffect(() => {
     if (!measuring) return;
     const id = setTimeout(() => { setMeasuring(false); setShown(true); }, 900);
     return () => clearTimeout(id);
   }, [measuring]);
 
-  const measure = (again: boolean) => { if (again) setRun((r) => r + 1); setMeasuring(true); };
+  const measure = (again: boolean) => { if (again) setRun((r) => r + 1); setLoggedToMission(false); setMeasuring(true); };
   const p = t.phases[phase];
   const nameOf = (id: string) => (t.signals as Record<string, { name: string }>)[id]?.name ?? id;
+
+  const speakSuitBrief = () => {
+    const headline = (t.verdicts as Record<string, Record<string, string>>)[phase][verdict.status];
+    const stepTexts = verdict.steps
+      .map((s, i) => {
+        const c = (t.steps as Record<string, { text: string; detail: string }>)[s.id];
+        return `${es ? 'Paso' : 'Step'} ${i + 1}: ${c?.text ?? s.id}. ${c?.detail ?? ''}`;
+      })
+      .join(' ');
+    const fullText = `${crew.role} ${crew.name}. ${headline} ${stepTexts}`;
+    speakCopilot(fullText, lang);
+  };
+
+  useEffect(() => {
+    if (shown && !measuring && voiceCopilot) {
+      speakSuitBrief();
+    }
+    return () => stopCopilotVoice();
+  }, [shown, measuring, voiceCopilot, phase, scenario, run]);
+
+  const logSuitTelemetryToMission = () => {
+    const mappedPhase: MissionPhase =
+      phase === 'eva' ? 'eva' : phase === 'entry' ? 'pre_landing' : phase === 'post_landing' ? 'surface' : 'cruise';
+    setMissionPhase(mappedPhase);
+
+    const out: Reading[] = [];
+    const byId = new Map(evals.map((e) => [e.id, e.value]));
+    if (byId.has('heart_rate')) {
+      out.push({ indicatorId: 'heart_rate', value: Math.round(byId.get('heart_rate')!), ts: nowTs, missionDay: ctx.missionDay, phase: mappedPhase, origin: 'sensor_sim' });
+    }
+    if (byId.has('spo2')) {
+      out.push({ indicatorId: 'spo2', value: Math.round(byId.get('spo2')!), ts: nowTs, missionDay: ctx.missionDay, phase: mappedPhase, origin: 'sensor_sim' });
+    }
+    if (byId.has('core_temp')) {
+      out.push({ indicatorId: 'body_temp', value: byId.get('core_temp')!, ts: nowTs, missionDay: ctx.missionDay, phase: mappedPhase, origin: 'sensor_sim' });
+    }
+    if (byId.get('dcs_symptoms') === 1) {
+      out.push({ indicatorId: 'symptom_joint_pain', value: 1, ts: nowTs, missionDay: ctx.missionDay, phase: mappedPhase, origin: 'manual' });
+    }
+    if ((byId.get('dizziness') ?? 0) >= 3) {
+      out.push({ indicatorId: 'symptom_dizziness', value: 1, ts: nowTs, missionDay: ctx.missionDay, phase: mappedPhase, origin: 'manual' });
+    }
+    if (out.length > 0) addReadings(out);
+    setLoggedToMission(true);
+  };
 
   return (
     <Screen wide>
@@ -112,6 +169,22 @@ export function SuitScreen() {
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-[30px] font-bold">{t.title}</h1>
           <span className="rounded-full border border-future px-3 py-1 text-[15px] text-future">{t.simBadge}</span>
+          <span className="rounded-full bg-brand-bg px-3 py-1 text-[14px] font-bold text-brand-ink">
+            {crew.role} {crew.name} · {crew.assignedDevice}
+          </span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={voiceCopilot}
+            onClick={() => setVoiceCopilot((v) => !v)}
+            className={`ml-auto rounded-full border-2 px-4 py-1.5 text-[14px] font-bold ${
+              voiceCopilot ? 'border-brand-ink bg-brand text-on-brand' : 'border-line bg-surface-2 text-ink'
+            }`}
+          >
+            {voiceCopilot
+              ? (es ? 'Copiloto de Voz en Casco: ACTIVO' : 'In-Helmet Voice Copilot: ON')
+              : (es ? 'Activar Copiloto de Voz (Manos Libres)' : 'Enable Voice Copilot (Hands-Free)')}
+          </button>
         </div>
         <p className="max-w-[80ch] text-ink-2">{t.intro}</p>
       </div>
@@ -169,8 +242,32 @@ export function SuitScreen() {
             <div className="flex flex-wrap items-center gap-3">
               <StatusBadge status={verdict.status} label={t.status[verdict.status]} />
               <p className="text-[24px] font-bold">{(t.verdicts as Record<string, Record<string, string>>)[phase][verdict.status]}</p>
+              <button
+                type="button"
+                onClick={speakSuitBrief}
+                className="ml-auto rounded-full border border-brand-ink bg-brand-bg px-4 py-2 text-[14px] font-bold text-brand-ink"
+              >
+                {es ? 'Escuchar por Audio del Casco (HUD)' : 'Speak on Helmet Audio (HUD)'}
+              </button>
             </div>
             <p className={`${PANEL} text-[16px]`}>{verdict.escalate ? t.escalate : t.noEscalate}</p>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={logSuitTelemetryToMission}
+                disabled={loggedToMission}
+                className={BTN_SECONDARY}
+              >
+                {loggedToMission
+                  ? (es ? 'Registrado en bitácora del tripulante ✓' : 'Logged to crew medical record ✓')
+                  : (es ? 'Registrar lecturas del traje en bitácora e Informe a Tierra' : 'Log suit readings to crew record & Earth Brief')}
+              </button>
+              {loggedToMission && (
+                <Link href="/loop" className="font-bold text-brand-ink underline">
+                  {es ? 'Abrir Hallazgos / Informe →' : 'Open Findings / Earth Brief →'}
+                </Link>
+              )}
+            </div>
             <h3 className="text-[20px] font-bold">{t.stepsTitle}</h3>
             <ol className="flex flex-col gap-3">
               {verdict.steps.map((s, i) => {
